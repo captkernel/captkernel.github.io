@@ -1,0 +1,26 @@
+	Home - Created but not filled/linked properly
+		Portfolio - Created and Linked. Not filled properly
+		Art - 	Created and Filled
+			Charcoal - Created, Linked and Filled.
+			Pastel - Created, Linked and Filled.
+			Pen - Created, Linked and Filled.
+			Pencil - Created, Linked and Filled.
+			Water Colours - Created, Linked and Filled.
+			
+			All Category Pages Created, Linked and Filled.
+
+		Music - Not Created
+		Modelling - Not Created
+
+	Home page photos changed. The right ones still need to be put. Just removed ET's photos :P
+	Links fixed from categories to project pages and Vice Versa.
+	
+Updates:
+	
+		About Me Created
+		Contact Created
+The Map in contact me has to be fixed.. I don't know how to do it :P
+Check kar map embedding kaise karte hain acche se..
+Actually wait.. I think I realized.
+
+24.05.2016 - 01:05
