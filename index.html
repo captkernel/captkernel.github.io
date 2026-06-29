@@ -217,6 +217,8 @@
     .m-card{position:relative;display:flex;flex-direction:column;background:var(--win);border:1px solid var(--border);border-radius:12px;
       overflow:hidden;container-type:inline-size;box-shadow:0 12px 32px rgba(0,0,0,.4);}
     #mobile .wbar{cursor:default;}
+    body.macos #mobile .wbar{height:auto;justify-content:flex-start;}   /* keep mac card headers left-aligned on mobile */
+    body.macos #mobile .wbar .ic{display:inline;} body.macos #mobile .wbar .name{position:static;text-align:left;}
     #mobile .wbody{flex:none;min-height:0;overflow:visible;}
     #mobile .w-term .wbody{max-height:62vh;overflow:auto;}
     #mobile .w-work .fhead,#mobile .w-work .frow{grid-template-columns:22px 1fr 58px;}
@@ -228,9 +230,119 @@
     .m-nav a .lab{font-size:.52rem;text-transform:uppercase;letter-spacing:.3px;}
     .m-nav a:active{color:var(--accent);background:rgba(70,209,122,.1);}
   }
+
+  /* ===================== macOS skin (body.macos) ===================== */
+  /* desktop-style toggle (bottom-left) */
+  .osswitch{position:fixed;left:14px;bottom:14px;z-index:9200;display:flex;gap:3px;padding:3px;border-radius:11px;
+    background:rgba(20,22,26,.8);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid rgba(255,255,255,.12);
+    font-family:var(--mono);font-size:.66rem;box-shadow:0 8px 26px rgba(0,0,0,.45);}
+  .osswitch button{border:none;background:transparent;color:var(--muted);padding:.34rem .62rem;border-radius:8px;cursor:pointer;font:inherit;transition:.15s;}
+  .osswitch button.on{background:rgba(70,209,122,.18);color:var(--accent);}
+  body.macos .osswitch button.on{background:rgba(10,132,255,.32);color:#fff;}
+  @media (max-width:820px){ .osswitch{bottom:auto;top:.62rem;left:auto;right:5.4rem;z-index:7;} }
+
+  /* theme: macOS dark mode + system blue, vibrancy, system font, gradient wallpaper */
+  body.macos{
+    --accent:#0a84ff; --accent-dim:#0a6fd6;
+    --win:rgba(44,44,50,.70); --winhdr:rgba(58,58,64,.62);
+    --border:rgba(255,255,255,.10); --border-active:rgba(255,255,255,.20);
+    --text:#f2f2f7; --muted:#9b9ba3; --faint:#6c6c74;
+    --sans:-apple-system,BlinkMacSystemFont,'SF Pro Text','Inter',system-ui,sans-serif;
+    font-family:var(--sans);
+    background:
+      radial-gradient(130% 120% at 50% -10%, #2b3a63 0%, #1d2740 36%, #121826 68%, #0b0e17 100%) fixed;
+  }
+  body.macos ::selection{background:#0a84ff;color:#fff;}
+  body.macos #desktop{top:26px;}                 /* clear the menu bar */
+  body.macos .hint,body.macos .einstr{display:none;}
+  body.macos .k-boot{display:none;}              /* drop the Linux dmesg boot lines in The Kernel */
+
+  /* windows: translucent vibrancy, soft shadow, big radius */
+  body.macos .win{border-radius:12px;background:var(--win);border:.5px solid var(--border);
+    backdrop-filter:blur(34px) saturate(1.5);-webkit-backdrop-filter:blur(34px) saturate(1.5);
+    box-shadow:0 30px 80px rgba(0,0,0,.55),0 0 0 .5px rgba(255,255,255,.06);}
+  body.macos .win:not(.focused){filter:none;opacity:.97;}
+  body.macos .win.focused{border-color:var(--border-active);box-shadow:0 38px 96px rgba(0,0,0,.66),0 0 0 .5px rgba(255,255,255,.14);}
+
+  /* title bar with left traffic lights + centered title */
+  body.macos .wbar{height:38px;padding:0 1rem;justify-content:center;position:relative;cursor:default;
+    background:var(--winhdr);border-bottom:.5px solid rgba(255,255,255,.07);font-family:var(--sans);font-size:.79rem;}
+  body.macos .win.focused .wbar{background:rgba(64,64,70,.6);}
+  body.macos .wbar:active{cursor:default;}
+  body.macos .wbar .ic{display:none;}
+  body.macos .wbar .name{position:absolute;left:0;right:0;text-align:center;font-weight:590;color:var(--text);pointer-events:none;}
+  body.macos .win:not(.focused) .wbar .name{color:var(--muted);}
+  body.macos .wbar .ctrls{position:absolute;left:13px;margin:0;display:flex;gap:8px;}
+  body.macos .wbar .ctrls span{width:12px;height:12px;border-radius:50%;font-size:0;line-height:12px;color:rgba(0,0,0,.55);overflow:hidden;}
+  body.macos .wbar .ctrls span:hover{font-size:.58rem;}
+  body.macos .wbar .c-x{order:0;background:#ff5f57;}    /* close */
+  body.macos .wbar .c-min{order:1;background:#febc2e;}  /* minimize */
+  body.macos .wbar .c-max{order:2;background:#28c840;}  /* zoom */
+  body.macos .wbar .ctrls .c-x:hover{background:#ff5f57;color:rgba(0,0,0,.55);}
+
+  /* dock: translucent pill, rounded-square tiles, magnify (JS), label-on-hover */
+  body.macos .dock{background:rgba(46,46,53,.5);backdrop-filter:blur(30px) saturate(1.6);-webkit-backdrop-filter:blur(30px) saturate(1.6);
+    border:.5px solid rgba(255,255,255,.16);border-radius:22px;padding:.38rem .5rem;gap:.34rem;
+    box-shadow:0 18px 50px rgba(0,0,0,.5),inset 0 0 0 .5px rgba(255,255,255,.08);}
+  body.macos .dock.up{border-radius:22px;}
+  body.macos .dock .app{width:52px;height:52px;border-radius:14px;color:#fff;font-size:1.32rem;
+    background:linear-gradient(160deg,rgba(98,108,130,.55),rgba(52,57,72,.55));border:.5px solid rgba(255,255,255,.16);
+    transition:transform .12s ease,width .12s ease,height .12s ease;}
+  body.macos .dock .app .lab{display:none;}
+  body.macos .dock .app:hover{transform:translateY(-12px);color:#fff;border-color:rgba(255,255,255,.28);}
+  body.macos .dock .app:hover .lab{display:block;position:absolute;top:-30px;left:50%;transform:translateX(-50%);
+    background:rgba(40,40,46,.92);color:#fff;padding:3px 9px;border-radius:7px;font-family:var(--sans);font-size:.62rem;letter-spacing:0;text-transform:none;opacity:1;white-space:nowrap;box-shadow:0 6px 18px rgba(0,0,0,.4);}
+  body.macos .dock .app.run::before{bottom:-6px;width:4px;height:4px;background:rgba(255,255,255,.85);box-shadow:none;}
+  body.macos .dock .sep{background:rgba(255,255,255,.18);}
+
+  /* menu bar (top) — only in macOS mode */
+  .menubar{display:none;}
+  body.macos .menubar{display:flex;align-items:center;gap:1.1rem;position:fixed;top:0;left:0;right:0;height:26px;z-index:9100;
+    padding:0 .8rem;background:rgba(30,30,36,.55);backdrop-filter:blur(26px) saturate(1.4);-webkit-backdrop-filter:blur(26px) saturate(1.4);
+    border-bottom:.5px solid rgba(255,255,255,.08);font-family:var(--sans);font-size:.76rem;color:var(--text);}
+  .menubar .mb-logo{font-size:.95rem;line-height:1;}
+  .menubar .mb-app{font-weight:700;}
+  .menubar .mb-menu{color:#d6d6dc;cursor:default;opacity:.92;}
+  .menubar .mb-menu:hover{opacity:1;}
+  .menubar .mb-right{margin-left:auto;display:flex;align-items:center;gap:1rem;color:#e6e6ea;}
+  .menubar .mb-right .mb-ic{cursor:pointer;opacity:.9;font-size:.82rem;}
+  .menubar .mb-right .mb-ic:hover{opacity:1;}
+  .menubar .mb-clock{font-variant-numeric:tabular-nums;}
+  @media (max-width:820px){ body.macos .menubar{display:none;} body.macos #desktop{top:0;} }
+
+  /* Spotlight overlay */
+  .spotlight{display:none;position:fixed;inset:0;z-index:9600;align-items:flex-start;justify-content:center;background:rgba(0,0,0,.28);backdrop-filter:blur(3px);}
+  .spotlight.show{display:flex;}
+  .spotlight .sp-box{margin-top:16vh;width:min(580px,92vw);background:rgba(46,46,52,.82);backdrop-filter:blur(40px) saturate(1.6);-webkit-backdrop-filter:blur(40px) saturate(1.6);
+    border:.5px solid rgba(255,255,255,.16);border-radius:14px;box-shadow:0 40px 120px rgba(0,0,0,.6);overflow:hidden;}
+  .spotlight .sp-in{display:flex;align-items:center;gap:.7rem;padding:.85rem 1.1rem;}
+  .spotlight .sp-in .mag{color:var(--muted);font-size:1.1rem;}
+  .spotlight .sp-in input{flex:1;background:transparent;border:none;outline:none;color:#f2f2f7;font-family:var(--sans);font-size:1.25rem;}
+  .spotlight .sp-res{border-top:.5px solid rgba(255,255,255,.1);max-height:46vh;overflow:auto;}
+  .spotlight .sp-res:empty{display:none;}
+  .spotlight .sp-item{display:flex;align-items:center;gap:.7rem;padding:.6rem 1.1rem;cursor:pointer;color:#e6e6ea;font-family:var(--sans);font-size:.92rem;}
+  .spotlight .sp-item:hover,.spotlight .sp-item.sel{background:rgba(10,132,255,.85);color:#fff;}
+  .spotlight .sp-item .si-ic{width:20px;text-align:center;opacity:.9;}
+  .spotlight .sp-item .si-sub{margin-left:auto;font-size:.72rem;opacity:.7;}
 </style>
 </head>
 <body class="prod">
+<div class="menubar" id="menubar">
+  <svg class="mb-logo" viewBox="0 0 14 17" width="13" height="15" fill="currentColor" aria-hidden="true"><path d="M11.7 13.2c-.2.5-.5 1-.8 1.4-.5.6-.9 1-1.3 1.2-.5.3-1 .4-1.6.4-.4 0-.9-.1-1.5-.3-.6-.2-1.1-.3-1.5-.3-.4 0-.9.1-1.5.3-.6.2-1 .3-1.4.3-.6 0-1.1-.2-1.6-.5-.4-.3-.9-.8-1.4-1.4C1 13.3.6 12.4.3 11.4 0 10.3-.1 9.3-.1 8.2c0-1.2.3-2.2.8-3 .4-.7.9-1.2 1.6-1.6.7-.4 1.4-.6 2.1-.6.4 0 1 .1 1.7.4.7.3 1.1.4 1.3.4.1 0 .6-.2 1.5-.5.8-.3 1.5-.4 2-.4 1.5.1 2.6.7 3.4 1.8-1.3.8-2 1.9-1.9 3.4 0 1.1.4 2.1 1.2 2.8.4.4.8.6 1.3.8-.1.3-.2.6-.4.9zM9.3.3c0 .9-.3 1.7-1 2.5-.7.9-1.6 1.4-2.6 1.3 0-.1 0-.2 0-.3 0-.9.4-1.8 1-2.5.3-.4.8-.7 1.3-.9.4-.2.8-.3 1.2-.3 0 .1.1.1.1.2z"/></svg>
+  <span class="mb-app">captKernel</span>
+  <span class="mb-menu">File</span><span class="mb-menu">Edit</span><span class="mb-menu">View</span><span class="mb-menu">Window</span><span class="mb-menu">Help</span>
+  <span class="mb-right">
+    <svg class="mb-ic" id="mb-cc" viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><rect x="2" y="3.4" width="12" height="2.8" rx="1.4"/><rect x="2" y="9.8" width="12" height="2.8" rx="1.4"/><circle cx="10.6" cy="4.8" r="1.5" fill="currentColor" stroke="none"/><circle cx="5.4" cy="11.2" r="1.5" fill="currentColor" stroke="none"/></svg>
+    <span class="mb-ic" id="mb-spot" title="Spotlight (⌘Space)">⌕</span>
+    <span class="mb-clock" id="mb-clock"></span>
+  </span>
+</div>
+<div class="spotlight" id="spotlight">
+  <div class="sp-box">
+    <div class="sp-in"><span class="mag">⌕</span><input id="sp-input" placeholder="Spotlight Search" autocomplete="off" spellcheck="false" /></div>
+    <div class="sp-res" id="sp-res"></div>
+  </div>
+</div>
 <div id="desktop">
   <div id="zones"></div>
 </div>
@@ -296,6 +408,12 @@
   <div class="wbtn" data-act="closeall" title="close all windows">⊗</div>
 </div>
 <div id="toast"></div>
+
+<!-- ===== desktop-style toggle (Linux ⇄ macOS) ===== -->
+<div class="osswitch" id="osswitch" title="Switch desktop style">
+  <button type="button" data-os="linux">Linux</button>
+  <button type="button" data-os="macos">macOS</button>
+</div>
 
 <!-- ===== mobile layout (built by initMobile on ≤820px) ===== -->
 <div id="mobile">
@@ -366,6 +484,9 @@ var APPS={
   kernel:{icon:'✎',title:'The Kernel — dmesg',w:560,h:440,cls:'w-kernel',html:KERNEL},
   connect:{icon:'✉',title:'~/connect',w:420,h:240,cls:'w-conn',html:'<a class="row" href="https://github.com/captkernel" target="_blank" rel="noopener"><span class="k">github</span><span class="v">github.com/captkernel →</span></a><a class="row" href="https://x.com/captkernel" target="_blank" rel="noopener"><span class="k">x</span><span class="v">@captkernel →</span></a><a class="row" href="https://www.linkedin.com/in/karanparmar99" target="_blank" rel="noopener"><span class="k">linkedin</span><span class="v">in/karanparmar99 →</span></a><a class="row" data-open="kernel"><span class="k">newsletter</span><span class="v">The Kernel →</span></a>'}
 };
+/* macOS-mode window titles (Linux/Windows metaphors → Mac apps); icon is hidden in the mac title bar */
+var MAC_TITLES={hero:'captKernel',term:'Terminal — zsh',fetch:'About This Mac',vision:'Notes — my bet',work:'Finder — Systems',kernel:'The Kernel',connect:'Contacts — connect'};
+Object.keys(MAC_TITLES).forEach(function(k){if(APPS[k])APPS[k].mtitle=MAC_TITLES[k];});
 
 function toast(m){toastEl.textContent=m;toastEl.style.opacity='1';clearTimeout(toast._t);toast._t=setTimeout(function(){toastEl.style.opacity='0';},1600);}
 
@@ -413,6 +534,7 @@ function applyRailMainConnect(other){
   setRect(WIN.connect,x3,g,cw2,ch);  /* right — narrow connect column */
 }
 function relayout(){
+  if(MAC())return;            /* macOS: windows free-float, no auto-tiling */
   var ids=tiled(),n=ids.length;if(!n)return;
   if(n===2 && HOME_SET.every(function(k){return ids.indexOf(k)>=0;})){return applyHome();}
   if(n===3 && ids.indexOf('hero')>=0 && ids.indexOf('fetch')>=0){   /* home + one app → image-7 / image-8 base layouts */
@@ -443,10 +565,11 @@ function openApp(id){
   var w=WIN[id];
   if(w){ if(w.min){w.min=false;w.el.style.display='';requestAnimationFrame(function(){w.el.classList.remove('minimizing');});} focus(id); relayout(); markRun(); return; }
   var el=document.createElement('div');el.className='win '+a.cls+' opening';el.style.zIndex=++z;
-  el.innerHTML='<div class="wbar"><span class="ic">'+a.icon+'</span><span class="name">'+a.title+'</span><span class="ctrls"><span class="c-min" title="minimize">—</span><span class="c-max" title="maximize">▢</span><span class="c-x" title="close">✕</span></span></div><div class="wbody">'+a.html+'</div><div class="g g-n"></div><div class="g g-s"></div><div class="g g-e"></div><div class="g g-w"></div><div class="g g-ne"></div><div class="g g-nw"></div><div class="g g-sw"></div><div class="g g-se"></div>';
+  var mt=(MAC()&&a.mtitle)?a.mtitle:a.title;
+  el.innerHTML='<div class="wbar"><span class="ic">'+a.icon+'</span><span class="name">'+mt+'</span><span class="ctrls"><span class="c-min" title="minimize">—</span><span class="c-max" title="maximize">▢</span><span class="c-x" title="close">✕</span></span></div><div class="wbody">'+a.html+'</div><div class="g g-n"></div><div class="g g-s"></div><div class="g g-e"></div><div class="g g-w"></div><div class="g g-ne"></div><div class="g g-nw"></div><div class="g g-sw"></div><div class="g g-se"></div>';
   desktop.appendChild(el);
   WIN[id]={el:el,min:false,float:false,x:0,y:0,w:a.w,h:a.h};order.push(id);
-  wire(id);relayout();focus(id);markRun();
+  wire(id);if(MAC())placeCascade(id);else relayout();focus(id);markRun();
   el.addEventListener('animationend',function(){el.classList.remove('opening');},{once:true});
 }
 function closeApp(id){var w=WIN[id];if(!w)return;w.el.classList.add('closing');
@@ -507,7 +630,10 @@ function wire(id){
   if(id==='vision')mountVision(el);
   el.querySelectorAll('[data-open]').forEach(function(b){b.addEventListener('click',function(){openApp(b.getAttribute('data-open'));});});
 }
-function maximize(id){var w=WIN[id];w.float=true;applyRect(w,{x:8,y:8,w:desktop.clientWidth-16,h:desktop.clientHeight-16});}
+function maximize(id){var w=WIN[id];if(!w)return;   /* zoom toggle (macOS green = zoom; Windows/Linux = maximize) */
+  if(w._zoom){applyRect(w,w._zoom);w._zoom=null;w.float=MAC();if(!MAC())relayout();return;}
+  w._zoom={x:w.x,y:w.y,w:w.w,h:w.h};w.float=true;
+  applyRect(w,{x:8,y:8,w:desktop.clientWidth-16,h:desktop.clientHeight-16});}
 
 function applyRect(w,r){setRect(w,r.x,r.y,r.w,r.h);}
 
@@ -528,7 +654,8 @@ function armLayout(name){if(snapArmed===name)return;snapArmed=name;zonesEl.inner
     d.style.left=r.x+'px';d.style.top=r.y+'px';d.style.width=r.w+'px';d.style.height=r.h+'px';zonesEl.appendChild(d);});
   snapbarEl.querySelectorAll('.thumb').forEach(function(t){t.classList.toggle('arm',t.getAttribute('data-k')===name);});}
 function barKeyAt(px){var th=snapbarEl.querySelectorAll('.thumb');for(var i=0;i<th.length;i++){var r=th[i].getBoundingClientRect();if(px>=r.left&&px<=r.right)return th[i].getAttribute('data-k');}return null;}
-function updateSnap(px,py){var R=desktop.getBoundingClientRect();
+function updateSnap(px,py){if(MAC())return;   /* no snap-tiling in macOS mode */
+  var R=desktop.getBoundingClientRect();
   if(py-R.top<58){
     var openCount=order.filter(function(o){return WIN[o]&&!WIN[o].min;}).length, anyVis=false;
     snapbarEl.querySelectorAll('.thumb').forEach(function(t){var ok=LAYOUTS[t.getAttribute('data-k')].length<=openCount;t.style.display=ok?'':'none';if(ok)anyVis=true;});
@@ -790,7 +917,8 @@ function initMobile(){
   var seq=['hero','fetch','vision','term','work','kernel','connect'];
   seq.forEach(function(id){var a=APPS[id];if(!a)return;
     var sec=document.createElement('section');sec.className='m-card '+a.cls;sec.id='m-'+id;
-    sec.innerHTML='<div class="wbar"><span class="ic">'+a.icon+'</span><span class="name">'+a.title+'</span></div><div class="wbody">'+a.html+'</div>';
+    var mt=(MAC()&&a.mtitle)?a.mtitle:a.title;
+    sec.innerHTML='<div class="wbar"><span class="ic">'+a.icon+'</span><span class="name">'+mt+'</span></div><div class="wbody">'+a.html+'</div>';
     host.appendChild(sec);
     if(id==='term')mountTerm(sec);
     if(id==='kernel')mountKernel(sec);
@@ -850,9 +978,86 @@ document.querySelectorAll('#wmctl .wbtn[data-act]').forEach(function(b){b.addEve
     else{lenisVel+=e.deltaY*1.1;}             /* Random: momentum zoom (inertia in renderWarp) */
   },{passive:false});
 })();
+
+/* ===================== macOS skin behavior ===================== */
+function MAC(){return document.body.classList.contains('macos');}
+var osMode=(function(){try{return localStorage.getItem('ckOS')||'linux';}catch(e){return 'linux';}})();
+var macCascadeN=0;
+function placeCascade(id){var w=WIN[id];if(!w)return;var W=desktop.clientWidth,H=desktop.clientHeight;
+  var ww=Math.min(w.w,W-40),hh=Math.min(w.h,H-40),n=(macCascadeN++)%6,ox=58+n*34,oy=34+n*30;
+  if(ox+ww>W-18)ox=Math.max(18,W-ww-18);if(oy+hh>H-18)oy=Math.max(18,H-hh-18);
+  setRect(w,ox,oy,ww,hh);}
+function macArrange(){macCascadeN=0;tiled().forEach(function(id){placeCascade(id);});}
+function macLanding(){var W=desktop.clientWidth,H=desktop.clientHeight,g=14,fw=Math.min(330,W*0.26);   /* curated landing: hero left, About-This-Mac top-right */
+  if(WIN.hero)setRect(WIN.hero,g,g,Math.min(560,W-fw-3*g),H-2*g);
+  if(WIN.fetch)setRect(WIN.fetch,W-fw-g,g,fw,Math.min(440,H-2*g));
+  macCascadeN=2;}
+function applyOsChrome(){Object.keys(WIN).forEach(function(id){var w=WIN[id],a=APPS[id];if(!w||!a)return;
+  var nm=w.el.querySelector('.wbar .name');if(nm)nm.textContent=(MAC()&&a.mtitle)?a.mtitle:a.title;});
+  var mb=document.querySelector('.mb-app');if(mb&&!MAC())mb.textContent='captKernel';}
+function applyOs(m){osMode=(m==='macos')?'macos':'linux';try{localStorage.setItem('ckOS',osMode);}catch(e){}
+  document.body.classList.toggle('macos',osMode==='macos');
+  [].forEach.call(document.querySelectorAll('#osswitch button'),function(b){b.classList.toggle('on',b.getAttribute('data-os')===osMode);});
+  [].forEach.call(document.querySelectorAll('.dock .app'),function(a){a.style.transform='';a.style.zIndex='';});
+  applyOsChrome();
+  if(!window.IS_MOBILE){ if(MAC())macArrange(); else relayout(); }
+  updateClock();}
+
+/* menu-bar clock */
+function updateClock(){var el=document.getElementById('mb-clock');if(!el)return;
+  var d=new Date(),dy=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],mo=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var h=d.getHours(),m=d.getMinutes(),ap=h<12?'AM':'PM',hh=h%12||12;
+  el.textContent=dy[d.getDay()]+' '+d.getDate()+' '+mo[d.getMonth()]+'  '+hh+':'+(m<10?'0':'')+m+' '+ap;}
+setInterval(updateClock,15000);
+
+/* focused-window name in the menu bar */
+(function(){var _focus=focus;focus=function(id){_focus(id);var mb=document.querySelector('.mb-app');
+  if(mb&&MAC()){var a=APPS[id];mb.textContent=a&&a.mtitle?a.mtitle.split(' — ')[0]:'captKernel';}};})();
+
+/* Spotlight */
+(function(){var spotEl=document.getElementById('spotlight'),spIn=document.getElementById('sp-input'),spRes=document.getElementById('sp-res');if(!spotEl)return;
+  var LIST=[['hero','⌂','captKernel — Home'],['fetch','','About This Mac'],['term','⌥','Terminal'],['vision','◎','Notes — my bet'],['work','▦','Finder — Systems'],['kernel','✦','The Kernel'],['connect','☎','Contacts — connect']];
+  function render(q){q=(q||'').toLowerCase().trim();
+    var hits=LIST.filter(function(a){return !q||a[2].toLowerCase().indexOf(q)>=0||a[0].indexOf(q)>=0;});
+    var h='';hits.forEach(function(a,i){h+='<div class="sp-item'+(i===0?' sel':'')+'" data-go="'+a[0]+'"><span class="si-ic">'+a[1]+'</span>'+a[2]+'<span class="si-sub">Open</span></div>';});
+    if(q){h+='<div class="sp-item'+(hits.length?'':' sel')+'" data-ask="'+q.replace(/[<>"]/g,'')+'"><span class="si-ic">⌕</span>Ask captKernel: “'+q.replace(/[<>"]/g,'')+'”<span class="si-sub">Terminal</span></div>';}
+    spRes.innerHTML=h;
+    [].forEach.call(spRes.querySelectorAll('.sp-item'),function(it){it.addEventListener('click',function(){activate(it);});});}
+  function activate(it){var go=it.getAttribute('data-go'),ask=it.getAttribute('data-ask');close();
+    if(go){goApp(go);}
+    else if(ask!=null){openApp('term');setTimeout(function(){var inp=WIN.term&&WIN.term.el.querySelector('.terminline input');
+      if(inp){inp.focus();inp.value=ask;inp.dispatchEvent(new KeyboardEvent('keydown',{key:'Enter',bubbles:true}));}},320);}}
+  function open(){spotEl.classList.add('show');spIn.value='';render('');setTimeout(function(){spIn.focus();},30);}
+  function close(){spotEl.classList.remove('show');}
+  window.spotlightOpen=open;
+  spIn.addEventListener('input',function(){render(spIn.value);});
+  spIn.addEventListener('keydown',function(e){
+    if(e.key==='Escape'){close();return;}
+    var items=[].slice.call(spRes.querySelectorAll('.sp-item'));if(!items.length)return;
+    var si=0;items.forEach(function(x,i){if(x.classList.contains('sel'))si=i;});
+    if(e.key==='ArrowDown'){e.preventDefault();if(si<items.length-1){items[si].classList.remove('sel');items[si+1].classList.add('sel');}}
+    else if(e.key==='ArrowUp'){e.preventDefault();if(si>0){items[si].classList.remove('sel');items[si-1].classList.add('sel');}}
+    else if(e.key==='Enter'){e.preventDefault();activate(spRes.querySelector('.sp-item.sel')||items[0]);}});
+  var sb=document.getElementById('mb-spot');if(sb)sb.addEventListener('click',open);
+  spotEl.addEventListener('click',function(e){if(e.target===spotEl)close();});
+  window.addEventListener('keydown',function(e){if((e.metaKey||e.ctrlKey)&&e.code==='Space'&&MAC()){e.preventDefault();spotEl.classList.contains('show')?close():open();}});
+})();
+
+/* Dock magnification (macOS only) */
+(function(){var dock=document.querySelector('.dock');if(!dock)return;
+  function apps(){return [].slice.call(dock.querySelectorAll('.app'));}
+  dock.addEventListener('mousemove',function(e){if(!MAC())return;apps().forEach(function(a){var r=a.getBoundingClientRect(),cx=r.left+r.width/2,d=Math.abs(e.clientX-cx),s=Math.max(0,1-d/175),sc=1+s*0.55;a.style.transform='translateY('+(-s*16).toFixed(1)+'px) scale('+sc.toFixed(3)+')';a.style.zIndex=Math.round(s*10);});});
+  dock.addEventListener('mouseleave',function(){apps().forEach(function(a){a.style.transform='';a.style.zIndex='';});});
+})();
+
 /* boot: window manager on desktop, stacked starlit site on mobile */
 var IS_MOBILE=window.matchMedia('(max-width:820px)').matches;
+try{var _qos=new URLSearchParams(location.search).get('os');if(_qos==='macos'||_qos==='linux')osMode=_qos;}catch(e){}   /* ?os=macos preview override */
+document.body.classList.toggle('macos',osMode==='macos');
+[].forEach.call(document.querySelectorAll('#osswitch button'),function(b){b.classList.toggle('on',b.getAttribute('data-os')===osMode);b.addEventListener('click',function(){applyOs(b.getAttribute('data-os'));});});
+updateClock();
 if(IS_MOBILE){document.body.classList.add('mobile');P.count=Math.min(P.count,1000);P.cursorGlowA=0;initMobile();startEmpty();}
+else if(MAC()){openApp('hero');openApp('fetch');macLanding();}
 else{openApp('home');}
 </script>
 </body>
