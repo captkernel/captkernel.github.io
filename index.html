@@ -618,8 +618,10 @@ function applyRepel(arr,mx,my,R){var ks=R*0.55*(P.strength/4.6);
     if(ed<R&&ed>0.01){var f=1-ed/R,pu=f*f*ks;d.x=d.ox+(ex/ed)*pu;d.y=d.oy+(ey/ed)*pu;}else{d.x=d.ox;d.y=d.oy;}}}
 /* fetch the real star + constellation datasets (cached after first load) */
 function loadSkyData(cb){if(SKYDATA.stars&&SKYDATA.lines){cb(true);return;}
-  var base='https://cdn.jsdelivr.net/gh/ofrohn/d3-celestial@master/data/';
-  Promise.all([fetch(base+'stars.6.json').then(function(r){return r.json();}),fetch(base+'constellations.lines.json').then(function(r){return r.json();})])
+  var cdn='https://cdn.jsdelivr.net/gh/ofrohn/d3-celestial@master/data/';   /* fallback only */
+  function grab(name){return fetch('sky/'+name).then(function(r){if(!r.ok)throw 0;return r.json();})   /* bundled (same-origin) first */
+    .catch(function(){return fetch(cdn+name).then(function(r){return r.json();});});}                  /* CDN if the bundle is missing */
+  Promise.all([grab('stars.6.json'),grab('constellations.lines.json')])
     .then(function(res){SKYDATA.stars=res[0];SKYDATA.lines=res[1];cb(true);}).catch(function(){cb(false);});}
 /* ---- Random mode: a 3D warp starfield (Lenis-driven dive toward the cursor) ---- */
 function newWarpStar(z){return {x3:Math.random()*2-1,y3:Math.random()*2-1,z3:z,br:(Math.random()<0.06?0.85+Math.random()*0.15:0.18+Math.random()*0.5),ph:Math.random()*6.283,tw:0.4+Math.random()*1.4};}
