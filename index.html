@@ -253,7 +253,7 @@
       radial-gradient(130% 120% at 50% -10%, #2b3a63 0%, #1d2740 36%, #121826 68%, #0b0e17 100%) fixed;
   }
   body.macos ::selection{background:#0a84ff;color:#fff;}
-  body.macos #desktop{top:26px;}                 /* clear the menu bar */
+  body.macos #desktop{top:0;}
   body.macos .hint,body.macos .einstr{display:none;}
   body.macos .k-boot{display:none;}              /* drop the Linux dmesg boot lines in The Kernel */
 
@@ -281,23 +281,24 @@
   body.macos .wbar .ctrls .c-x:hover{background:#ff5f57;color:rgba(0,0,0,.55);}
 
   /* dock: translucent pill, rounded-square tiles, magnify (JS), label-on-hover */
-  body.macos .dock{background:rgba(46,46,53,.5);backdrop-filter:blur(30px) saturate(1.6);-webkit-backdrop-filter:blur(30px) saturate(1.6);
-    border:.5px solid rgba(255,255,255,.16);border-radius:22px;padding:.38rem .5rem;gap:.34rem;
-    box-shadow:0 18px 50px rgba(0,0,0,.5),inset 0 0 0 .5px rgba(255,255,255,.08);}
+  body.macos .dock{transform:translate(-50%,-12px);background:rgba(46,46,53,.5);backdrop-filter:blur(30px) saturate(1.6);-webkit-backdrop-filter:blur(30px) saturate(1.6);
+    border:.5px solid rgba(255,255,255,.16);border-radius:22px;padding:.4rem .55rem;gap:.42rem;align-items:flex-end;
+    box-shadow:0 18px 50px rgba(0,0,0,.5),inset 0 0 0 .5px rgba(255,255,255,.08);}   /* always visible (no auto-hide) */
   body.macos .dock.up{border-radius:22px;}
-  body.macos .dock .app{width:52px;height:52px;border-radius:14px;color:#fff;font-size:1.32rem;
+  body.macos .dock .app{width:50px;height:50px;border-radius:14px;color:#fff;font-size:1.3rem;
     background:linear-gradient(160deg,rgba(98,108,130,.55),rgba(52,57,72,.55));border:.5px solid rgba(255,255,255,.16);
-    transition:transform .12s ease,width .12s ease,height .12s ease;}
+    transform-origin:bottom center;transition:transform .16s cubic-bezier(.2,.8,.2,1),border-color .15s;}
   body.macos .dock .app .lab{display:none;}
-  body.macos .dock .app:hover{transform:translateY(-12px);color:#fff;border-color:rgba(255,255,255,.28);}
-  body.macos .dock .app:hover .lab{display:block;position:absolute;top:-30px;left:50%;transform:translateX(-50%);
-    background:rgba(40,40,46,.92);color:#fff;padding:3px 9px;border-radius:7px;font-family:var(--sans);font-size:.62rem;letter-spacing:0;text-transform:none;opacity:1;white-space:nowrap;box-shadow:0 6px 18px rgba(0,0,0,.4);}
+  /* clean magnification ripple — hovered icon grows from the dock, neighbours lift a touch (no JS, no overlap jank) */
+  body.macos .dock .app:hover{transform:translateY(-9px) scale(1.42);border-color:rgba(255,255,255,.32);z-index:2;}
+  body.macos .dock .app:hover+.app,body.macos .dock .app:has(+ .app:hover){transform:translateY(-3px) scale(1.16);}
   body.macos .dock .app.run::before{bottom:-6px;width:4px;height:4px;background:rgba(255,255,255,.85);box-shadow:none;}
   body.macos .dock .sep{background:rgba(255,255,255,.18);}
+  body.macos .wmctl{transform:translateY(0);opacity:1;pointer-events:auto;}   /* always reachable (dock no longer auto-hides) */
 
   /* menu bar (top) — only in macOS mode */
   .menubar{display:none;}
-  body.macos .menubar{display:flex;align-items:center;gap:1.1rem;position:fixed;top:0;left:0;right:0;height:26px;z-index:9100;
+  body.macos .menubar{display:none;align-items:center;gap:1.1rem;position:fixed;top:0;left:0;right:0;height:26px;z-index:9100;
     padding:0 .8rem;background:rgba(30,30,36,.55);backdrop-filter:blur(26px) saturate(1.4);-webkit-backdrop-filter:blur(26px) saturate(1.4);
     border-bottom:.5px solid rgba(255,255,255,.08);font-family:var(--sans);font-size:.76rem;color:var(--text);}
   .menubar .mb-logo{font-size:.95rem;line-height:1;}
@@ -534,7 +535,6 @@ function applyRailMainConnect(other){
   setRect(WIN.connect,x3,g,cw2,ch);  /* right — narrow connect column */
 }
 function relayout(){
-  if(MAC())return;            /* macOS: windows free-float, no auto-tiling */
   var ids=tiled(),n=ids.length;if(!n)return;
   if(n===2 && HOME_SET.every(function(k){return ids.indexOf(k)>=0;})){return applyHome();}
   if(n===3 && ids.indexOf('hero')>=0 && ids.indexOf('fetch')>=0){   /* home + one app → image-7 / image-8 base layouts */
@@ -569,7 +569,7 @@ function openApp(id){
   el.innerHTML='<div class="wbar"><span class="ic">'+a.icon+'</span><span class="name">'+mt+'</span><span class="ctrls"><span class="c-min" title="minimize">—</span><span class="c-max" title="maximize">▢</span><span class="c-x" title="close">✕</span></span></div><div class="wbody">'+a.html+'</div><div class="g g-n"></div><div class="g g-s"></div><div class="g g-e"></div><div class="g g-w"></div><div class="g g-ne"></div><div class="g g-nw"></div><div class="g g-sw"></div><div class="g g-se"></div>';
   desktop.appendChild(el);
   WIN[id]={el:el,min:false,float:false,x:0,y:0,w:a.w,h:a.h};order.push(id);
-  wire(id);if(MAC())placeCascade(id);else relayout();focus(id);markRun();
+  wire(id);relayout();focus(id);markRun();
   el.addEventListener('animationend',function(){el.classList.remove('opening');},{once:true});
 }
 function closeApp(id){var w=WIN[id];if(!w)return;w.el.classList.add('closing');
@@ -654,8 +654,7 @@ function armLayout(name){if(snapArmed===name)return;snapArmed=name;zonesEl.inner
     d.style.left=r.x+'px';d.style.top=r.y+'px';d.style.width=r.w+'px';d.style.height=r.h+'px';zonesEl.appendChild(d);});
   snapbarEl.querySelectorAll('.thumb').forEach(function(t){t.classList.toggle('arm',t.getAttribute('data-k')===name);});}
 function barKeyAt(px){var th=snapbarEl.querySelectorAll('.thumb');for(var i=0;i<th.length;i++){var r=th[i].getBoundingClientRect();if(px>=r.left&&px<=r.right)return th[i].getAttribute('data-k');}return null;}
-function updateSnap(px,py){if(MAC())return;   /* no snap-tiling in macOS mode */
-  var R=desktop.getBoundingClientRect();
+function updateSnap(px,py){var R=desktop.getBoundingClientRect();
   if(py-R.top<58){
     var openCount=order.filter(function(o){return WIN[o]&&!WIN[o].min;}).length, anyVis=false;
     snapbarEl.querySelectorAll('.thumb').forEach(function(t){var ok=LAYOUTS[t.getAttribute('data-k')].length<=openCount;t.style.display=ok?'':'none';if(ok)anyVis=true;});
@@ -778,7 +777,7 @@ function renderWarp(w,h,t){
     var tw=(1-P.twDepth)+P.twDepth*(0.5+0.5*Math.sin(t*p.tw*P.twSpeed+p.ph)),inten=p.br*tw;
     var coreA=Math.min(aCap,(inten*0.55+pf*0.55*P.greenAmt)*P.bright*p.fade),size=Math.min(sizeCap,p.sz*(0.85+pf*1.6)*p.cz);   /* brightness no longer increases with zoom (cz); only size grows */
     var pg=Math.min(1,pf*0.85),rr=(206+(205-206)*pg)|0,gg=(222+(225-222)*pg)|0,bb=(240+(255-240)*pg)|0;
-    var mk=(skyMode&&scrubFade<0.04)?0:maskAt(p.x,p.y);if(mk){var mb=mk/255;coreA=Math.min(1,coreA+mb*0.7);size+=mb*0.9;rr=(rr+(70-rr)*mb)|0;gg=(gg+(209-gg)*mb)|0;bb=(bb+(122-bb)*mb)|0;}   /* wordmark: always in Random; in My Sky only while scrolling (trail active) */
+    var mk=(skyMode&&scrubFade<0.04)?0:maskAt(p.x,p.y);if(mk){var mb=mk/255,_tg=MAC()?[40,130,255]:[70,209,122];coreA=Math.min(1,coreA+mb*0.7);size+=mb*0.9;rr=(rr+(_tg[0]-rr)*mb)|0;gg=(gg+(_tg[1]-gg)*mb)|0;bb=(bb+(_tg[2]-bb)*mb)|0;}   /* wordmark: always in Random; in My Sky only while scrolling (trail active) */
     patCtx.beginPath();patCtx.arc(p.x,p.y,size*P.glow,0,6.2832);patCtx.fillStyle='rgba('+rr+','+gg+','+bb+','+(coreA*0.16).toFixed(3)+')';patCtx.fill();
     patCtx.beginPath();patCtx.arc(p.x,p.y,size,0,6.2832);patCtx.fillStyle='rgba('+rr+','+gg+','+bb+','+coreA.toFixed(3)+')';patCtx.fill();}
   if(patMouse.x>-9000){var cca=P.cursorGlowA*(0.55+0.45*Math.sin(t*1.6)),cg=P.cursorGlow;
@@ -832,9 +831,12 @@ function patFrame(){if(!patCtx)return;if(skyDirty){skyDirty=false;buildPat();}
   applyRepel(patDots,mx,my,R);
   if(patLineVerts.length)applyRepel(patLineVerts,mx,my,R);
   if(patLabelChars.length)applyRepel(patLabelChars,mx,my,R*1.1);   /* render-time repulsion → consistent during the scroll */
-  if(P.trails&&scrubFade>0.04){patCtx.globalCompositeOperation='source-over';patCtx.fillStyle='rgba(10,13,11,0.2)';patCtx.fillRect(0,0,w,h);scrubFade*=0.9;}  /* star trails while scrubbing time */
+  if(P.trails&&scrubFade>0.04){   /* macOS: erase-to-transparent so trails fade to the wallpaper (no black-green build-up); Linux: keep the original dark fade */
+    if(MAC()){patCtx.globalCompositeOperation='destination-out';patCtx.fillStyle='rgba(0,0,0,0.2)';patCtx.fillRect(0,0,w,h);patCtx.globalCompositeOperation='source-over';}
+    else{patCtx.globalCompositeOperation='source-over';patCtx.fillStyle='rgba(10,13,11,0.2)';patCtx.fillRect(0,0,w,h);}
+    scrubFade*=0.9;}
   else patCtx.clearRect(0,0,w,h);
-  if(conLines&&patLines.length){patCtx.strokeStyle='rgba(70,209,122,0.13)';patCtx.lineWidth=1;patCtx.beginPath();
+  if(conLines&&patLines.length){patCtx.strokeStyle=MAC()?'rgba(10,132,255,0.18)':'rgba(70,209,122,0.13)';patCtx.lineWidth=1;patCtx.beginPath();
     for(var li=0;li<patLines.length;li++){var pl=patLines[li];patCtx.moveTo(pl[0].x,pl[0].y);for(var pv=1;pv<pl.length;pv++)patCtx.lineTo(pl[pv].x,pl[pv].y);}patCtx.stroke();
     patCtx.fillStyle='rgba(150,175,165,0.5)';patCtx.font='11px "JetBrains Mono",monospace';patCtx.textAlign='center';
     for(var lc=0;lc<patLabelChars.length;lc++){var C=patLabelChars[lc];patCtx.fillText(C.ch,C.x,C.y);}patCtx.textAlign='start';}
@@ -843,7 +845,7 @@ function patFrame(){if(!patCtx)return;if(skyDirty){skyDirty=false;buildPat();}
     var tw=(1-P.twDepth)+P.twDepth*(0.5+0.5*Math.sin(t*p.tw*P.twSpeed+p.ph)),inten=p.br*tw;
     var coreA=Math.min(1,(inten*0.55+pf*0.55*P.greenAmt)*P.bright),size=p.sz*(0.85+pf*1.6)*0.7;   /* My Sky stars smaller → wider, more distant field (matches 35%-zoom look) */
     var pg=Math.min(1,pf*0.85),rr=(206+(205-206)*pg)|0,gg=(222+(225-222)*pg)|0,bb=(240+(255-240)*pg)|0;
-    var mk=(skyMode&&scrubFade<0.04)?0:maskAt(p.x,p.y);if(mk){var mb=mk/255;coreA=Math.min(1,coreA+mb*0.7);size+=mb*0.9;rr=(rr+(70-rr)*mb)|0;gg=(gg+(209-gg)*mb)|0;bb=(bb+(122-bb)*mb)|0;}   /* wordmark: always in Random; in My Sky only while scrolling (trail active) */
+    var mk=(skyMode&&scrubFade<0.04)?0:maskAt(p.x,p.y);if(mk){var mb=mk/255,_tg=MAC()?[40,130,255]:[70,209,122];coreA=Math.min(1,coreA+mb*0.7);size+=mb*0.9;rr=(rr+(_tg[0]-rr)*mb)|0;gg=(gg+(_tg[1]-gg)*mb)|0;bb=(bb+(_tg[2]-bb)*mb)|0;}   /* wordmark: always in Random; in My Sky only while scrolling (trail active) */
     patCtx.beginPath();patCtx.arc(p.x,p.y,size*P.glow,0,6.2832);patCtx.fillStyle='rgba('+rr+','+gg+','+bb+','+(coreA*0.16).toFixed(3)+')';patCtx.fill();
     patCtx.beginPath();patCtx.arc(p.x,p.y,size,0,6.2832);patCtx.fillStyle='rgba('+rr+','+gg+','+bb+','+coreA.toFixed(3)+')';patCtx.fill();}
   if(patMouse.x>-9000){var band=(typeof dockEl!=='undefined'&&dockEl?dockEl.offsetHeight*0.55:30);
@@ -1000,7 +1002,7 @@ function applyOs(m){osMode=(m==='macos')?'macos':'linux';try{localStorage.setIte
   [].forEach.call(document.querySelectorAll('#osswitch button'),function(b){b.classList.toggle('on',b.getAttribute('data-os')===osMode);});
   [].forEach.call(document.querySelectorAll('.dock .app'),function(a){a.style.transform='';a.style.zIndex='';});
   applyOsChrome();
-  if(!window.IS_MOBILE){ if(MAC())macArrange(); else relayout(); }
+  if(!window.IS_MOBILE)relayout();
   updateClock();}
 
 /* menu-bar clock */
@@ -1043,13 +1045,6 @@ setInterval(updateClock,15000);
   window.addEventListener('keydown',function(e){if((e.metaKey||e.ctrlKey)&&e.code==='Space'&&MAC()){e.preventDefault();spotEl.classList.contains('show')?close():open();}});
 })();
 
-/* Dock magnification (macOS only) */
-(function(){var dock=document.querySelector('.dock');if(!dock)return;
-  function apps(){return [].slice.call(dock.querySelectorAll('.app'));}
-  dock.addEventListener('mousemove',function(e){if(!MAC())return;apps().forEach(function(a){var r=a.getBoundingClientRect(),cx=r.left+r.width/2,d=Math.abs(e.clientX-cx),s=Math.max(0,1-d/175),sc=1+s*0.55;a.style.transform='translateY('+(-s*16).toFixed(1)+'px) scale('+sc.toFixed(3)+')';a.style.zIndex=Math.round(s*10);});});
-  dock.addEventListener('mouseleave',function(){apps().forEach(function(a){a.style.transform='';a.style.zIndex='';});});
-})();
-
 /* boot: window manager on desktop, stacked starlit site on mobile */
 var IS_MOBILE=window.matchMedia('(max-width:820px)').matches;
 try{var _qos=new URLSearchParams(location.search).get('os');if(_qos==='macos'||_qos==='linux')osMode=_qos;}catch(e){}   /* ?os=macos preview override */
@@ -1057,7 +1052,6 @@ document.body.classList.toggle('macos',osMode==='macos');
 [].forEach.call(document.querySelectorAll('#osswitch button'),function(b){b.classList.toggle('on',b.getAttribute('data-os')===osMode);b.addEventListener('click',function(){applyOs(b.getAttribute('data-os'));});});
 updateClock();
 if(IS_MOBILE){document.body.classList.add('mobile');P.count=Math.min(P.count,1000);P.cursorGlowA=0;initMobile();startEmpty();}
-else if(MAC()){openApp('hero');openApp('fetch');macLanding();}
 else{openApp('home');}
 </script>
 </body>
