@@ -113,6 +113,43 @@
   .w-work .ty{color:var(--muted);font-size:.72rem;}
   .w-work .src{font-size:.62rem;text-transform:uppercase;} .w-work .src.gh{color:var(--accent);} .w-work .src.local{color:var(--blue);} .w-work .src.work{color:var(--yellow);}
   .w-work .st{font-size:.62rem;text-transform:uppercase;color:var(--faint);text-align:right;} .w-work .st.live{color:var(--accent);}
+  /* ---- featured "shipped" band ---- */
+  .w-work .work-feat{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;padding:.7rem 1rem;border-bottom:1px solid var(--border);}
+  .w-work .feat-cap{grid-column:1/-1;display:flex;align-items:center;gap:.45rem;font-size:.6rem;text-transform:uppercase;letter-spacing:.7px;color:var(--faint);}
+  .w-work .feat-cap b{color:var(--accent);font-weight:700;}
+  .w-work .feat-card{border:1px solid var(--border);border-radius:8px;padding:.6rem .65rem;background:linear-gradient(180deg,rgba(70,209,122,.05),rgba(70,209,122,0));cursor:pointer;transition:transform .14s ease,border-color .14s ease,box-shadow .14s ease;display:flex;flex-direction:column;gap:.4rem;}
+  .w-work .feat-card:hover{transform:translateY(-2px);border-color:var(--accent);box-shadow:0 8px 24px -14px rgba(70,209,122,.55);}
+  .w-work .feat-top{display:flex;align-items:center;gap:.45rem;}
+  .w-work .feat-ico{font-size:1rem;line-height:1;}
+  .w-work .feat-nm{font-weight:700;color:var(--text);font-size:.92rem;letter-spacing:.2px;}
+  .w-work .feat-badge{margin-left:auto;font-size:.54rem;text-transform:uppercase;letter-spacing:.4px;color:var(--accent);border:1px solid rgba(70,209,122,.4);border-radius:99px;padding:.08rem .42rem;white-space:nowrap;}
+  .w-work .feat-tag{font-size:.74rem;color:var(--muted);line-height:1.32;}
+  .w-work .feat-chips{display:flex;flex-wrap:wrap;gap:.25rem;}
+  .w-work .feat-chips span{font-size:.56rem;font-family:var(--mono);color:var(--faint);border:1px solid var(--border);border-radius:4px;padding:.06rem .32rem;}
+  .w-work .feat-cta{display:flex;gap:.35rem;margin-top:.1rem;}
+  .w-work .feat-cta a{flex:1;text-align:center;font-size:.63rem;font-weight:600;padding:.32rem .3rem;border-radius:5px;text-decoration:none;border:1px solid var(--border);transition:.12s;white-space:nowrap;}
+  .w-work .feat-cta a.primary{background:var(--accent);color:#04130b;border-color:var(--accent);}
+  .w-work .feat-cta a.primary:hover{filter:brightness(1.08);}
+  .w-work .feat-cta a.ghost{color:var(--accent);} .w-work .feat-cta a.ghost:hover{background:rgba(70,209,122,.1);}
+  /* ---- in-window detail view ---- */
+  .w-work .feat-back{display:inline-flex;align-items:center;gap:.3rem;margin:.6rem 1rem .1rem;font-size:.66rem;color:var(--accent);cursor:pointer;background:none;border:none;font-family:inherit;}
+  .w-work .feat-back:hover{text-decoration:underline;}
+  .w-work .det-head{padding:.3rem 1rem .4rem;}
+  .w-work .det-head h3{margin:0;font-size:1.12rem;color:var(--text);display:flex;align-items:center;gap:.45rem;}
+  .w-work .det-head h3 .feat-badge{font-size:.56rem;}
+  .w-work .det-tag{font-size:.78rem;color:var(--muted);margin-top:.25rem;}
+  .w-work .det-pitch{padding:0 1rem .55rem;font-size:.8rem;color:var(--text);line-height:1.5;opacity:.92;}
+  .w-work .det-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;padding:0 1rem .4rem;}
+  .w-work .det-col h4{margin:0 0 .35rem;font-size:.62rem;text-transform:uppercase;letter-spacing:.4px;color:var(--accent);}
+  .w-work .det-col ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:.3rem;}
+  .w-work .det-col li{font-size:.72rem;color:var(--muted);line-height:1.35;padding-left:.85rem;position:relative;}
+  .w-work .det-col li:before{content:'›';position:absolute;left:0;color:var(--accent);}
+  .w-work .det-stack{margin:.4rem 1rem;padding:.45rem .6rem;border:1px solid var(--border);border-radius:6px;font-family:var(--mono);font-size:.62rem;color:var(--faint);background:rgba(255,255,255,.02);}
+  .w-work .det-stack b{color:var(--muted);}
+  .w-work .det-cta{display:flex;gap:.4rem;padding:.25rem 1rem .7rem;}
+  .w-work .det-cta a{font-size:.68rem;font-weight:600;padding:.4rem .85rem;border-radius:6px;text-decoration:none;border:1px solid var(--border);transition:.12s;}
+  .w-work .det-cta a.primary{background:var(--accent);color:#04130b;border-color:var(--accent);} .w-work .det-cta a.primary:hover{filter:brightness(1.08);}
+  .w-work .det-cta a.ghost{color:var(--accent);} .w-work .det-cta a.ghost:hover{background:rgba(70,209,122,.1);}
 
   .w-kernel .wbody{padding:0;font-family:var(--mono);}
   .k-boot{padding:.7rem 1.1rem;color:var(--faint);font-size:.72rem;line-height:1.6;border-bottom:1px solid var(--border);} .k-boot .ok{color:var(--accent);}
@@ -223,6 +260,8 @@
     #mobile .w-term .wbody{max-height:62vh;overflow:auto;}
     #mobile .w-work .fhead,#mobile .w-work .frow{grid-template-columns:22px 1fr 58px;}
     #mobile .w-work .ty,#mobile .w-work .src{display:none;}
+    #mobile .w-work .work-feat{grid-template-columns:1fr;}
+    #mobile .w-work .det-grid{grid-template-columns:1fr;}
     #mobile .k-row{flex-wrap:wrap;} #mobile .k-row .ti{flex:1 1 100%;}
     .m-nav{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:6;justify-content:space-around;gap:.2rem;
       padding:.4rem .4rem calc(.4rem + env(safe-area-inset-bottom));background:rgba(12,17,14,.93);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-top:1px solid var(--border);}
@@ -565,27 +604,72 @@ var FETCH='<pre class="logo"> ██████╗ ██╗  ██╗\n██
 '<div class="info"><div><span class="k">host</span><span class="v">Karan Parmar</span></div><div><span class="k">role</span><span class="v">solo AI builder</span></div><div><span class="k">os</span><span class="v">captKernel OS</span></div><div><span class="k">kernel</span><span class="v">6.ai-frontier</span></div><div><span class="k">shell</span><span class="v">zsh + claude</span></div><div><span class="k">repos</span><span class="v">7 public</span></div><div><span class="k">status</span><span class="v">● in the open</span></div></div>'+
 '<div class="palette"><i style="background:var(--red)"></i><i style="background:var(--yellow)"></i><i style="background:var(--accent)"></i><i style="background:var(--blue)"></i><i style="background:var(--muted)"></i><i style="background:var(--text)"></i></div>';
 
+/* ---- featured flagships (shipped, finished pieces) ---- */
+var FEATURED=[
+ {k:'knob',ico:'🎚️',nm:'Knob',badge:'v1.0.0 · download',tag:'Windows audio + display control, one global hotkey.',
+  chips:['Electron','Win 11 acrylic','tray + hotkey'],
+  cta:[{l:'Download ↓',h:'https://github.com/captkernel/Knob/releases/latest',c:'primary'},{l:'GitHub',h:'https://github.com/captkernel/Knob',c:'ghost'}],
+  pitch:'A polished tray app summoned by a global hotkey (Ctrl+Alt+A). One glance, one click: switch your default speaker or mic, ride the volume slider, apply saved device profiles, and rearrange your monitors — then dismiss with the same key.',
+  groups:[
+   {h:'🔊 Audio',i:['Output / input switching, friendly names + icons','Saveable device profiles, favourites, renames','Live mic-level test, Bluetooth-aware, hot-plug']},
+   {h:'🖥️ Display',i:['To-scale monitor layout you drag to arrange','Edge-snap, set primary, toggle a display on/off','Save & apply multi-monitor profiles in one click']},
+   {h:'✨ Polish',i:['Native Win 11 acrylic glass + Framer Motion','Auto-start in tray, background auto-update','Resilient rebindable hotkey with live status']}],
+  stack:'<b>Stack:</b> Electron · React · Tailwind · Framer Motion · NirSoft svcl / MultiMonitorTool helpers'},
+ {k:'skills',ico:'🧠',nm:'Skills Curator',badge:'● live',tag:'The intelligence layer for Claude skills.',
+  chips:['security scan','--customize','multi-platform'],
+  cta:[{l:'GitHub',h:'https://github.com/captkernel/Skills_Curator',c:'primary'},{l:'What it does',h:'#',c:'ghost',d:'skills'}],
+  pitch:'A trust-rated catalog plus real judgment: it tells you which skills actually fit your project — your stack, deps, and CLAUDE.md — recommends with pros and cons, security-scans before you install, and persists every decision.',
+  groups:[
+   {h:'Judges fit',i:['Recommends by fit, not popularity','Flags duplicate and conflicting skills','Per-project verdict + decision registry']},
+   {h:'--customize',i:['Forks any skill, rebuilds it for your project','Keeps only the parts that fit, in your voice','Infuse, not invoke']},
+   {h:'Everywhere',i:['Editions for Claude Code, Python, claude.ai','Migrates skills across 55+ agent platforms','Security scan on every candidate']}],
+  stack:'<b>Editions:</b> Claude Code · Lite (no-Python) · Python · claude.ai'},
+ {k:'claunchpad',ico:'🚀',nm:'Claunchpad',badge:'● live',tag:'One skill, and Claude works like a pro — zero setup.',
+  chips:['persistent memory','agent teams','one-tap skills'],
+  cta:[{l:'See showcase',h:'https://htmlpreview.github.io/?https://github.com/captkernel/Claunchpad/blob/master/showcase.html',c:'primary'},{l:'GitHub',h:'https://github.com/captkernel/Claunchpad',c:'ghost'}],
+  pitch:'Drop in one skill and Claude starts working like a seasoned pro: persistent memory, agent teams that size themselves, the good ecosystem skills, and the habits that take weeks to work out. Answer one question and it runs.',
+  groups:[
+   {h:'🧠 Memory',i:['Remembers decisions, fixed bugs, techniques','A hook reloads it at every session start','Survives /clear and context compaction']},
+   {h:'👥 Orchestration',i:['Teams that size themselves: solo → pair → fan-out','Escalates only when the task earns it','Knowledge passed between agents, not lost']},
+   {h:'🧩 Setup',i:['One-tap install of the best ecosystem skills','Tuned to you: tiny + safe, or the full machine','Councils pressure-test big, irreversible calls']}],
+  stack:'<b>Runs on:</b> Claude Code · claude.ai · API — pillars: Memory · Delegation · Orchestration'}
+];
+function ctaHtml(b){return '<a class="'+b.c+'"'+(b.d?' data-detail="'+b.d+'" href="#"':' href="'+b.h+'" target="_blank" rel="noopener"')+'>'+b.l+'</a>';}
+function featBandHtml(){var h='<div class="work-feat"><div class="feat-cap"><b>★ shipped</b> — finished, in the wild</div>';
+  FEATURED.forEach(function(f){h+='<div class="feat-card" data-key="'+f.k+'"><div class="feat-top"><span class="feat-ico">'+f.ico+'</span><span class="feat-nm">'+f.nm+'</span><span class="feat-badge">'+f.badge+'</span></div><div class="feat-tag">'+f.tag+'</div><div class="feat-chips">';
+    f.chips.forEach(function(c){h+='<span>'+c+'</span>';});
+    h+='</div><div class="feat-cta">';f.cta.forEach(function(b){h+=ctaHtml(b);});h+='</div></div>';});
+  return h+'</div>';}
+function detailHtml(f){var h='<button class="feat-back">← all systems</button><div class="det-head"><h3>'+f.ico+' '+f.nm+' <span class="feat-badge">'+f.badge+'</span></h3><div class="det-tag">'+f.tag+'</div></div><div class="det-pitch">'+f.pitch+'</div><div class="det-grid">';
+  f.groups.forEach(function(g){h+='<div class="det-col"><h4>'+g.h+'</h4><ul>';g.i.forEach(function(it){h+='<li>'+it+'</li>';});h+='</ul></div>';});
+  h+='</div><div class="det-stack">'+f.stack+'</div><div class="det-cta">';f.cta.forEach(function(b){h+=ctaHtml(b);});return h+'</div>';}
+
+/* ---- curated systems list (flagships above; ⚠ rows auto-hidden from the public site) ---- */
 var WORKROWS=[
-['01','skills-curator','skill evaluator','gh','github','live'],['02','sounddeck / knob','win audio app','gh','github','live'],
-['03','claude-dev-toolkit','dev toolkit','gh','github','live'],['04','claude-everyday-tools','tool pack','gh','github','live'],
-['05','claude-writing-tools','tool pack','gh','github','live'],['06','claude-thinking-tools','tool pack','gh','github','live'],
-['07','awesome-agent-skills','collection','gh','github','fork'],['08','skills (intel layer)','skill engine','local','local','active'],
-['09','swadesh ⚠','autonomous AI co','local','local','active'],['10','chat2business','idea → council','local','local','working'],
-['11','ai-spend-defense ⚠','AI ROI calc','local','local','spec'],['12','tokenloop ⚠','token analyzer','local','local','spec'],
-['13','shum / fAIsh ⚠','AI stylist','local','local','proto'],['14','alexa / hal','Claude on Echo','local','local','live'],
-['15','image-blaster','photo → 3D splat','local','local','active'],['16','instacomp','IG extractor','local','local','build'],
-['17','music','mic-coach app','local','local','active'],['18','food','RN party app','local','local','active'],
-['19','memory manager','PS photo toolkit','local','local','active'],['20','dashboard (PCC)','projects hub','local','local','active'],
-['21','ancyr','brand site','local','local','live'],['22','business (ANCYR) ⚠','multi-agent ops','local','local','active'],
-['23','kidsplanet ⚠','site + studio','work','client','live'],['24','pos (duffdun) ⚠','offline POS','work','client','live'],
-['25','school ⚠','foundation intake','work','client','build'],['26','tcw','IG auto-poster','local','local','active'],
-['27','alpha indoor games','website','local','local','build'],['28','toolkits','tooling','local','local','active'],
-['29','captkernel.com','this site','gh','github','live'],['30','accenture','AI Decision Sci Mgr','work','linkedin','current']];
-function workHtml(){var h='<div class="fhead"><span>no.</span><span>system</span><span>type</span><span>src</span><span>status</span></div>',n=0;
+['','claude toolkits','4 public skill packs','gh','github','live'],['','alexa / hal','Claude on Echo','local','local','live'],
+['','food','RN party app','local','local','active'],['','music','mic-coach app','local','local','active'],
+['','image-blaster','photo → 3D splat','local','local','active'],['','chat2business','idea → council','local','local','working'],
+['','memory manager','PS photo toolkit','local','local','active'],['','dashboard (PCC)','projects hub','local','local','active'],
+['','ancyr','brand site','local','local','live'],['','captkernel.com','this site','gh','github','live'],
+['','accenture','AI Decision Sci Mgr','work','linkedin','current'],
+['','swadesh ⚠','autonomous AI co','local','local','active'],['','ai-spend-defense ⚠','AI ROI calc','local','local','spec'],
+['','tokenloop ⚠','token analyzer','local','local','spec'],['','shum / fAIsh ⚠','AI stylist','local','local','proto'],
+['','business (ANCYR) ⚠','multi-agent ops','local','local','active'],['','kidsplanet ⚠','site + studio','work','client','live'],
+['','pos (duffdun) ⚠','offline POS','work','client','live'],['','school ⚠','foundation intake','work','client','build']];
+function workHtml(){var h=featBandHtml();
+  h+='<div class="work-list"><div class="fhead"><span>no.</span><span>system</span><span>type</span><span>src</span><span>status</span></div>';var n=0;
   WORKROWS.forEach(function(r){if(/⚠/.test(r[1]))return;   /* omit private/client (⚠) items from the public site */
     n++;var no=(n<10?'0':'')+n;
     h+='<div class="frow"><span class="no">'+no+'</span><span class="nm">'+r[1]+'</span><span class="ty">'+r[2]+'</span><span class="src '+r[3]+'">'+r[4]+'</span><span class="st'+(r[5]==='live'?' live':'')+'">'+(r[5]==='live'?'● ':'')+r[5]+'</span></div>';});
-  return h;}
+  return h+'</div><div class="work-detail" style="display:none"></div>';}
+function mountWork(el){var feat=el.querySelector('.work-feat'),list=el.querySelector('.work-list'),det=el.querySelector('.work-detail');if(!det)return;
+  function showList(){det.style.display='none';det.innerHTML='';if(feat)feat.style.display='';if(list)list.style.display='';}
+  function showDetail(k){var f=null;FEATURED.forEach(function(x){if(x.k===k)f=x;});if(!f)return;
+    det.innerHTML=detailHtml(f);if(feat)feat.style.display='none';if(list)list.style.display='none';det.style.display='';
+    var b=det.querySelector('.feat-back');if(b)b.addEventListener('click',showList);
+    det.querySelectorAll('[data-detail]').forEach(function(d){d.addEventListener('click',function(e){e.preventDefault();showDetail(d.getAttribute('data-detail'));});});}
+  el.querySelectorAll('.feat-card').forEach(function(c){c.addEventListener('click',function(e){if(e.target.closest('a'))return;showDetail(c.getAttribute('data-key'));});});
+  el.querySelectorAll('.work-feat [data-detail]').forEach(function(d){d.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();showDetail(d.getAttribute('data-detail'));});});}
 
 var KERNEL='<div class="k-boot">[ 0.000000 ] captKernel 6.ai-frontier booting… <span class="ok">ok</span><br>[ 0.001337 ] mounting /studio … <span class="ok">ok</span> · 5 dispatches · weekly</div>'+
 '<div class="k-pin"><span class="pin">★ pinned</span><div class="pt"><b>Ship an AI tool in a weekend</b><span>the free playbook — my exact process.</span></div><div class="get">Get it free →</div></div>'+
@@ -747,6 +831,7 @@ function wire(id){
   if(id==='term')mountTerm(el);
   if(id==='kernel')mountKernel(el);
   if(id==='vision')mountVision(el);
+  if(id==='work')mountWork(el);
   el.querySelectorAll('[data-open]').forEach(function(b){b.addEventListener('click',function(){openApp(b.getAttribute('data-open'));});});
 }
 function maximize(id){var w=WIN[id];if(!w)return;   /* zoom toggle (macOS green = zoom; Windows/Linux = maximize) */
@@ -1141,6 +1226,7 @@ function initMobile(){
     if(id==='term')mountTerm(sec);
     if(id==='kernel')mountKernel(sec);
     if(id==='vision')mountVision(sec);
+    if(id==='work')mountWork(sec);
     sec.querySelectorAll('[data-open]').forEach(function(b){b.addEventListener('click',function(e){e.preventDefault();var t=document.getElementById('m-'+b.getAttribute('data-open'));if(t)t.scrollIntoView({behavior:'smooth',block:'start'});});});
   });
   var nav=document.getElementById('m-nav');
