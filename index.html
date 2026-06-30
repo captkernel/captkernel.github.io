@@ -958,7 +958,8 @@ function patFrame(){if(!patCtx)return;if(skyDirty){skyDirty=false;buildPat();}
   patEase.x+=(patMouse.x-patEase.x)*P.ease;patEase.y+=(patMouse.y-patEase.y)*P.ease;
   if(focusCon||focusT>0.0001){renderFocus(w,h);return;}   /* constellation focus takes over the canvas */
   if(!skyMode){renderWarp(w,h,t);return;}        /* Random = scroll-driven warp dive */
-  if(skyTimeVel!==0){skyTimeOffset+=skyTimeVel;
+  var moved=skyTimeVel!==0;
+  if(moved){skyTimeOffset+=skyTimeVel;
     var sspd=Math.min(1,Math.abs(skyTimeVel)/380000),sdec=0.74+(P.inertia-0.74)*sspd;   /* fast scroll → long glide; slow → quick decay */
     skyTimeVel*=sdec;if(Math.abs(skyTimeVel)<7000)skyTimeVel=0;                            /* snap at the end (kills the slow crawl) */
     skyDirty=true;scrubFade=1;updateSkyTime();}
@@ -987,7 +988,7 @@ function patFrame(){if(!patCtx)return;if(skyDirty){skyDirty=false;buildPat();}
   if(scrub){
     tctx.setTransform(1,0,0,1,0,0);
     tctx.globalCompositeOperation='destination-out';tctx.fillStyle='rgba(0,0,0,0.22)';tctx.fillRect(0,0,c.width,c.height);
-    tctx.globalCompositeOperation='lighter';tctx.drawImage(_frCv,0,0);tctx.globalCompositeOperation='source-over';
+    tctx.globalCompositeOperation='lighter';if(moved)tctx.drawImage(_frCv,0,0);tctx.globalCompositeOperation='source-over';  /* feed the trail only while moving → no brightness pile-up once the stars stop */
     patCtx.clearRect(0,0,w,h);patCtx.save();patCtx.setTransform(1,0,0,1,0,0);
     patCtx.drawImage(_frCv,0,0);                                                 /* crisp heads (rest brightness) */
     patCtx.globalCompositeOperation='destination-over';patCtx.drawImage(_trCv,0,0);  /* trail behind */
@@ -1019,7 +1020,10 @@ function det3(m){return m[0][0]*(m[1][1]*m[2][2]-m[1][2]*m[2][1])-m[0][1]*(m[1][
 function solve3(M,v){var D=det3(M);function rep(cI){return M.map(function(r,i){return r.map(function(x,j){return j===cI?v[i]:x;});});}return [det3(rep(0))/D,det3(rep(1))/D,det3(rep(2))/D];}
 function openFocus(id,fx,fy){
   try{if(!focusBg)focusBg=document.createElement('canvas');focusBg.width=patCanvas.width;focusBg.height=patCanvas.height;focusBg.getContext('2d').drawImage(patCanvas,0,0);}catch(e){focusBg=null;}  /* snapshot the live sky to fade out behind the focus */
-  loadConData(function(){if(CONMETA[id])conImg(CONMETA[id].img);focusCon=id;focusFrom={x:fx,y:fy};focusDir=1;skyTimeVel=0;showConPanel(id);});}
+  var cxp=0,cyp=0,np=0;   /* animate FROM the constellation's own position (its centroid), not the click point */
+  for(var i=0;i<patConHit.length;i++){if(patConHit[i].id===id){patConHit[i].segs.forEach(function(s){s.forEach(function(p){cxp+=p[0];cyp+=p[1];np++;});});break;}}
+  var fromX=np?cxp/np:fx,fromY=np?cyp/np:fy;
+  loadConData(function(){if(CONMETA[id])conImg(CONMETA[id].img);focusCon=id;focusFrom={x:fromX,y:fromY};focusDir=1;focusT=0;skyTimeVel=0;showConPanel(id);});}
 function closeFocus(){if(!focusCon)return;focusDir=-1;hideConPanel();}
 function showConPanel(id){var f=CONINFO&&CONINFO[id],el=document.getElementById('conpanel'),b=document.getElementById('cp-body');if(!el||!f)return;
   var h='<div class="cp-nm">'+f.nm+'</div><div class="cp-gen">'+(f.gen||'')+(f.mean?' · '+f.mean:'')+'</div>';
@@ -1032,7 +1036,7 @@ function showConPanel(id){var f=CONINFO&&CONINFO[id],el=document.getElementById(
   b.innerHTML=h;el.classList.add('show');}
 function hideConPanel(){var el=document.getElementById('conpanel');el&&el.classList.remove('show');}
 function renderFocus(w,h){var dpr=Math.min(2,window.devicePixelRatio||1);
-  focusT+=focusDir*0.07;if(focusT>1)focusT=1;if(focusT<0)focusT=0;
+  focusT+=focusDir*0.05;if(focusT>1)focusT=1;if(focusT<0)focusT=0;   /* ~0.4s glide in/out */
   patCtx.setTransform(dpr,0,0,dpr,0,0);patCtx.globalCompositeOperation='source-over';patCtx.globalAlpha=1;patCtx.filter='none';patCtx.clearRect(0,0,w,h);
   if(focusDir<0&&focusT<=0){focusCon=null;return;}
   var e=focusDir>0?(1-Math.pow(1-focusT,3)):(focusT*focusT);
@@ -1054,9 +1058,9 @@ function renderFocus(w,h){var dpr=Math.min(2,window.devicePixelRatio||1);
   if(im){var A=meta.a,Pp=[px(A[0][2],A[0][3]),px(A[1][2],A[1][3]),px(A[2][2],A[2][3])];
     var M=[[A[0][0],A[0][1],1],[A[1][0],A[1][1],1],[A[2][0],A[2][1],1]];
     var ace=solve3(M,[Pp[0][0],Pp[1][0],Pp[2][0]]),bdf=solve3(M,[Pp[0][1],Pp[1][1],Pp[2][1]]);
-    patCtx.save();patCtx.globalCompositeOperation='screen';patCtx.globalAlpha=0.6*e;patCtx.filter='grayscale(1) brightness(1.7) contrast(1.05)';
-    patCtx.setTransform(dpr*ace[0],dpr*bdf[0],dpr*ace[1],dpr*bdf[1],dpr*ace[2],dpr*bdf[2]);patCtx.drawImage(im,0,0);patCtx.restore();
-    patCtx.setTransform(dpr,0,0,dpr,0,0);patCtx.filter='none';patCtx.globalCompositeOperation='source-over';}
+    patCtx.save();patCtx.globalCompositeOperation='screen';patCtx.globalAlpha=0.72*e;   /* figures are pre-keyed white-on-transparent → no box, no filter needed */
+    patCtx.setTransform(dpr*ace[0],dpr*bdf[0],dpr*ace[1],dpr*bdf[1],dpr*ace[2],dpr*bdf[2]);patCtx.imageSmoothingQuality='high';patCtx.drawImage(im,0,0);patCtx.restore();
+    patCtx.setTransform(dpr,0,0,dpr,0,0);patCtx.globalCompositeOperation='source-over';}
   patCtx.lineCap='round';patCtx.lineJoin='round';patCtx.strokeStyle='rgba(227,196,137,'+(0.85*e).toFixed(3)+')';patCtx.lineWidth=1.6;patCtx.shadowColor='rgba(227,196,137,.5)';patCtx.shadowBlur=6;
   feat.geometry.coordinates.forEach(function(sg){patCtx.beginPath();sg.forEach(function(p,i){var q=px(p[0],p[1]);i?patCtx.lineTo(q[0],q[1]):patCtx.moveTo(q[0],q[1]);});patCtx.stroke();});
   patCtx.shadowBlur=0;patCtx.globalCompositeOperation='lighter';var seen={};
