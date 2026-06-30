@@ -255,6 +255,10 @@
   body.macos ::selection{background:#0a84ff;color:#fff;}
   body.macos #desktop{top:0;}
   body.macos .hint,body.macos .einstr{display:none;}
+  /* macOS edge-snap preview (blue, not the Linux green thumbnail bar) */
+  body.macos #zones .zone{background:rgba(10,132,255,.16);border:1.5px solid rgba(10,132,255,.5);border-radius:12px;
+    transition:left .12s cubic-bezier(.2,.8,.2,1),top .12s cubic-bezier(.2,.8,.2,1),width .12s cubic-bezier(.2,.8,.2,1),height .12s cubic-bezier(.2,.8,.2,1),background .1s;}
+  body.macos #zones .zone.hot{background:rgba(10,132,255,.26);border-color:#0a84ff;}
   body.macos .k-boot{display:none;}              /* drop the Linux dmesg boot lines in The Kernel */
 
   /* windows: translucent vibrancy, soft shadow, big radius */
@@ -285,13 +289,13 @@
     border:.5px solid rgba(255,255,255,.16);border-radius:22px;padding:.4rem .55rem;gap:.42rem;align-items:flex-end;
     box-shadow:0 18px 50px rgba(0,0,0,.5),inset 0 0 0 .5px rgba(255,255,255,.08);}   /* always visible (no auto-hide) */
   body.macos .dock.up{border-radius:22px;}
-  body.macos .dock .app{width:50px;height:50px;border-radius:14px;color:#fff;font-size:1.3rem;
+  body.macos .dock{align-items:flex-end;}
+  body.macos .dock .app{width:50px;height:50px;flex:none;border-radius:14px;color:#fff;font-size:1.3rem;
     background:linear-gradient(160deg,rgba(98,108,130,.55),rgba(52,57,72,.55));border:.5px solid rgba(255,255,255,.16);
-    transform-origin:bottom center;transition:transform .16s cubic-bezier(.2,.8,.2,1),border-color .15s;}
+    transition:transform .06s linear,border-color .15s;}
   body.macos .dock .app .lab{display:none;}
-  /* clean magnification ripple — hovered icon grows from the dock, neighbours lift a touch (no JS, no overlap jank) */
-  body.macos .dock .app:hover{transform:translateY(-9px) scale(1.42);border-color:rgba(255,255,255,.32);z-index:2;}
-  body.macos .dock .app:hover+.app,body.macos .dock .app:has(+ .app:hover){transform:translateY(-3px) scale(1.16);}
+  body.macos .dock .app:hover{border-color:rgba(255,255,255,.34);}
+  /* magnification is JS-driven (resizes icons so the flex row reflows → grows up, no overlap) */
   body.macos .dock .app.run::before{bottom:-6px;width:4px;height:4px;background:rgba(255,255,255,.85);box-shadow:none;}
   body.macos .dock .sep{background:rgba(255,255,255,.18);}
   body.macos .wmctl{transform:translateY(0);opacity:1;pointer-events:auto;}   /* always reachable (dock no longer auto-hides) */
@@ -597,7 +601,7 @@ function wire(id){
     function up(ev){bar.releasePointerCapture(e.pointerId);bar.removeEventListener('pointermove',mv);bar.removeEventListener('pointerup',up);
       el.classList.remove('drag');
       if(!moved){clearSnap();return;}
-      if(snapArmed&&snapTarget){snapInto(snapArmed,id,snapTarget.i);clearSnap();return;}  /* snap-layout: arrange all windows */
+      if(snapArmed&&snapTarget){if(MAC()){var sw=WIN[id];sw.float=true;applyRect(sw,{x:snapTarget.x,y:snapTarget.y,w:snapTarget.w,h:snapTarget.h});focus(id);}else snapInto(snapArmed,id,snapTarget.i);clearSnap();return;}  /* mac: snap dragged window to the edge zone; linux: arrange all windows */
       clearSnap();
       var tgt=tiledUnder(ev.clientX,ev.clientY,id);        /* dropped onto another tile -> swap places */
       if(tgt){var i=order.indexOf(id),j=order.indexOf(tgt);order[i]=tgt;order[j]=id;}
@@ -654,7 +658,21 @@ function armLayout(name){if(snapArmed===name)return;snapArmed=name;zonesEl.inner
     d.style.left=r.x+'px';d.style.top=r.y+'px';d.style.width=r.w+'px';d.style.height=r.h+'px';zonesEl.appendChild(d);});
   snapbarEl.querySelectorAll('.thumb').forEach(function(t){t.classList.toggle('arm',t.getAttribute('data-k')===name);});}
 function barKeyAt(px){var th=snapbarEl.querySelectorAll('.thumb');for(var i=0;i<th.length;i++){var r=th[i].getBoundingClientRect();if(px>=r.left&&px<=r.right)return th[i].getAttribute('data-k');}return null;}
+/* macOS edge-snap: drag toward a screen edge/corner → half / quarter / fill (with a blue preview) */
+function macSnapZone(lx,ly){var W=desktop.clientWidth,H=desktop.clientHeight,e=Math.max(52,Math.min(W,H)*0.075),g=8;
+  function rc(fx,fy,fw,fh){return{x:fx*W+g,y:fy*H+g,w:fw*W-2*g,h:fh*H-2*g};}
+  var nl=lx<e,nr=lx>W-e,nt=ly<e,nb=ly>H-e;
+  if(nt&&nl)return rc(0,0,.5,.5); if(nt&&nr)return rc(.5,0,.5,.5);
+  if(nb&&nl)return rc(0,.5,.5,.5); if(nb&&nr)return rc(.5,.5,.5,.5);
+  if(nt)return rc(0,0,1,1); if(nl)return rc(0,0,.5,1); if(nr)return rc(.5,0,.5,1);
+  return null;}
+function macUpdateSnap(lx,ly){var t=macSnapZone(lx,ly);
+  if(!t){zonesEl.innerHTML='';snapArmed=null;snapTarget=null;return;}
+  snapArmed='mac';snapTarget={x:t.x,y:t.y,w:t.w,h:t.h};
+  zonesEl.innerHTML='';var d=document.createElement('div');d.className='zone hot';
+  d.style.left=t.x+'px';d.style.top=t.y+'px';d.style.width=t.w+'px';d.style.height=t.h+'px';zonesEl.appendChild(d);}
 function updateSnap(px,py){var R=desktop.getBoundingClientRect();
+  if(MAC()){macUpdateSnap(px-R.left,py-R.top);return;}
   if(py-R.top<58){
     var openCount=order.filter(function(o){return WIN[o]&&!WIN[o].min;}).length, anyVis=false;
     snapbarEl.querySelectorAll('.thumb').forEach(function(t){var ok=LAYOUTS[t.getAttribute('data-k')].length<=openCount;t.style.display=ok?'':'none';if(ok)anyVis=true;});
@@ -840,7 +858,7 @@ function patFrame(){if(!patCtx)return;if(skyDirty){skyDirty=false;buildPat();}
     for(var li=0;li<patLines.length;li++){var pl=patLines[li];patCtx.moveTo(pl[0].x,pl[0].y);for(var pv=1;pv<pl.length;pv++)patCtx.lineTo(pl[pv].x,pl[pv].y);}patCtx.stroke();
     patCtx.fillStyle='rgba(150,175,165,0.5)';patCtx.font='11px "JetBrains Mono",monospace';patCtx.textAlign='center';
     for(var lc=0;lc<patLabelChars.length;lc++){var C=patLabelChars[lc];patCtx.fillText(C.ch,C.x,C.y);}patCtx.textAlign='start';}
-  patCtx.globalCompositeOperation=(P.trails&&scrubFade>0.04)?'source-over':'lighter';   /* while scrubbing: source-over so a moving star keeps its base brightness (no additive build-up); additive glow only at rest or trails off */
+  patCtx.globalCompositeOperation=(P.trails&&scrubFade>0.04)?'lighten':'lighter';   /* while scrubbing: 'lighten' = per-pixel max, so a re-drawn star never exceeds its own brightness (no build-up over the trail residual); additive glow only at rest */
   for(var j=0;j<patDots.length;j++){var p=patDots[j],ex=p.x-mx,ey=p.y-my,ed=Math.sqrt(ex*ex+ey*ey),pf=ed<R?(1-ed/R):0;
     var tw=(1-P.twDepth)+P.twDepth*(0.5+0.5*Math.sin(t*p.tw*P.twSpeed+p.ph)),inten=p.br*tw;
     var coreA=Math.min(1,(inten*0.55+pf*0.55*P.greenAmt)*P.bright),size=p.sz*(0.85+pf*1.6)*0.7;   /* My Sky stars smaller → wider, more distant field (matches 35%-zoom look) */
@@ -1043,6 +1061,29 @@ setInterval(updateClock,15000);
   var sb=document.getElementById('mb-spot');if(sb)sb.addEventListener('click',open);
   spotEl.addEventListener('click',function(e){if(e.target===spotEl)close();});
   window.addEventListener('keydown',function(e){if((e.metaKey||e.ctrlKey)&&e.code==='Space'&&MAC()){e.preventDefault();spotEl.classList.contains('show')?close():open();}});
+})();
+
+/* macOS Dock magnification — analytic fisheye: scale icons by cursor proximity AND spread them by
+   their scaled widths so they never overlap; uses transform only, so the dock's DOM width is constant
+   and it doesn't recenter (rest centers stay valid). */
+(function(){var dock=document.querySelector('.dock');if(!dock)return;
+  var BASE=50,GROW=32,RANGE=135,rest=null,gaps=null,raf=0,mx=0;
+  function apps(){return [].slice.call(dock.querySelectorAll('.app'));}
+  function clear(a){a.style.transform='';a.style.zIndex='';}
+  function capture(){var as=apps();as.forEach(clear);
+    rest=as.map(function(a){var b=a.getBoundingClientRect();return b.left+b.width/2;});
+    gaps=rest.map(function(c,i){return i===0?0:(rest[i]-rest[i-1]-BASE);});}
+  function paint(){raf=0;var as=apps();if(!rest||rest.length!==as.length)capture();
+    var scales=as.map(function(a,i){var d=Math.abs(mx-rest[i]),s=Math.max(0,1-d/RANGE);s=s*s*(3-2*s);return 1+(GROW/BASE)*s;});
+    var total=0;scales.forEach(function(sc,i){total+=gaps[i]+BASE*sc;});
+    var center=(rest[0]+rest[rest.length-1])/2,x=center-total/2;
+    as.forEach(function(a,i){x+=gaps[i];var w=BASE*scales[i],tx=(x+w/2)-rest[i];x+=w;
+      a.style.transformOrigin='center bottom';
+      a.style.transform='translateX('+tx.toFixed(1)+'px) scale('+scales[i].toFixed(3)+')';
+      a.style.zIndex=scales[i]>1.02?'2':'';});}
+  dock.addEventListener('mouseenter',function(e){if(!MAC())return;capture();mx=e.clientX;paint();});
+  dock.addEventListener('mousemove',function(e){if(!MAC())return;mx=e.clientX;if(!raf)raf=requestAnimationFrame(paint);});
+  dock.addEventListener('mouseleave',function(){if(raf){cancelAnimationFrame(raf);raf=0;}apps().forEach(clear);rest=null;});
 })();
 
 /* boot: window manager on desktop, stacked starlit site on mobile */
