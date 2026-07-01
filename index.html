@@ -165,6 +165,13 @@
   .w-work .det-why h4{margin:.2rem 0 .35rem;font-size:.62rem;text-transform:uppercase;letter-spacing:.4px;color:var(--accent);}
   .w-work .det-why p{margin:0 0 .45rem;font-size:.79rem;line-height:1.5;color:var(--muted);}
   .w-work .det-why .det-who{color:var(--text);opacity:.9;} .w-work .det-why .det-who b{color:var(--accent);font-weight:600;}
+  /* ---- agent roster (AI-native company) ---- */
+  .w-work .det-agents{padding:.1rem 1rem .5rem;}
+  .w-work .det-agents h4{margin:.2rem 0 .5rem;font-size:.62rem;text-transform:uppercase;letter-spacing:.4px;color:var(--blue);}
+  .w-work .ag-grid{display:grid;grid-template-columns:1fr 1fr;gap:.34rem .9rem;}
+  .w-work .ag{font-size:.72rem;line-height:1.32;padding-left:.85rem;position:relative;}
+  .w-work .ag:before{content:'▸';position:absolute;left:0;top:0;color:var(--blue);font-size:.68rem;}
+  .w-work .ag b{color:var(--text);font-weight:600;} .w-work .ag span{color:var(--muted);}
 
   .w-kernel .wbody{padding:0;font-family:var(--mono);}
   .k-boot{padding:.7rem 1.1rem;color:var(--faint);font-size:.72rem;line-height:1.6;border-bottom:1px solid var(--border);} .k-boot .ok{color:var(--accent);}
@@ -276,7 +283,7 @@
     #mobile .w-work .fhead,#mobile .w-work .frow{grid-template-columns:22px 1fr 58px;}
     #mobile .w-work .ty,#mobile .w-work .src{display:none;}
     #mobile .w-work .work-feat,#mobile .w-work .work-wip{grid-template-columns:1fr;}
-    #mobile .w-work .det-grid{grid-template-columns:1fr;}
+    #mobile .w-work .det-grid,#mobile .w-work .ag-grid{grid-template-columns:1fr;}
     #mobile .k-row{flex-wrap:wrap;} #mobile .k-row .ti{flex:1 1 100%;}
     .m-nav{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:6;justify-content:space-around;gap:.2rem;
       padding:.4rem .4rem calc(.4rem + env(safe-area-inset-bottom));background:rgba(12,17,14,.93);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-top:1px solid var(--border);}
@@ -678,8 +685,26 @@ var WIP=[
   pitch:'A Himalayan Angora textile house I founded, run as an AI-native company. The craft is my family\'s — combed, spun, and handwoven in Kullu since 1965; the operation is a crew of ~26 agents I built to run brand, product, legal, finance, photography, copy, web, and more. Launching October 2026.',
   why:'My family has worked Himalayan Angora in Kullu for six decades. I wanted to carry that craft forward as something new: a genuinely premium house operated almost entirely by agents, so one founder can run the whole company and the work of hands stays the point.',
   who:'People who value ultra-premium, hand-made natural fibre — and a living proof of what an AI-native brand company looks like.',
+  agents:[
+   ['Brand Guardian','guards the house codes, tone & angora ethics on every asset'],
+   ['Product & Packaging','SKU specs, packaging, certificates, serial numbers'],
+   ['Operations','manufacturing, QC, logistics & raw-fibre sourcing'],
+   ['Legal','trademark, entity, GST, contracts & labeling'],
+   ['Finance','budget, working capital, unit economics, Razorpay'],
+   ['Financial Modeling','forward scenarios, cash flow, investment memos'],
+   ['Photography','art direction, photographer sourcing, shoot planning'],
+   ['Copy & Comms','the copy system, tone, product & press copy'],
+   ['Website','the Next.js storefront: waitlist, pricing, cart, checkout'],
+   ['Digital Infra','analytics, SEO, email/CRM, Workspace'],
+   ['Research','competitive intel, market data & contacts'],
+   ['Vendor Scout','sources, profiles & shortlists vendors'],
+   ['Heritage','the family lineage & farm history since 1965'],
+   ['Press / PR','press targets, outreach & placement tracking'],
+   ['Email','drafts, checks & sends all outbound mail'],
+   ['PMO','milestones, risks & governance'],
+   ['Morning Briefing','a daily digest of the whole company\'s state'],
+   ['Quality Audit','audits the other agents\' output for drift & errors']],
   groups:[
-   {h:'The company',i:['~26 agents run the operation','brand · product · legal · finance · photography','copy · website · research · PR · daily briefings']},
    {h:'The craft',i:['Himalayan Angora — combed, spun, handwoven','Made in Kullu, Himachal Pradesh','A family craft since 1965']}],
   stack:'<b>Launch:</b> October 2026 · <b>Operations:</b> ~26-agent command centre · <b>Stack:</b> Next.js 15'},
  {k:'kidsplanet',ico:ICO_KP,nm:'Kids Planet',badge:'◐ live + building',tag:'Agentic AI inside a real K–8 school.',
@@ -731,6 +756,7 @@ function featBandHtml(){var h='<div class="work-feat"><div class="feat-cap"><b>�
 function wipBandHtml(){var h='<div class="work-wip"><div class="feat-cap wip"><b>◐ in progress</b> — building in the open</div>';WIP.forEach(function(f){h+=cardHtml(f,'wip-card');});return h+'</div>';}
 function detailHtml(f){var h='<button class="feat-back">← all systems</button><div class="det-head"><h3>'+f.ico+' '+f.nm+' <span class="feat-badge">'+f.badge+'</span></h3><div class="det-tag">'+f.tag+'</div></div><div class="det-pitch">'+f.pitch+'</div>';
   if(f.why)h+='<div class="det-why"><h4>Why I built it</h4><p>'+f.why+'</p>'+(f.who?'<p class="det-who"><b>Who it\'s for:</b> '+f.who+'</p>':'')+'</div>';
+  if(f.agents&&f.agents.length){h+='<div class="det-agents"><h4>An agent for every department</h4><div class="ag-grid">';f.agents.forEach(function(a){h+='<div class="ag"><b>'+a[0]+'</b> <span>'+a[1]+'</span></div>';});h+='</div></div>';}
   if(f.groups&&f.groups.length){h+='<div class="det-grid">';f.groups.forEach(function(g){h+='<div class="det-col"><h4>'+g.h+'</h4><ul>';g.i.forEach(function(it){h+='<li>'+it+'</li>';});h+='</ul></div>';});h+='</div>';}
   if(f.stack)h+='<div class="det-stack">'+f.stack+'</div>';
   h+='<div class="det-cta">';(f.cta||[]).forEach(function(b){h+=ctaHtml(b);});return h+'</div>';}
