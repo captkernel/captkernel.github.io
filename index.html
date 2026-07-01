@@ -169,11 +169,11 @@
   .w-conn .row{display:flex;justify-content:space-between;gap:1rem;padding:.55rem 0;border-bottom:1px solid var(--border);} .w-conn .row:hover .v{color:var(--accent);} .w-conn .k{color:var(--muted);} .w-conn .v{color:var(--text);}
 
   /* ---- dock ---- */
-  .dock{position:fixed;bottom:0;left:50%;transform:translate(-50%,calc(100% - 7px));transition:transform .26s cubic-bezier(.2,.8,.2,1);z-index:9000;display:flex;gap:.4rem;align-items:flex-end;
+  .dock{position:fixed;bottom:0;left:50%;transform:translate(-50%,calc(100% - 15px));transition:transform .26s cubic-bezier(.2,.8,.2,1);z-index:9000;display:flex;gap:.4rem;align-items:flex-end;
     padding:.45rem .55rem;background:rgba(14,20,16,.86);backdrop-filter:blur(18px);border:1px solid var(--border);border-radius:16px 16px 0 0;box-shadow:0 -6px 40px rgba(0,0,0,.5);}
   .dock.up{transform:translate(-50%,-12px);border-radius:16px;}
   .dock::after{content:"";position:absolute;top:-14px;left:0;right:0;height:14px;}/* hover catch-strip above the peek */
-  .dockpeek{position:fixed;left:0;right:0;bottom:0;height:8px;z-index:8999;}
+  .dockpeek{position:fixed;left:0;right:0;bottom:0;height:20px;z-index:8999;}
   /* floating window controls — appear with the dock, but separate (bottom-right) */
   .wmctl{position:fixed;bottom:14px;right:18px;z-index:9000;display:flex;gap:.4rem;transform:translateY(74px);opacity:0;transition:transform .26s cubic-bezier(.2,.8,.2,1),opacity .2s;pointer-events:none;}
   .wmctl.up{transform:translateY(0);opacity:1;pointer-events:auto;}
@@ -611,7 +611,7 @@ var FETCH='<pre class="logo"> ██████╗ ██╗  ██╗\n██
 /* ---- featured flagships (shipped, finished pieces) ---- */
 /* real project logos, inlined as SVG so the site stays a single self-contained file */
 var ICO_KNOB='<svg class="glyph" viewBox="0 0 64 64" width="24" height="24" aria-label="Knob"><defs><linearGradient id="kn-g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7b6ef0"/><stop offset="1" stop-color="#5a23b8"/></linearGradient></defs><rect x="2" y="2" width="60" height="60" rx="15" fill="url(#kn-g)"/><circle cx="32" cy="35" r="13" fill="none" stroke="#fff" stroke-width="6"/><circle cx="32" cy="22" r="4" fill="#fff"/></svg>';
-var ICO_CLAUN='<svg class="glyph" viewBox="0 0 64 80" width="21" height="24" aria-label="Claunchpad"><defs><linearGradient id="cp-icon-trail" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#22c55e"/><stop offset=".5" stop-color="#5b8dee"/><stop offset="1" stop-color="#8b5cf6"/></linearGradient></defs><path d="M32 4 L58 40 L41 40 L41 62 L23 62 L23 40 L6 40 Z" fill="url(#cp-icon-trail)"/><rect x="12" y="70" width="40" height="6" rx="3" fill="#5b8dee"/></svg>';
+var ICO_CLAUN='<svg class="glyph" viewBox="0 0 64 64" width="24" height="24" aria-label="Claunchpad"><defs><linearGradient id="cp-icon-trail" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#22c55e"/><stop offset=".5" stop-color="#5b8dee"/><stop offset="1" stop-color="#8b5cf6"/></linearGradient></defs><rect x="2" y="2" width="60" height="60" rx="15" fill="#0f1117"/><path d="M32 12 L52 40 L40 40 L40 50 L24 50 L24 40 L12 40 Z" fill="url(#cp-icon-trail)"/><rect x="22" y="54" width="20" height="4" rx="2" fill="#5b8dee"/></svg>';
 /* Skills Curator — "D4b": a skill decomposed into blocks, kept parts nudged inward, the chosen one chroma-red. Art-style: Clair Obscur / decompose-select-rewrite. */
 var ICO_SKILLS='<svg class="glyph" viewBox="0 0 64 64" width="24" height="24" aria-label="Skills Curator"><rect x="2" y="2" width="60" height="60" rx="15" fill="#f3ede1"/><rect x="18.1" y="18.1" width="8" height="8" rx="1.6" fill="#7a1f1f" opacity=".82"/><rect x="28" y="18.1" width="8" height="8" rx="1.6" fill="#7a1f1f" opacity=".82"/><rect x="39" y="17" width="8" height="8" rx="1.6" fill="#7a1f1f" opacity=".2"/><rect x="17" y="28" width="8" height="8" rx="1.6" fill="#7a1f1f" opacity=".2"/><rect x="28" y="28" width="8" height="8" rx="1.6" fill="#7a1f1f" opacity=".82"/><rect x="37.9" y="28" width="8" height="8" rx="1.6" fill="#d97777"/><rect x="18.1" y="37.9" width="8" height="8" rx="1.6" fill="#7a1f1f" opacity=".82"/><rect x="28" y="39" width="8" height="8" rx="1.6" fill="#7a1f1f" opacity=".2"/><rect x="37.9" y="37.9" width="8" height="8" rx="1.6" fill="#7a1f1f" opacity=".82"/></svg>';
 var FEATURED=[
@@ -1171,7 +1171,7 @@ function stopEmpty(){if(!patOn)return;patOn=false;emptyEl.classList.remove('show
 function updateEmpty(){var vis=order.filter(function(o){return WIN[o]&&!WIN[o].min;}).length;var empty=(vis===0);
   document.body.classList.toggle('dock-pinned',!empty);   /* dock pinned while a window is open; auto-hides only on the star map */
   if(empty)startEmpty();else stopEmpty();
-  if(typeof dockEl!=='undefined'&&dockEl){if(empty)dockDown();else dockUp();}}
+  if(typeof dockEl!=='undefined'&&dockEl){if(empty)dockPeekReveal();else dockUp();}}
 emptyEl.addEventListener('pointermove',function(e){patMouse.x=e.clientX;patMouse.y=e.clientY;});
 emptyEl.addEventListener('pointerleave',function(){patMouse.x=-9999;patMouse.y=-9999;});
 
@@ -1256,6 +1256,9 @@ window.addEventListener('resize',function(){relayout();if(patOn)buildPat();});
 /* dock auto-hide: peeks at the bottom; reveal on hovering the peek/strip, hide on leave */
 var dockEl=document.querySelector('.dock'), dockPeek=document.getElementById('dockpeek'), wmctlEl=document.getElementById('wmctl');
 function dockUp(){dockEl.classList.add('up');wmctlEl.classList.add('up');} function dockDown(){if(document.body.classList.contains('dock-pinned'))return;dockEl.classList.remove('up');wmctlEl.classList.remove('up');}
+/* on the star map, briefly reveal the dock so it's discoverable, then let it settle back to the peek */
+var _dockRevT=null;
+function dockPeekReveal(ms){dockUp();clearTimeout(_dockRevT);_dockRevT=setTimeout(function(){if(!dockEl.matches(':hover')&&!wmctlEl.matches(':hover')&&!document.body.classList.contains('dock-pinned'))dockDown();},ms||2800);}
 dockPeek.addEventListener('mouseenter',dockUp);
 dockEl.addEventListener('mouseenter',dockUp);
 dockEl.addEventListener('mouseleave',dockDown);
