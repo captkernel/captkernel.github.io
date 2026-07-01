@@ -99,9 +99,23 @@
   .w-fetch .info{font-size:.79rem;line-height:1.9;} .w-fetch .info .k{color:var(--accent);display:inline-block;width:70px;} .w-fetch .info .v{color:var(--text);}
   .w-fetch .palette{display:flex;gap:5px;margin-top:.9rem;} .w-fetch .palette i{width:16px;height:16px;border-radius:4px;display:block;}
 
-  .w-vision .wbody{padding:1.2rem 1.3rem;font-family:var(--mono);font-size:.85rem;line-height:1.7;}
-  .w-vision .cm{color:var(--faint);} .w-vision .big{color:var(--text);font-family:var(--sans);font-size:1rem;line-height:1.5;font-weight:500;margin-top:.4rem;} .w-vision .big b,.w-vision .big .vg{color:var(--accent);font-weight:600;}
-  .w-vision .vcur{display:inline-block;width:.5em;height:1.05em;background:var(--accent);vertical-align:-2px;margin-left:1px;animation:vblink 1.05s steps(1) infinite;} @keyframes vblink{50%{opacity:0;}}
+  /* ---- About window ---- */
+  .w-about .wbody{padding:1.1rem 1.3rem;font-family:var(--sans);overflow:auto;}
+  .w-about .ab-id{display:flex;align-items:baseline;gap:.55rem;flex-wrap:wrap;}
+  .w-about .ab-nm{font-size:1.25rem;font-weight:700;color:var(--text);letter-spacing:-.01em;}
+  .w-about .ab-hn{font-family:var(--mono);font-size:.78rem;color:var(--accent);} .w-about .ab-hn::before{content:"@";opacity:.6;}
+  .w-about .ab-role{font-size:.9rem;color:var(--text);margin-top:.2rem;}
+  .w-about .ab-meta{font-family:var(--mono);font-size:.7rem;color:var(--faint);margin-top:.28rem;}
+  .w-about .ab-bio{font-size:.84rem;line-height:1.62;color:var(--muted);margin:.9rem 0;}
+  .w-about .ab-bet{border:1px solid var(--border);border-left:2px solid var(--accent);border-radius:0 8px 8px 0;background:rgba(70,209,122,.05);padding:.6rem .8rem;margin:.9rem 0;font-family:var(--mono);}
+  .w-about .ab-bet .cm{color:var(--faint);font-size:.72rem;}
+  .w-about .ab-bet .big{color:var(--text);font-family:var(--sans);font-size:.94rem;line-height:1.5;font-weight:500;margin-top:.3rem;} .w-about .ab-bet .big b,.w-about .ab-bet .big .vg{color:var(--accent);font-weight:600;}
+  .w-about .vcur{display:inline-block;width:.5em;height:1.05em;background:var(--accent);vertical-align:-2px;margin-left:1px;animation:vblink 1.05s steps(1) infinite;} @keyframes vblink{50%{opacity:0;}}
+  .w-about .ab-h{font-family:var(--mono);font-size:.62rem;text-transform:uppercase;letter-spacing:.5px;color:var(--faint);margin:.2rem 0 .5rem;}
+  .w-about .ab-row{margin-bottom:.55rem;} .w-about .ab-row b{display:block;font-size:.82rem;color:var(--text);font-weight:600;} .w-about .ab-row span{font-family:var(--mono);font-size:.7rem;color:var(--muted);line-height:1.4;}
+  .w-about .ab-now{display:flex;align-items:center;gap:.45rem;font-family:var(--mono);font-size:.74rem;color:var(--muted);margin-top:.7rem;border-top:1px solid var(--border);padding-top:.7rem;}
+  .w-about .ab-now .dot{width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 6px var(--accent);flex:none;}
+  body.macos .w-about .ab-hn,body.macos .w-about .ab-bet .big .vg{color:#2997ff;} body.macos .w-about .ab-bet{border-left-color:#2997ff;background:rgba(10,132,255,.06);} body.macos .w-about .vcur,body.macos .w-about .ab-now .dot{background:#2997ff;box-shadow:0 0 6px #2997ff;}
 
   .w-work .wbody{font-family:var(--mono);}
   .w-work .note{padding:.5rem 1rem;font-size:.68rem;color:var(--yellow);border-bottom:1px solid var(--border);background:rgba(229,192,123,.05);}
@@ -520,7 +534,7 @@
 <div class="dock">
   <div class="app" data-open="home">⌂<span class="lab">home</span></div>
   <div class="app" data-open="term">▸_<span class="lab">term</span></div>
-  <div class="app" data-open="vision">◎<span class="lab">vision</span></div>
+  <div class="app" data-open="about">◎<span class="lab">about</span></div>
   <div class="app" data-open="work">▦<span class="lab">work</span></div>
   <div class="app" data-open="kernel">✎<span class="lab">kernel</span></div>
   <div class="app" data-open="connect">✉<span class="lab">connect</span></div>
@@ -846,13 +860,22 @@ var APPS={
   hero:{icon:'⌂',title:'hero',w:520,h:340,cls:'w-hero',html:'<div class="eyebrow">// solo AI studio · building in the open</div><h1>I build<br>with <span class="ai">AI.</span></h1><p class="sub">captKernel is where I build autonomous agents, developer tools, and the products that grow out of them — solo, and in the open.</p><div class="ctas"><a class="btn primary" data-open="work">Explore the work</a><a class="btn ghost" data-open="connect">Work with me →</a></div>'},
   term:{icon:'▸',title:'captkernel — zsh',w:520,h:300,cls:'w-term',html:'<div class="termout"><div class="ln o">captKernel shell. type <span class="hl">help</span>, or ask — e.g. <span class="cy">"what can you build for me?"</span></div></div><div class="terminline"><span class="p">captkernel:~$</span><input autocomplete="off" spellcheck="false"></div>'},
   fetch:{icon:'◐',title:'fastfetch',w:340,h:360,cls:'w-fetch',html:FETCH},
-  vision:{icon:'◎',title:'~/vision.txt',w:340,h:200,cls:'w-vision',html:'<div class="cm"># my bet</div><div class="big vbig"></div>'},
+  about:{icon:'◎',title:'~/about.md',w:480,h:440,cls:'w-about',html:'<div class="ab-id"><span class="ab-nm">Karan Parmar</span><span class="ab-hn">captkernel</span></div>'+
+    '<div class="ab-role">Solo AI builder — I direct, agents build.</div>'+
+    '<div class="ab-meta">AI Decision Science Manager @ Accenture (GenAI) · building captKernel in the open</div>'+
+    '<p class="ab-bio">I\'m more a director than a hands-on coder: I describe what I want, agents build it, and I review and ship — moving at the speed of ideas instead of the speed of typing. captKernel is my one-person AI studio, where I build autonomous agents, developer tools, and AI-native products, and document the whole thing in the open.</p>'+
+    '<div class="ab-bet"><div class="cm"># the bet</div><div class="big vbig"></div></div>'+
+    '<div class="ab-h">what i\'m building toward</div>'+
+    '<div class="ab-row"><b>AI-native companies</b><span>ANCYR — a luxury Angora house run by ~26 agents · Swadesh — an autonomous company-operator</span></div>'+
+    '<div class="ab-row"><b>Agentic automation of real work</b><span>Kids Planet — my family\'s 15-year-old school · FooFindr — group ordering</span></div>'+
+    '<div class="ab-row"><b>Tools for the agent era</b><span>Skills Curator · Claunchpad · Knob</span></div>'+
+    '<div class="ab-now"><span class="dot"></span> building autonomous agents · shipping weekly · writing The Kernel</div>'},
   work:{icon:'▦',title:'~/systems — all work',w:640,h:460,cls:'w-work',html:workHtml()},
   kernel:{icon:'✎',title:'The Kernel — dmesg',w:560,h:440,cls:'w-kernel',html:KERNEL},
   connect:{icon:'✉',title:'~/connect',w:420,h:240,cls:'w-conn',html:'<a class="row" href="https://github.com/captkernel" target="_blank" rel="noopener"><span class="k">github</span><span class="v">github.com/captkernel →</span></a><a class="row" href="https://x.com/captkernel" target="_blank" rel="noopener"><span class="k">x</span><span class="v">@captkernel →</span></a><a class="row" href="https://www.linkedin.com/in/karanparmar99" target="_blank" rel="noopener"><span class="k">linkedin</span><span class="v">in/karanparmar99 →</span></a><a class="row" data-open="kernel"><span class="k">newsletter</span><span class="v">The Kernel →</span></a>'}
 };
 /* macOS-mode window titles (Linux/Windows metaphors → Mac apps); icon is hidden in the mac title bar */
-var MAC_TITLES={hero:'captKernel',term:'Terminal — zsh',fetch:'About This Mac',vision:'Notes — my bet',work:'Finder — Systems',kernel:'The Kernel',connect:'Contacts — connect'};
+var MAC_TITLES={hero:'captKernel',term:'Terminal — zsh',fetch:'About This Mac',about:'About — Karan Parmar',work:'Finder — Systems',kernel:'The Kernel',connect:'Contacts — connect'};
 Object.keys(MAC_TITLES).forEach(function(k){if(APPS[k])APPS[k].mtitle=MAC_TITLES[k];});
 
 function toast(m){toastEl.textContent=m;toastEl.style.opacity='1';clearTimeout(toast._t);toast._t=setTimeout(function(){toastEl.style.opacity='0';},1600);}
@@ -993,7 +1016,7 @@ function wire(id){
   /* content interactivity */
   if(id==='term')mountTerm(el);
   if(id==='kernel')mountKernel(el);
-  if(id==='vision')mountVision(el);
+  if(id==='about')mountAbout(el);
   if(id==='work')mountWork(el);
   el.querySelectorAll('[data-open]').forEach(function(b){b.addEventListener('click',function(){openApp(b.getAttribute('data-open'));});});
 }
@@ -1341,11 +1364,11 @@ function mountTerm(el){
   function pr(h,c){var d=document.createElement('div');d.className='ln '+(c||'');d.innerHTML=h;out.appendChild(d);}
   var C={help:function(){pr('commands: <span class="hl">whoami about work skills experience vision now kernel dmesg subscribe social contact available clear</span>','o');pr('…or just ask in plain English.','cy');},
     whoami:function(){pr('captKernel — Karan Parmar. Solo AI builder shipping agents, tools & products in the open.','o');},
-    about:function(){pr('By day: AI Decision Science @ Accenture. Off the clock: captKernel, a one-person AI studio. 7 public repos and counting.','o');},
+    about:function(){pr('opening ~/about…','o');setTimeout(function(){goApp('about');},250);},
     work:function(){pr('my systems — opening ~/systems…','o');setTimeout(function(){goApp('work');},250);},
     skills:function(){pr('python · typescript · claude/agent SDK · LLM & agent design · node · electron · windows tooling','o');},
     experience:function(){pr('AI Decision Science Manager @ Accenture (GenAI). Independently: captKernel.','o');},
-    vision:function(){pr('Turn frontier AI into things people actually use — in the open, one system at a time.','o');},
+    vision:function(){pr('the bet: turn frontier AI into things people actually use — in the open, one system at a time. (see ~/about)','o');},
     now:function(){pr('● building autonomous agents · shipping weekly · writing The Kernel','o');},
     kernel:function(){pr('opening The Kernel…','o');setTimeout(function(){openApp('kernel');},250);},
     dmesg:function(){pr('[ 2026.06.21 ] build shipped: skills-curator','o');pr('[ 2026.06.07 ] playbook Shipping AI products solo','o');pr('run "kernel" to read →','cy');},
@@ -1371,7 +1394,7 @@ function mountTerm(el){
     if(C[b])C[b](p);else answer(v);body.scrollTop=body.scrollHeight;}});
 }
 function mountKernel(el){el.querySelectorAll('.k-row:not(.k-ext), .k-pin .get').forEach(function(r){r.addEventListener('click',function(){toast('demo — issue would open here');});});}
-function mountVision(el){var big=el.querySelector('.vbig');if(!big)return;big.innerHTML='';
+function mountAbout(el){var big=el.querySelector('.vbig');if(!big)return;big.innerHTML='';
   var segs=[{t:'Turn frontier AI into things people actually use — and build it ',c:''},{t:'in the open',c:'vg'},{t:', one system at a time.',c:''}];
   var cur=document.createElement('span');cur.className='vcur';big.appendChild(cur);
   var si=0,ci=0,span=null;
@@ -1388,7 +1411,7 @@ function goApp(id){if(window.IS_MOBILE){var t=document.getElementById('m-'+id);i
 /* ---------------- mobile: stacked single-column site (no window manager) ---------------- */
 function initMobile(){
   var host=document.getElementById('m-main');if(!host)return;
-  var seq=['hero','fetch','vision','term','work','kernel','connect'];
+  var seq=['hero','fetch','about','term','work','kernel','connect'];
   seq.forEach(function(id){var a=APPS[id];if(!a)return;
     var sec=document.createElement('section');sec.className='m-card '+a.cls;sec.id='m-'+id;
     var mt=(MAC()&&a.mtitle)?a.mtitle:a.title;
@@ -1396,7 +1419,7 @@ function initMobile(){
     host.appendChild(sec);
     if(id==='term')mountTerm(sec);
     if(id==='kernel')mountKernel(sec);
-    if(id==='vision')mountVision(sec);
+    if(id==='about')mountAbout(sec);
     if(id==='work')mountWork(sec);
     sec.querySelectorAll('[data-open]').forEach(function(b){b.addEventListener('click',function(e){e.preventDefault();var t=document.getElementById('m-'+b.getAttribute('data-open'));if(t)t.scrollIntoView({behavior:'smooth',block:'start'});});});
   });
@@ -1526,7 +1549,7 @@ setInterval(updateClock,15000);
 
 /* Spotlight */
 (function(){var spotEl=document.getElementById('spotlight'),spIn=document.getElementById('sp-input'),spRes=document.getElementById('sp-res');if(!spotEl)return;
-  var LIST=[['hero','⌂','captKernel — Home'],['fetch','','About This Mac'],['term','⌥','Terminal'],['vision','◎','Notes — my bet'],['work','▦','Finder — Systems'],['kernel','✦','The Kernel'],['connect','☎','Contacts — connect']];
+  var LIST=[['hero','⌂','captKernel — Home'],['fetch','','About This Mac'],['term','⌥','Terminal'],['about','◎','About — Karan Parmar'],['work','▦','Finder — Systems'],['kernel','✦','The Kernel'],['connect','☎','Contacts — connect']];
   function render(q){q=(q||'').toLowerCase().trim();
     var hits=LIST.filter(function(a){return !q||a[2].toLowerCase().indexOf(q)>=0||a[0].indexOf(q)>=0;});
     var h='';hits.forEach(function(a,i){h+='<div class="sp-item'+(i===0?' sel':'')+'" data-go="'+a[0]+'"><span class="si-ic">'+a[1]+'</span>'+a[2]+'<span class="si-sub">Open</span></div>';});
