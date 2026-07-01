@@ -172,6 +172,12 @@
   .w-work .ag{font-size:.72rem;line-height:1.32;padding-left:.85rem;position:relative;}
   .w-work .ag:before{content:'▸';position:absolute;left:0;top:0;color:var(--blue);font-size:.68rem;}
   .w-work .ag b{color:var(--text);font-weight:600;} .w-work .ag span{color:var(--muted);}
+  /* ---- press / mentions in the detail view ---- */
+  .w-work .det-press{padding:.1rem 1rem .55rem;}
+  .w-work .det-press h4{margin:.2rem 0 .4rem;font-size:.62rem;text-transform:uppercase;letter-spacing:.4px;color:var(--blue);}
+  .w-work .det-press a{display:block;text-decoration:none;padding:.4rem .6rem;border:1px solid var(--border);border-radius:6px;margin-bottom:.3rem;transition:border-color .12s,background .12s;}
+  .w-work .det-press a:hover{border-color:var(--blue);background:rgba(91,141,238,.06);}
+  .w-work .det-press a b{color:var(--text);font-weight:600;font-size:.77rem;} .w-work .det-press a span{display:block;color:var(--muted);font-size:.68rem;margin-top:.12rem;}
 
   .w-kernel .wbody{padding:0;font-family:var(--mono);}
   .k-boot{padding:.7rem 1.1rem;color:var(--faint);font-size:.72rem;line-height:1.6;border-bottom:1px solid var(--border);} .k-boot .ok{color:var(--accent);}
@@ -180,7 +186,10 @@
   .k-pin .get{background:var(--accent);color:#062012;font-weight:700;font-family:var(--sans);font-size:.74rem;padding:.4rem .8rem;border-radius:6px;cursor:pointer;}
   .k-row{display:flex;gap:.8rem;padding:.6rem 1.1rem;border-bottom:1px solid var(--border);font-size:.8rem;cursor:pointer;} .k-row:hover{background:rgba(70,209,122,.05);}
   .k-row .ts{color:var(--faint);width:88px;flex:none;} .k-row .tag{width:78px;flex:none;text-transform:uppercase;font-size:.66rem;}
-  .k-row .tag.build{color:var(--accent);} .k-row .tag.play{color:var(--blue);} .k-row .tag.note{color:var(--yellow);} .k-row .tag.open{color:var(--muted);}
+  .k-row .tag.build{color:var(--accent);} .k-row .tag.play{color:var(--blue);} .k-row .tag.note{color:var(--yellow);} .k-row .tag.open{color:var(--muted);} .k-row .tag.press{color:var(--blue);}
+  .k-sig{padding:.6rem 1.1rem .45rem;font-size:.7rem;color:var(--muted);border-bottom:1px solid var(--border);background:rgba(97,175,239,.05);}
+  .k-sig .pin.sig{color:var(--blue);font-size:.66rem;text-transform:uppercase;margin-right:.5rem;letter-spacing:.4px;}
+  a.k-ext{text-decoration:none;color:inherit;} a.k-ext .ti span{color:var(--blue);opacity:.85;}
   .k-row .ti{color:var(--text);} .k-row .ti span{display:block;color:var(--muted);font-size:.73rem;}
   .k-sub{display:flex;justify-content:space-between;align-items:center;gap:.7rem;padding:.9rem 1.1rem;background:rgba(97,175,239,.05);flex-wrap:wrap;}
   .k-sub .t{font-size:.82rem;} .k-sub .t b{color:var(--accent);} .k-sub input{background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:.45rem .7rem;font-family:var(--mono);font-size:.78rem;} .k-sub button{background:var(--accent);color:#062012;font-weight:700;font-family:var(--sans);font-size:.78rem;padding:.45rem .9rem;border:none;border-radius:6px;cursor:pointer;}
@@ -659,6 +668,7 @@ var FEATURED=[
   pitch:'A trust-rated catalog plus real judgment: it tells you which skills actually fit your project — your stack, deps, and CLAUDE.md — recommends with pros and cons, security-scans before you install, and persists every decision.',
   why:'The Claude skills ecosystem grew faster than anyone could vet. I had no reliable way to know which skills fit my project, which were safe to install, or which I had already judged — so I built the layer that scores fit, security-scans, rewrites skills to match your project, and remembers every decision.',
   who:'Claude Code and claude.ai users drowning in skills who want to install only what fits — safely.',
+  press:[{t:'The Man Who Taught His AI to Shut Up and Use His Voice',pub:'Strategic Tensors · Nishant Sharma',h:'https://strategictensors.substack.com/p/the-man-who-taught-his-ai-to-shut'}],
   groups:[
    {h:'Judges fit',i:['Recommends by fit, not popularity','Flags duplicate and conflicting skills','Per-project verdict + decision registry']},
    {h:'--customize',i:['Forks any skill, rebuilds it for your project','Keeps only the parts that fit, in your voice','Infuse, not invoke']},
@@ -718,10 +728,12 @@ var WIP=[
    {h:'Planet Studio',i:['14 auth-gated ops modules','AI paper checker + Word export','Admin tasks → agentic processes']}],
   stack:'<b>Stack:</b> Next.js · Supabase · browser-direct Claude (no server storage)'},
  {k:'foofindr',ico:ICO_FOOD,nm:'FooFindr',badge:'◐ in build',tag:'Group food ordering, gamified.',
-  chips:['React Native','Swiggy MCP','285 tests'],cta:[],
+  chips:['React Native','Swiggy MCP','285 tests'],
+  cta:[{l:'▶ Try the beta',h:'https://foofindr-teaser.tiiny.site/',c:'primary'}],
   pitch:'Friends swipe on cuisines, match on what everyone\'s actually craving, and then one person fires a single cash-on-delivery order for the whole group through a real Swiggy integration.',
   why:'Deciding where to eat as a group is endless back-and-forth. FooFindr turns it into a quick, playful swipe-to-match, then collapses the ordering into one tap for the host.',
   who:'Friend groups and flatmates in India ordering together.',
+  press:[{t:'What if Ordering Dinner Was the Game?',pub:'Strategic Tensors · Nishant Sharma',h:'https://strategictensors.substack.com/p/what-if-ordering-dinner-was-the-game'}],
   groups:[
    {h:'The flow',i:['Swipe on cuisines, match the group','Host places one COD order for everyone','Real Swiggy MCP integration']},
    {h:'Build',i:['React Native / Expo','285 tests passing','Motion + swipe UX in progress']}],
@@ -758,6 +770,7 @@ function detailHtml(f){var h='<button class="feat-back">← all systems</button>
   if(f.why)h+='<div class="det-why"><h4>Why I built it</h4><p>'+f.why+'</p>'+(f.who?'<p class="det-who"><b>Who it\'s for:</b> '+f.who+'</p>':'')+'</div>';
   if(f.agents&&f.agents.length){h+='<div class="det-agents"><h4>An agent for every department</h4><div class="ag-grid">';f.agents.forEach(function(a){h+='<div class="ag"><b>'+a[0]+'</b> <span>'+a[1]+'</span></div>';});h+='</div></div>';}
   if(f.groups&&f.groups.length){h+='<div class="det-grid">';f.groups.forEach(function(g){h+='<div class="det-col"><h4>'+g.h+'</h4><ul>';g.i.forEach(function(it){h+='<li>'+it+'</li>';});h+='</ul></div>';});h+='</div>';}
+  if(f.press&&f.press.length){h+='<div class="det-press"><h4>↗ Press &amp; mentions</h4>';f.press.forEach(function(p){h+='<a href="'+p.h+'" target="_blank" rel="noopener"><b>'+p.t+'</b><span>'+p.pub+' ↗</span></a>';});h+='</div>';}
   if(f.stack)h+='<div class="det-stack">'+f.stack+'</div>';
   h+='<div class="det-cta">';(f.cta||[]).forEach(function(b){h+=ctaHtml(b);});return h+'</div>';}
 
@@ -788,6 +801,9 @@ function mountWork(el){var feat=el.querySelector('.work-feat'),wip=el.querySelec
 
 var KERNEL='<div class="k-boot">[ 0.000000 ] captKernel 6.ai-frontier booting… <span class="ok">ok</span><br>[ 0.001337 ] mounting /studio … <span class="ok">ok</span> · 5 dispatches · weekly</div>'+
 '<div class="k-pin"><span class="pin">★ pinned</span><div class="pt"><b>Ship an AI tool in a weekend</b><span>the free playbook — my exact process.</span></div><div class="get">Get it free →</div></div>'+
+'<div class="k-sig"><span class="pin sig">◂ signal</span> who\'s talking about the work</div>'+
+'<a class="k-row k-ext" href="https://strategictensors.substack.com/p/what-if-ordering-dinner-was-the-game" target="_blank" rel="noopener"><span class="ts">[ 2026.06.21 ]</span><span class="tag press">press</span><span class="ti">"What if Ordering Dinner Was the Game?"<span>Strategic Tensors · Nishant Sharma — on FooFindr ↗</span></span></a>'+
+'<a class="k-row k-ext" href="https://strategictensors.substack.com/p/the-man-who-taught-his-ai-to-shut" target="_blank" rel="noopener"><span class="ts">[ 2026.05.28 ]</span><span class="tag press">press</span><span class="ti">"The Man Who Taught His AI to Shut Up and Use His Voice"<span>Strategic Tensors · Nishant Sharma — on Skills Curator ↗</span></span></a>'+
 '<div class="k-row"><span class="ts">[ 2026.06.21 ]</span><span class="tag build">build</span><span class="ti">shipped: skills-curator<span>evaluate Claude Code skills before install.</span></span></div>'+
 '<div class="k-row"><span class="ts">[ 2026.06.07 ]</span><span class="tag play">playbook</span><span class="ti">Shipping AI products solo: my stack<span>move faster than a team.</span></span></div>'+
 '<div class="k-row"><span class="ts">[ 2026.05.24 ]</span><span class="tag note">note</span><span class="ti">Agents that actually do work<span>beyond demos.</span></span></div>'+
@@ -1317,7 +1333,7 @@ function mountTerm(el){
     pr('<span class="p">captkernel:~$</span> '+v.replace(/</g,'&lt;'));var p=v.split(/\s+/),b=p[0].toLowerCase();
     if(C[b])C[b](p);else answer(v);body.scrollTop=body.scrollHeight;}});
 }
-function mountKernel(el){el.querySelectorAll('.k-row, .k-pin .get').forEach(function(r){r.addEventListener('click',function(){toast('demo — issue would open here');});});}
+function mountKernel(el){el.querySelectorAll('.k-row:not(.k-ext), .k-pin .get').forEach(function(r){r.addEventListener('click',function(){toast('demo — issue would open here');});});}
 function mountVision(el){var big=el.querySelector('.vbig');if(!big)return;big.innerHTML='';
   var segs=[{t:'Turn frontier AI into things people actually use — and build it ',c:''},{t:'in the open',c:'vg'},{t:', one system at a time.',c:''}];
   var cur=document.createElement('span');cur.className='vcur';big.appendChild(cur);
