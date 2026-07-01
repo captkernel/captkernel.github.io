@@ -152,6 +152,19 @@
   .w-work .det-cta a{font-size:.68rem;font-weight:600;padding:.4rem .85rem;border-radius:6px;text-decoration:none;border:1px solid var(--border);transition:.12s;}
   .w-work .det-cta a.primary{background:var(--accent);color:#04130b;border-color:var(--accent);} .w-work .det-cta a.primary:hover{filter:brightness(1.08);}
   .w-work .det-cta a.ghost{color:var(--accent);} .w-work .det-cta a.ghost:hover{background:rgba(70,209,122,.1);}
+  /* ---- in-progress (WIP) band ---- */
+  .w-work .work-wip{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;padding:.7rem 1rem;border-bottom:1px solid var(--border);}
+  .w-work .feat-cap.wip b{color:var(--blue);}
+  .w-work .wip-card{border:1px solid var(--border);border-radius:8px;padding:.6rem .65rem;background:linear-gradient(180deg,rgba(91,141,238,.05),rgba(91,141,238,0));cursor:pointer;transition:transform .14s ease,border-color .14s ease,box-shadow .14s ease;display:flex;flex-direction:column;gap:.4rem;opacity:.94;}
+  .w-work .wip-card:hover{transform:translateY(-2px);border-color:var(--blue);box-shadow:0 8px 24px -14px rgba(91,141,238,.5);opacity:1;}
+  .w-work .wip-card .feat-badge{color:var(--blue);border-color:rgba(91,141,238,.4);}
+  .w-work .feat-more{font-size:.62rem;color:var(--faint);margin-top:auto;}
+  .w-work .wip-card:hover .feat-more{color:var(--blue);}
+  /* ---- why / who block in the detail view ---- */
+  .w-work .det-why{padding:.1rem 1rem .5rem;}
+  .w-work .det-why h4{margin:.2rem 0 .35rem;font-size:.62rem;text-transform:uppercase;letter-spacing:.4px;color:var(--accent);}
+  .w-work .det-why p{margin:0 0 .45rem;font-size:.79rem;line-height:1.5;color:var(--muted);}
+  .w-work .det-why .det-who{color:var(--text);opacity:.9;} .w-work .det-why .det-who b{color:var(--accent);font-weight:600;}
 
   .w-kernel .wbody{padding:0;font-family:var(--mono);}
   .k-boot{padding:.7rem 1.1rem;color:var(--faint);font-size:.72rem;line-height:1.6;border-bottom:1px solid var(--border);} .k-boot .ok{color:var(--accent);}
@@ -262,7 +275,7 @@
     #mobile .w-term .wbody{max-height:62vh;overflow:auto;}
     #mobile .w-work .fhead,#mobile .w-work .frow{grid-template-columns:22px 1fr 58px;}
     #mobile .w-work .ty,#mobile .w-work .src{display:none;}
-    #mobile .w-work .work-feat{grid-template-columns:1fr;}
+    #mobile .w-work .work-feat,#mobile .w-work .work-wip{grid-template-columns:1fr;}
     #mobile .w-work .det-grid{grid-template-columns:1fr;}
     #mobile .k-row{flex-wrap:wrap;} #mobile .k-row .ti{flex:1 1 100%;}
     .m-nav{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:6;justify-content:space-around;gap:.2rem;
@@ -614,11 +627,20 @@ var ICO_KNOB='<svg class="glyph" viewBox="0 0 64 64" width="24" height="24" aria
 var ICO_CLAUN='<svg class="glyph" viewBox="0 0 64 64" width="24" height="24" aria-label="Claunchpad"><defs><linearGradient id="cp-icon-trail" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#22c55e"/><stop offset=".5" stop-color="#5b8dee"/><stop offset="1" stop-color="#8b5cf6"/></linearGradient></defs><rect x="2" y="2" width="60" height="60" rx="15" fill="#0f1117"/><path d="M32 12 L52 40 L40 40 L40 50 L24 50 L24 40 L12 40 Z" fill="url(#cp-icon-trail)"/><rect x="22" y="54" width="20" height="4" rx="2" fill="#5b8dee"/></svg>';
 /* Skills Curator — "D4b": a skill decomposed into blocks, kept parts nudged inward, the chosen one chroma-red. Art-style: Clair Obscur / decompose-select-rewrite. */
 var ICO_SKILLS='<svg class="glyph" viewBox="0 0 64 64" width="24" height="24" aria-label="Skills Curator"><rect x="2" y="2" width="60" height="60" rx="15" fill="#f3ede1"/><rect x="18.1" y="18.1" width="8" height="8" rx="1.6" fill="#7a1f1f" opacity=".82"/><rect x="28" y="18.1" width="8" height="8" rx="1.6" fill="#7a1f1f" opacity=".82"/><rect x="39" y="17" width="8" height="8" rx="1.6" fill="#7a1f1f" opacity=".2"/><rect x="17" y="28" width="8" height="8" rx="1.6" fill="#7a1f1f" opacity=".2"/><rect x="28" y="28" width="8" height="8" rx="1.6" fill="#7a1f1f" opacity=".82"/><rect x="37.9" y="28" width="8" height="8" rx="1.6" fill="#d97777"/><rect x="18.1" y="37.9" width="8" height="8" rx="1.6" fill="#7a1f1f" opacity=".82"/><rect x="28" y="39" width="8" height="8" rx="1.6" fill="#7a1f1f" opacity=".2"/><rect x="37.9" y="37.9" width="8" height="8" rx="1.6" fill="#7a1f1f" opacity=".82"/></svg>';
+/* ---- WIP project glyphs (custom SVG marks, muted app-tile style) ---- */
+var ICO_FOOD='<svg class="glyph" viewBox="0 0 64 64" width="24" height="24" aria-label="FooFindr"><defs><linearGradient id="ff-g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff7a4d"/><stop offset="1" stop-color="#e23d1f"/></linearGradient></defs><rect x="2" y="2" width="60" height="60" rx="15" fill="url(#ff-g)"/><g fill="#fff"><rect x="26" y="16" width="2.6" height="12" rx="1.3"/><rect x="30.7" y="16" width="2.6" height="12" rx="1.3"/><rect x="35.4" y="16" width="2.6" height="12" rx="1.3"/><path d="M25 27 h15 v2 a5 5 0 0 1 -5 5 h-5 a5 5 0 0 1 -5 -5 Z"/><rect x="30.7" y="33" width="3.6" height="16" rx="1.8"/></g></svg>';
+var ICO_C2B='<svg class="glyph" viewBox="0 0 64 64" width="24" height="24" aria-label="Chat2Business"><defs><linearGradient id="c2-g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5b8dee"/><stop offset="1" stop-color="#3b3bb0"/></linearGradient></defs><rect x="2" y="2" width="60" height="60" rx="15" fill="url(#c2-g)"/><path d="M16 18 h32 a4 4 0 0 1 4 4 v15 a4 4 0 0 1 -4 4 H29 l-8 7 v-7 h-5 a4 4 0 0 1 -4 -4 V22 a4 4 0 0 1 4 -4 Z" fill="#fff"/><g fill="#3b3bb0"><rect x="21" y="31" width="4" height="6" rx="1"/><rect x="30" y="27" width="4" height="10" rx="1"/><rect x="39" y="23" width="4" height="14" rx="1"/></g></svg>';
+var ICO_SWA='<svg class="glyph" viewBox="0 0 64 64" width="24" height="24" aria-label="Swadesh"><defs><linearGradient id="sw-g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff9933"/><stop offset="1" stop-color="#138808"/></linearGradient></defs><rect x="2" y="2" width="60" height="60" rx="15" fill="url(#sw-g)"/><g stroke="#fff" stroke-width="2.2"><line x1="32" y1="21" x2="21" y2="43"/><line x1="32" y1="21" x2="43" y2="43"/><line x1="21" y1="43" x2="43" y2="43"/></g><g fill="#fff"><circle cx="32" cy="21" r="4.6"/><circle cx="21" cy="43" r="4.6"/><circle cx="43" cy="43" r="4.6"/></g></svg>';
+var ICO_ANC='<svg class="glyph" viewBox="0 0 64 64" width="24" height="24" aria-label="ANCYR"><rect x="2" y="2" width="60" height="60" rx="15" fill="#2a201b"/><text x="32" y="43" text-anchor="middle" font-family="Georgia,\'Times New Roman\',serif" font-weight="600" font-size="34" fill="#c9a24a">A</text><rect x="22" y="47.5" width="20" height="1.6" fill="#c9a24a"/></svg>';
+var ICO_KP='<svg class="glyph" viewBox="0 0 64 64" width="24" height="24" aria-label="Kids Planet"><defs><linearGradient id="kp-g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2bb3c0"/><stop offset="1" stop-color="#2176ae"/></linearGradient></defs><rect x="2" y="2" width="60" height="60" rx="15" fill="url(#kp-g)"/><circle cx="30" cy="33" r="12" fill="#fff"/><ellipse cx="30" cy="33" rx="19" ry="6" fill="none" stroke="#ffe08a" stroke-width="2.6" transform="rotate(-20 30 33)"/><circle cx="47" cy="19" r="2.4" fill="#ffe08a"/></svg>';
+
 var FEATURED=[
  {k:'knob',ico:ICO_KNOB,nm:'Knob',badge:'v1.0.0 · download',tag:'Windows audio + display control, one global hotkey.',
   chips:['Electron','Win 11 acrylic','tray + hotkey'],
   cta:[{l:'Download ↓',h:'https://github.com/captkernel/Knob/releases/latest',c:'primary'},{l:'GitHub',h:'https://github.com/captkernel/Knob',c:'ghost'}],
   pitch:'A polished tray app summoned by a global hotkey (Ctrl+Alt+A). One glance, one click: switch your default speaker or mic, ride the volume slider, apply saved device profiles, and rearrange your monitors — then dismiss with the same key.',
+  why:'Windows makes the simple things slow — switching your mic before a call, or rearranging monitors every time you dock, means digging through Settings. I wanted one hotkey that summons everything, does the switch in a click, and disappears. It started as a personal tray tool and grew into a polished, auto-updating app.',
+  who:'Windows power users juggling multiple audio devices and multi-monitor setups.',
   groups:[
    {h:'🔊 Audio',i:['Output / input switching, friendly names + icons','Saveable device profiles, favourites, renames','Live mic-level test, Bluetooth-aware, hot-plug']},
    {h:'🖥️ Display',i:['To-scale monitor layout you drag to arrange','Edge-snap, set primary, toggle a display on/off','Save & apply multi-monitor profiles in one click']},
@@ -628,6 +650,8 @@ var FEATURED=[
   chips:['security scan','--customize','multi-platform'],
   cta:[{l:'GitHub',h:'https://github.com/captkernel/Skills_Curator',c:'primary'},{l:'What it does',h:'#',c:'ghost',d:'skills'}],
   pitch:'A trust-rated catalog plus real judgment: it tells you which skills actually fit your project — your stack, deps, and CLAUDE.md — recommends with pros and cons, security-scans before you install, and persists every decision.',
+  why:'The Claude skills ecosystem grew faster than anyone could vet. I had no reliable way to know which skills fit my project, which were safe to install, or which I had already judged — so I built the layer that scores fit, security-scans, rewrites skills to match your project, and remembers every decision.',
+  who:'Claude Code and claude.ai users drowning in skills who want to install only what fits — safely.',
   groups:[
    {h:'Judges fit',i:['Recommends by fit, not popularity','Flags duplicate and conflicting skills','Per-project verdict + decision registry']},
    {h:'--customize',i:['Forks any skill, rebuilds it for your project','Keeps only the parts that fit, in your voice','Infuse, not invoke']},
@@ -637,48 +661,104 @@ var FEATURED=[
   chips:['persistent memory','agent teams','one-tap skills'],
   cta:[{l:'See showcase',h:'https://htmlpreview.github.io/?https://github.com/captkernel/Claunchpad/blob/master/showcase.html',c:'primary'},{l:'GitHub',h:'https://github.com/captkernel/Claunchpad',c:'ghost'}],
   pitch:'Drop in one skill and Claude starts working like a seasoned pro: persistent memory, agent teams that size themselves, the good ecosystem skills, and the habits that take weeks to work out. Answer one question and it runs.',
+  why:'On every new project I was rebuilding the same foundation by hand — persistent memory, agent structures, the good skills, the guardrails. Claunchpad packages all of it into one skill: install it, answer one question, and Claude starts working like it knows what it\'s doing.',
+  who:'Anyone starting a project with Claude Code — beginners who want a safe default, experts who want the full machine.',
   groups:[
    {h:'🧠 Memory',i:['Remembers decisions, fixed bugs, techniques','A hook reloads it at every session start','Survives /clear and context compaction']},
    {h:'👥 Orchestration',i:['Teams that size themselves: solo → pair → fan-out','Escalates only when the task earns it','Knowledge passed between agents, not lost']},
    {h:'🧩 Setup',i:['One-tap install of the best ecosystem skills','Tuned to you: tiny + safe, or the full machine','Councils pressure-test big, irreversible calls']}],
   stack:'<b>Runs on:</b> Claude Code · claude.ai · API — pillars: Memory · Delegation · Orchestration'}
 ];
+
+/* ---- in progress: building in the open ---- */
+var WIP=[
+ {k:'ancyr',ico:ICO_ANC,nm:'ANCYR',badge:'◐ Oct 2026',tag:'An AI-native Himalayan Angora house I founded.',
+  chips:['~26 agents','Himalayan Angora','since 1965'],
+  cta:[{l:'Visit ancyr.com',h:'https://ancyr.com',c:'primary'}],
+  pitch:'A Himalayan Angora textile house I founded, run as an AI-native company. The craft is my family\'s — combed, spun, and handwoven in Kullu since 1965; the operation is a crew of ~26 agents I built to run brand, product, legal, finance, photography, copy, web, and more. Launching October 2026.',
+  why:'My family has worked Himalayan Angora in Kullu for six decades. I wanted to carry that craft forward as something new: a genuinely premium house operated almost entirely by agents, so one founder can run the whole company and the work of hands stays the point.',
+  who:'People who value ultra-premium, hand-made natural fibre — and a living proof of what an AI-native brand company looks like.',
+  groups:[
+   {h:'The company',i:['~26 agents run the operation','brand · product · legal · finance · photography','copy · website · research · PR · daily briefings']},
+   {h:'The craft',i:['Himalayan Angora — combed, spun, handwoven','Made in Kullu, Himachal Pradesh','A family craft since 1965']}],
+  stack:'<b>Launch:</b> October 2026 · <b>Operations:</b> ~26-agent command centre · <b>Stack:</b> Next.js 15'},
+ {k:'kidsplanet',ico:ICO_KP,nm:'Kids Planet',badge:'◐ live + building',tag:'Agentic AI inside a real K–8 school.',
+  chips:['Next.js · Supabase','Planet Studio','AI paper checker'],
+  cta:[{l:'Visit site',h:'https://kidsplanetkullu.com',c:'primary'}],
+  pitch:'My family\'s 15-year-old K–8 school in Kullu, brought online and automated: a public site plus Planet Studio, an auth-gated dashboard of 14 modules — including an AI question-paper checker — that turns the school\'s administrative grind into agentic processes.',
+  why:'A real, running school does enormous work on paper and scattered tools. I\'m integrating AI systems to replace that administrative load with agentic processes — freeing the staff to teach, not file.',
+  who:'The school\'s staff and administrators (Planet Studio) and its parents (the public site).',
+  groups:[
+   {h:'Public site',i:['Live at kidsplanetkullu.com','Playgroup → Class 8','The school\'s face for parents']},
+   {h:'Planet Studio',i:['14 auth-gated ops modules','AI paper checker + Word export','Admin tasks → agentic processes']}],
+  stack:'<b>Stack:</b> Next.js · Supabase · browser-direct Claude (no server storage)'},
+ {k:'foofindr',ico:ICO_FOOD,nm:'FooFindr',badge:'◐ in build',tag:'Group food ordering, gamified.',
+  chips:['React Native','Swiggy MCP','285 tests'],cta:[],
+  pitch:'Friends swipe on cuisines, match on what everyone\'s actually craving, and then one person fires a single cash-on-delivery order for the whole group through a real Swiggy integration.',
+  why:'Deciding where to eat as a group is endless back-and-forth. FooFindr turns it into a quick, playful swipe-to-match, then collapses the ordering into one tap for the host.',
+  who:'Friend groups and flatmates in India ordering together.',
+  groups:[
+   {h:'The flow',i:['Swipe on cuisines, match the group','Host places one COD order for everyone','Real Swiggy MCP integration']},
+   {h:'Build',i:['React Native / Expo','285 tests passing','Motion + swipe UX in progress']}],
+  stack:'<b>Stack:</b> React Native · Expo · Zustand · Reanimated · Swiggy MCP'},
+ {k:'chat2b',ico:ICO_C2B,nm:'Chat2Business',badge:'◐ scaffolding',tag:'Voice memo → validated business.',
+  chips:['Crew engine','AI council','voice → build'],cta:[],
+  pitch:'Talk a business idea into your phone and it runs the whole gauntlet automatically — captured, transcribed, structured, researched, reviewed by an AI advisory council, decided, and prototyped.',
+  why:'Most ideas die in the gap between a shower thought and knowing whether it is actually worth doing. Chat2Business closes that gap: say it out loud and get back honest research, a council critique, and a built prototype.',
+  who:'Founders and solo builders stress-testing ideas before sinking time into them.',
+  groups:[
+   {h:'Pipeline',i:['captured → transcribed → structured','researched → council-reviewed → decided','→ built (prototype)']},
+   {h:'Built on',i:['The reusable "Crew" agent engine','Council + deep-research skills','Voice → structure pattern']}],
+  stack:'<b>Stack:</b> the Crew engine · AI council · automatic voice → prototype pipeline'},
+ {k:'swadesh',ico:ICO_SWA,nm:'Swadesh',badge:'◐ scaffold + design',tag:'Autonomous AI company-operator, India-first.',
+  chips:['agent crew','UPI · GST','Hindi + regional'],cta:[],
+  pitch:'Type a business idea and a fleet of agents stands the company up and runs it 24/7 — wired for UPI/Razorpay, GST invoicing, WhatsApp, and Hindi plus regional languages.',
+  why:'The tools to run a small business in India all exist — payments, messaging, compliance — they are just fragmented and tedious. Swadesh is my bet that an agent crew can operate the whole thing, pointed at how business actually works here.',
+  who:'Indian solo founders and small operators who want a business run for them, not just software to run it with.',
+  groups:[
+   {h:'The crew',i:['Coordinator "AI CEO" + role agents','growth, finance, legal, CX, content, research','Instantiated per company, on demand']},
+   {h:'India stack',i:['UPI / Razorpay + GST invoicing','WhatsApp (native + cloud API)','Hindi + regional localisation']}],
+  stack:'<b>Stack:</b> the Crew engine · India execution adapters · <b>Status:</b> scaffold + design'}
+];
+
 function ctaHtml(b){return '<a class="'+b.c+'"'+(b.d?' data-detail="'+b.d+'" href="#"':' href="'+b.h+'" target="_blank" rel="noopener"')+'>'+b.l+'</a>';}
-function featBandHtml(){var h='<div class="work-feat"><div class="feat-cap"><b>★ shipped</b> — finished, in the wild</div>';
-  FEATURED.forEach(function(f){h+='<div class="feat-card" data-key="'+f.k+'"><div class="feat-top"><span class="feat-ico">'+f.ico+'</span><span class="feat-nm">'+f.nm+'</span><span class="feat-badge">'+f.badge+'</span></div><div class="feat-tag">'+f.tag+'</div><div class="feat-chips">';
-    f.chips.forEach(function(c){h+='<span>'+c+'</span>';});
-    h+='</div><div class="feat-cta">';f.cta.forEach(function(b){h+=ctaHtml(b);});h+='</div></div>';});
+function cardHtml(f,cardCls){var h='<div class="'+cardCls+'" data-key="'+f.k+'"><div class="feat-top"><span class="feat-ico">'+f.ico+'</span><span class="feat-nm">'+f.nm+'</span><span class="feat-badge">'+f.badge+'</span></div><div class="feat-tag">'+f.tag+'</div><div class="feat-chips">';
+  f.chips.forEach(function(c){h+='<span>'+c+'</span>';});h+='</div>';
+  if(f.cta&&f.cta.length){h+='<div class="feat-cta">';f.cta.forEach(function(b){h+=ctaHtml(b);});h+='</div>';}
+  else h+='<div class="feat-more">details →</div>';
   return h+'</div>';}
-function detailHtml(f){var h='<button class="feat-back">← all systems</button><div class="det-head"><h3>'+f.ico+' '+f.nm+' <span class="feat-badge">'+f.badge+'</span></h3><div class="det-tag">'+f.tag+'</div></div><div class="det-pitch">'+f.pitch+'</div><div class="det-grid">';
-  f.groups.forEach(function(g){h+='<div class="det-col"><h4>'+g.h+'</h4><ul>';g.i.forEach(function(it){h+='<li>'+it+'</li>';});h+='</ul></div>';});
-  h+='</div><div class="det-stack">'+f.stack+'</div><div class="det-cta">';f.cta.forEach(function(b){h+=ctaHtml(b);});return h+'</div>';}
+function featBandHtml(){var h='<div class="work-feat"><div class="feat-cap"><b>★ shipped</b> — finished, in the wild</div>';FEATURED.forEach(function(f){h+=cardHtml(f,'feat-card');});return h+'</div>';}
+function wipBandHtml(){var h='<div class="work-wip"><div class="feat-cap wip"><b>◐ in progress</b> — building in the open</div>';WIP.forEach(function(f){h+=cardHtml(f,'wip-card');});return h+'</div>';}
+function detailHtml(f){var h='<button class="feat-back">← all systems</button><div class="det-head"><h3>'+f.ico+' '+f.nm+' <span class="feat-badge">'+f.badge+'</span></h3><div class="det-tag">'+f.tag+'</div></div><div class="det-pitch">'+f.pitch+'</div>';
+  if(f.why)h+='<div class="det-why"><h4>Why I built it</h4><p>'+f.why+'</p>'+(f.who?'<p class="det-who"><b>Who it\'s for:</b> '+f.who+'</p>':'')+'</div>';
+  if(f.groups&&f.groups.length){h+='<div class="det-grid">';f.groups.forEach(function(g){h+='<div class="det-col"><h4>'+g.h+'</h4><ul>';g.i.forEach(function(it){h+='<li>'+it+'</li>';});h+='</ul></div>';});h+='</div>';}
+  if(f.stack)h+='<div class="det-stack">'+f.stack+'</div>';
+  h+='<div class="det-cta">';(f.cta||[]).forEach(function(b){h+=ctaHtml(b);});return h+'</div>';}
 
 /* ---- curated systems list (flagships above; ⚠ rows auto-hidden from the public site) ---- */
 var WORKROWS=[
 ['','claude toolkits','4 public skill packs','gh','github','live'],['','alexa / hal','Claude on Echo','local','local','live'],
-['','food','RN party app','local','local','active'],['','music','mic-coach app','local','local','active'],
-['','image-blaster','photo → 3D splat','local','local','active'],['','chat2business','idea → council','local','local','working'],
+['','music','mic-coach app','local','local','active'],['','image-blaster','photo → 3D splat','local','local','active'],
 ['','memory manager','PS photo toolkit','local','local','active'],['','dashboard (PCC)','projects hub','local','local','active'],
-['','ancyr','brand site','local','local','live'],['','captkernel.com','this site','gh','github','live'],
-['','accenture','AI Decision Sci Mgr','work','linkedin','current'],
-['','swadesh ⚠','autonomous AI co','local','local','active'],['','ai-spend-defense ⚠','AI ROI calc','local','local','spec'],
-['','tokenloop ⚠','token analyzer','local','local','spec'],['','shum / fAIsh ⚠','AI stylist','local','local','proto'],
-['','business (ANCYR) ⚠','multi-agent ops','local','local','active'],['','kidsplanet ⚠','site + studio','work','client','live'],
-['','pos (duffdun) ⚠','offline POS','work','client','live'],['','school ⚠','foundation intake','work','client','build']];
-function workHtml(){var h=featBandHtml();
+['','captkernel.com','this site','gh','github','live'],['','accenture','AI Decision Sci Mgr','work','linkedin','current'],
+['','ai-spend-defense ⚠','AI ROI calc','local','local','spec'],['','tokenloop ⚠','token analyzer','local','local','spec'],
+['','shum / fAIsh ⚠','AI stylist','local','local','proto'],['','pos (duffdun) ⚠','offline POS','work','client','live'],
+['','school ⚠','foundation intake','work','client','build']];
+function workHtml(){var h=featBandHtml()+wipBandHtml();
   h+='<div class="work-list"><div class="fhead"><span>no.</span><span>system</span><span>type</span><span>src</span><span>status</span></div>';var n=0;
   WORKROWS.forEach(function(r){if(/⚠/.test(r[1]))return;   /* omit private/client (⚠) items from the public site */
     n++;var no=(n<10?'0':'')+n;
     h+='<div class="frow"><span class="no">'+no+'</span><span class="nm">'+r[1]+'</span><span class="ty">'+r[2]+'</span><span class="src '+r[3]+'">'+r[4]+'</span><span class="st'+(r[5]==='live'?' live':'')+'">'+(r[5]==='live'?'● ':'')+r[5]+'</span></div>';});
   return h+'</div><div class="work-detail" style="display:none"></div>';}
-function mountWork(el){var feat=el.querySelector('.work-feat'),list=el.querySelector('.work-list'),det=el.querySelector('.work-detail');if(!det)return;
-  function showList(){det.style.display='none';det.innerHTML='';if(feat)feat.style.display='';if(list)list.style.display='';}
-  function showDetail(k){var f=null;FEATURED.forEach(function(x){if(x.k===k)f=x;});if(!f)return;
-    det.innerHTML=detailHtml(f);if(feat)feat.style.display='none';if(list)list.style.display='none';det.style.display='';
+function mountWork(el){var feat=el.querySelector('.work-feat'),wip=el.querySelector('.work-wip'),list=el.querySelector('.work-list'),det=el.querySelector('.work-detail');if(!det)return;
+  var ALL=FEATURED.concat(WIP);
+  function showList(){det.style.display='none';det.innerHTML='';[feat,wip,list].forEach(function(x){if(x)x.style.display='';});}
+  function showDetail(k){var f=null;ALL.forEach(function(x){if(x.k===k)f=x;});if(!f)return;
+    det.innerHTML=detailHtml(f);[feat,wip,list].forEach(function(x){if(x)x.style.display='none';});det.style.display='';
     var b=det.querySelector('.feat-back');if(b)b.addEventListener('click',showList);
     det.querySelectorAll('[data-detail]').forEach(function(d){d.addEventListener('click',function(e){e.preventDefault();showDetail(d.getAttribute('data-detail'));});});}
-  el.querySelectorAll('.feat-card').forEach(function(c){c.addEventListener('click',function(e){if(e.target.closest('a'))return;showDetail(c.getAttribute('data-key'));});});
-  el.querySelectorAll('.work-feat [data-detail]').forEach(function(d){d.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();showDetail(d.getAttribute('data-detail'));});});}
+  el.querySelectorAll('.feat-card,.wip-card').forEach(function(c){c.addEventListener('click',function(e){if(e.target.closest('a'))return;showDetail(c.getAttribute('data-key'));});});
+  el.querySelectorAll('.work-feat [data-detail],.work-wip [data-detail]').forEach(function(d){d.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();showDetail(d.getAttribute('data-detail'));});});}
 
 var KERNEL='<div class="k-boot">[ 0.000000 ] captKernel 6.ai-frontier booting… <span class="ok">ok</span><br>[ 0.001337 ] mounting /studio … <span class="ok">ok</span> · 5 dispatches · weekly</div>'+
 '<div class="k-pin"><span class="pin">★ pinned</span><div class="pt"><b>Ship an AI tool in a weekend</b><span>the free playbook — my exact process.</span></div><div class="get">Get it free →</div></div>'+
