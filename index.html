@@ -120,7 +120,9 @@
   .w-work .feat-card{border:1px solid var(--border);border-radius:8px;padding:.6rem .65rem;background:linear-gradient(180deg,rgba(70,209,122,.05),rgba(70,209,122,0));cursor:pointer;transition:transform .14s ease,border-color .14s ease,box-shadow .14s ease;display:flex;flex-direction:column;gap:.4rem;}
   .w-work .feat-card:hover{transform:translateY(-2px);border-color:var(--accent);box-shadow:0 8px 24px -14px rgba(70,209,122,.55);}
   .w-work .feat-top{display:flex;align-items:center;gap:.45rem;}
-  .w-work .feat-ico{font-size:1rem;line-height:1;}
+  .w-work .feat-ico{font-size:1rem;line-height:1;display:flex;align-items:center;}
+  .w-work .feat-ico svg{display:block;}
+  .w-work .det-head h3 svg{vertical-align:middle;margin-right:.15rem;}
   .w-work .feat-nm{font-weight:700;color:var(--text);font-size:.92rem;letter-spacing:.2px;}
   .w-work .feat-badge{margin-left:auto;font-size:.54rem;text-transform:uppercase;letter-spacing:.4px;color:var(--accent);border:1px solid rgba(70,209,122,.4);border-radius:99px;padding:.08rem .42rem;white-space:nowrap;}
   .w-work .feat-tag{font-size:.74rem;color:var(--muted);line-height:1.32;}
@@ -605,8 +607,13 @@ var FETCH='<pre class="logo"> ██████╗ ██╗  ██╗\n██
 '<div class="palette"><i style="background:var(--red)"></i><i style="background:var(--yellow)"></i><i style="background:var(--accent)"></i><i style="background:var(--blue)"></i><i style="background:var(--muted)"></i><i style="background:var(--text)"></i></div>';
 
 /* ---- featured flagships (shipped, finished pieces) ---- */
+/* real project logos, inlined as SVG so the site stays a single self-contained file */
+var ICO_KNOB='<svg class="glyph" viewBox="0 0 64 64" width="24" height="24" aria-label="Knob"><defs><linearGradient id="kn-g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7b6ef0"/><stop offset="1" stop-color="#5a23b8"/></linearGradient></defs><rect x="2" y="2" width="60" height="60" rx="15" fill="url(#kn-g)"/><circle cx="32" cy="35" r="13" fill="none" stroke="#fff" stroke-width="6"/><circle cx="32" cy="22" r="4" fill="#fff"/></svg>';
+var ICO_CLAUN='<svg class="glyph" viewBox="0 0 64 80" width="21" height="24" aria-label="Claunchpad"><defs><linearGradient id="cp-icon-trail" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#22c55e"/><stop offset=".5" stop-color="#5b8dee"/><stop offset="1" stop-color="#8b5cf6"/></linearGradient></defs><path d="M32 4 L58 40 L41 40 L41 62 L23 62 L23 40 L6 40 Z" fill="url(#cp-icon-trail)"/><rect x="12" y="70" width="40" height="6" rx="3" fill="#5b8dee"/></svg>';
+/* Skills Curator — "D4b": a skill decomposed into blocks, kept parts nudged inward, the chosen one chroma-red. Art-style: Clair Obscur / decompose-select-rewrite. */
+var ICO_SKILLS='<svg class="glyph" viewBox="0 0 64 64" width="24" height="24" aria-label="Skills Curator"><rect x="2" y="2" width="60" height="60" rx="15" fill="#f3ede1"/><rect x="18.1" y="18.1" width="8" height="8" rx="1.6" fill="#7a1f1f" opacity=".82"/><rect x="28" y="18.1" width="8" height="8" rx="1.6" fill="#7a1f1f" opacity=".82"/><rect x="39" y="17" width="8" height="8" rx="1.6" fill="#7a1f1f" opacity=".2"/><rect x="17" y="28" width="8" height="8" rx="1.6" fill="#7a1f1f" opacity=".2"/><rect x="28" y="28" width="8" height="8" rx="1.6" fill="#7a1f1f" opacity=".82"/><rect x="37.9" y="28" width="8" height="8" rx="1.6" fill="#d97777"/><rect x="18.1" y="37.9" width="8" height="8" rx="1.6" fill="#7a1f1f" opacity=".82"/><rect x="28" y="39" width="8" height="8" rx="1.6" fill="#7a1f1f" opacity=".2"/><rect x="37.9" y="37.9" width="8" height="8" rx="1.6" fill="#7a1f1f" opacity=".82"/></svg>';
 var FEATURED=[
- {k:'knob',ico:'🎚️',nm:'Knob',badge:'v1.0.0 · download',tag:'Windows audio + display control, one global hotkey.',
+ {k:'knob',ico:ICO_KNOB,nm:'Knob',badge:'v1.0.0 · download',tag:'Windows audio + display control, one global hotkey.',
   chips:['Electron','Win 11 acrylic','tray + hotkey'],
   cta:[{l:'Download ↓',h:'https://github.com/captkernel/Knob/releases/latest',c:'primary'},{l:'GitHub',h:'https://github.com/captkernel/Knob',c:'ghost'}],
   pitch:'A polished tray app summoned by a global hotkey (Ctrl+Alt+A). One glance, one click: switch your default speaker or mic, ride the volume slider, apply saved device profiles, and rearrange your monitors — then dismiss with the same key.',
@@ -615,7 +622,7 @@ var FEATURED=[
    {h:'🖥️ Display',i:['To-scale monitor layout you drag to arrange','Edge-snap, set primary, toggle a display on/off','Save & apply multi-monitor profiles in one click']},
    {h:'✨ Polish',i:['Native Win 11 acrylic glass + Framer Motion','Auto-start in tray, background auto-update','Resilient rebindable hotkey with live status']}],
   stack:'<b>Stack:</b> Electron · React · Tailwind · Framer Motion · NirSoft svcl / MultiMonitorTool helpers'},
- {k:'skills',ico:'🧠',nm:'Skills Curator',badge:'● live',tag:'The intelligence layer for Claude skills.',
+ {k:'skills',ico:ICO_SKILLS,nm:'Skills Curator',badge:'● live',tag:'The intelligence layer for Claude skills.',
   chips:['security scan','--customize','multi-platform'],
   cta:[{l:'GitHub',h:'https://github.com/captkernel/Skills_Curator',c:'primary'},{l:'What it does',h:'#',c:'ghost',d:'skills'}],
   pitch:'A trust-rated catalog plus real judgment: it tells you which skills actually fit your project — your stack, deps, and CLAUDE.md — recommends with pros and cons, security-scans before you install, and persists every decision.',
@@ -624,7 +631,7 @@ var FEATURED=[
    {h:'--customize',i:['Forks any skill, rebuilds it for your project','Keeps only the parts that fit, in your voice','Infuse, not invoke']},
    {h:'Everywhere',i:['Editions for Claude Code, Python, claude.ai','Migrates skills across 55+ agent platforms','Security scan on every candidate']}],
   stack:'<b>Editions:</b> Claude Code · Lite (no-Python) · Python · claude.ai'},
- {k:'claunchpad',ico:'🚀',nm:'Claunchpad',badge:'● live',tag:'One skill, and Claude works like a pro — zero setup.',
+ {k:'claunchpad',ico:ICO_CLAUN,nm:'Claunchpad',badge:'● live',tag:'One skill, and Claude works like a pro — zero setup.',
   chips:['persistent memory','agent teams','one-tap skills'],
   cta:[{l:'See showcase',h:'https://htmlpreview.github.io/?https://github.com/captkernel/Claunchpad/blob/master/showcase.html',c:'primary'},{l:'GitHub',h:'https://github.com/captkernel/Claunchpad',c:'ghost'}],
   pitch:'Drop in one skill and Claude starts working like a seasoned pro: persistent memory, agent teams that size themselves, the good ecosystem skills, and the habits that take weeks to work out. Answer one question and it runs.',
