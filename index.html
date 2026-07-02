@@ -709,7 +709,7 @@ var FEATURED=[
   stack:'<b>Stack:</b> Electron · React · Tailwind · Framer Motion · NirSoft svcl / MultiMonitorTool helpers'},
  {k:'skills',ico:ICO_SKILLS,nm:'Skills Curator',badge:'● live',tag:'The intelligence layer for Claude skills.',
   chips:['security scan','--customize','multi-platform'],
-  cta:[{l:'GitHub',h:'https://github.com/captkernel/Skills_Curator',c:'primary'},{l:'What it does',h:'#',c:'ghost',d:'skills'}],
+  cta:[{l:'What it does',h:'#',c:'primary',d:'skills'},{l:'GitHub',h:'https://github.com/captkernel/Skills_Curator',c:'ghost'}],
   pitch:'A trust-rated catalog plus real judgment: it tells you which skills actually fit your project — your stack, deps, and CLAUDE.md — recommends with pros and cons, security-scans before you install, and persists every decision.',
   why:'The Claude skills ecosystem grew faster than anyone could vet. I had no reliable way to know which skills fit my project, which were safe to install, or which I had already judged — so I built the layer that scores fit, security-scans, rewrites skills to match your project, and remembers every decision.',
   who:'Claude Code and claude.ai users drowning in skills who want to install only what fits — safely.',
@@ -1205,9 +1205,10 @@ function buildPat(){var c=patCanvas;var dpr=Math.min(2,window.devicePixelRatio||
     for(var i=0;i<fs.length;i++){var m=fs[i].properties.mag;if(m>5.5)continue;var co=fs[i].geometry.coordinates,pp=projDeg(co[0],co[1],skyLat,skyLon,jd,w,h);if(!pp)continue;
       if(pp.x<-40||pp.x>w+40||pp.y<-40||pp.y>h+40)continue;   /* cull off-screen → efficient */
       var stA=fieldStar(pp.x,pp.y,1000000+i);
-      /* every REAL catalogue star reads bright — high floor, brighter/bigger with lower magnitude */
-      stA.br=Math.max(0.62,Math.min(1,1.04-m*0.12));
-      stA.sz=Math.max(1.05,(3.4-m)*0.66);
+      /* every REAL catalogue star reads bright — high floor, brighter/bigger with lower magnitude.
+         the brightest reach the same brightness/size as the brightest stars in the Random field. */
+      stA.br=Math.max(0.62,1.22-m*0.13);
+      stA.sz=Math.max(1.2,(3.8-m)*0.95);
       stA.real=1;patDots.push(stA);}
     if(!FILLERSKY)fillerSkyGen();              /* filler = real sky coords → moves with time, reacts to cursor */
     for(var f=0;f<FILLERSKY.length;f++){var fp=projDeg(FILLERSKY[f][0],FILLERSKY[f][1],skyLat,skyLon,jd,w,h);if(!fp||fp.x<-40||fp.x>w+40||fp.y<-40||fp.y>h+40)continue;
