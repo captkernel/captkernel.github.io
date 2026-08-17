@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>C2B — Chat2Business Console · captKernel</title>
+<meta name="description" content="Chat2Business: turn a rough idea into a pressure-tested MVP. A 5-persona Claude Council reviews your idea, scores it, and only survivors get an MVP spec. Runs in your browser with your own Anthropic API key." />
+<link rel="canonical" href="https://captkernel.com/c2b/" />
+<meta name="theme-color" content="#0a0d0b" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230a0d0b'/%3E%3Ctext x='3' y='23' font-family='monospace' font-size='16' fill='%2346d17a'%3EC2B%3C/text%3E%3C/svg%3E" />
+<style>
+  :root{
+    --bg:#0a0d0b; --panel:#0f1411; --panel2:#121912; --border:#1d2922; --border-active:#2f7d4f;
+    --text:#dde5df; --muted:#7e8c84; --faint:#535e57; --accent:#46d17a; --accent-dim:#2f7d4f;
+    --red:#e06c75; --yellow:#e5c07b; --blue:#61afef; --amber:#e5a95b;
+    --sans:'Inter',system-ui,-apple-system,sans-serif; --mono:'JetBrains Mono',ui-monospace,'SF Mono',Menlo,monospace;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;}
+  body{background:radial-gradient(900px 500px at 50% -10%,#12190f 0%,var(--bg) 60%);
+    color:var(--text);font-family:var(--sans);-webkit-font-smoothing:antialiased;line-height:1.5;min-height:100vh;}
+  ::selection{background:var(--accent);color:#062012;}
+  a{color:var(--accent);text-decoration:none;} a:hover{text-decoration:underline;}
+  .wrap{max-width:900px;margin:0 auto;padding:0 18px 90px;}
+
+  /* top bar */
+  header{display:flex;align-items:center;justify-content:space-between;padding:16px 0 10px;font-family:var(--mono);font-size:.8rem;}
+  header .brand{color:var(--muted);} header .brand b{color:var(--accent);}
+  header a.back{color:var(--muted);}
+
+  /* window shell */
+  .win{background:var(--panel);border:1px solid var(--border);border-radius:12px;overflow:hidden;box-shadow:0 20px 50px rgba(0,0,0,.4);margin-bottom:16px;}
+  .win>.bar{display:flex;align-items:center;gap:.5rem;height:34px;padding:0 .85rem;background:var(--panel2);border-bottom:1px solid var(--border);font-family:var(--mono);font-size:.72rem;color:var(--muted);}
+  .win>.bar .ic{color:var(--accent);}
+  .win>.bar .dot{margin-left:auto;width:9px;height:9px;border-radius:50%;background:var(--faint);flex:none;}
+  .win>.bar .dot.run{background:var(--amber);animation:pulse 1s infinite;}
+  .win>.bar .dot.done{background:var(--accent);}
+  .win>.bar .dot.err{background:var(--red);}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+  .win>.body{padding:16px 18px;}
+
+  /* hero */
+  .hero h1{font-size:1.7rem;margin:2px 0 8px;letter-spacing:-.02em;}
+  .hero h1 .g{color:var(--accent);}
+  .hero p{color:var(--muted);margin:0 0 4px;max-width:640px;}
+  .pipe{font-family:var(--mono);font-size:.72rem;color:var(--faint);margin-top:10px;}
+  .pipe b{color:var(--accent-dim);}
+
+  label{display:block;font-family:var(--mono);font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:0 0 6px;}
+  input[type=text],input[type=password],textarea,select{width:100%;background:var(--panel2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:var(--sans);font-size:.92rem;padding:10px 12px;}
+  input:focus,textarea:focus,select:focus{outline:none;border-color:var(--border-active);box-shadow:0 0 0 1px var(--accent-dim);}
+  textarea{resize:vertical;min-height:90px;line-height:1.5;}
+  .row{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;}
+  .row>div{flex:1;min-width:180px;}
+  .field{margin-bottom:14px;}
+  .hint{font-size:.75rem;color:var(--faint);margin-top:6px;}
+  .hint.warn{color:var(--amber);}
+
+  button{font-family:var(--mono);font-size:.8rem;border-radius:8px;padding:9px 16px;cursor:pointer;border:1px solid var(--border);background:var(--panel2);color:var(--text);transition:.14s;}
+  button:hover{border-color:var(--border-active);color:var(--accent);}
+  button.primary{background:linear-gradient(180deg,var(--accent-dim),#256b41);border:none;color:#eafff1;font-weight:600;}
+  button.primary:hover{filter:brightness(1.12);color:#fff;}
+  button:disabled{opacity:.45;cursor:not-allowed;}
+  button.ghost{background:transparent;}
+  .btnrow{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:6px;}
+
+  .cost{margin-left:auto;font-family:var(--mono);font-size:.72rem;color:var(--muted);}
+  .cost b{color:var(--accent);}
+
+  .checkline{display:flex;align-items:center;gap:8px;font-size:.82rem;color:var(--muted);font-family:var(--sans);}
+  .checkline input{width:auto;}
+
+  /* output stages */
+  .stage .body{max-height:none;}
+  .out{font-family:var(--sans);font-size:.92rem;color:var(--text);white-space:normal;}
+  .out h2{font-size:.8rem;text-transform:uppercase;letter-spacing:.06em;color:var(--accent);margin:16px 0 6px;font-family:var(--mono);}
+  .out h3{font-size:.95rem;margin:14px 0 4px;color:var(--text);}
+  .out p{margin:0 0 9px;}
+  .out ul{margin:0 0 10px;padding-left:20px;} .out li{margin-bottom:4px;}
+  .out strong{color:#eafff1;}
+  .out code{font-family:var(--mono);font-size:.85em;background:var(--panel2);padding:1px 5px;border-radius:4px;color:var(--accent);}
+  .out .cursor{color:var(--accent);animation:blink 1s steps(1) infinite;} @keyframes blink{50%{opacity:0}}
+  .placeholder{color:var(--faint);font-family:var(--mono);font-size:.8rem;}
+
+  .council-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  @media(max-width:640px){.council-grid{grid-template-columns:1fr;}}
+  .persona{border:1px solid var(--border);border-radius:10px;background:var(--panel2);overflow:hidden;}
+  .persona .ph{display:flex;align-items:center;gap:.5rem;padding:7px 12px;font-family:var(--mono);font-size:.72rem;color:var(--muted);border-bottom:1px solid var(--border);}
+  .persona .ph .d{margin-left:auto;width:8px;height:8px;border-radius:50%;background:var(--faint);}
+  .persona .ph .d.run{background:var(--amber);animation:pulse 1s infinite;} .persona .ph .d.done{background:var(--accent);} .persona .ph .d.err{background:var(--red);}
+  .persona .pbody{padding:11px 13px;font-size:.85rem;max-height:300px;overflow:auto;}
+
+  .verdict-badge{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:12px;}
+  .score-ring{font-family:var(--mono);font-weight:800;font-size:1.6rem;border:2px solid var(--accent);border-radius:12px;padding:8px 14px;color:var(--accent);}
+  .tier-tag{font-family:var(--mono);font-size:.95rem;font-weight:700;padding:6px 14px;border-radius:999px;}
+  .tier-Launch{background:#12351f;color:#7ef0a6;border:1px solid #2f7d4f;}
+  .tier-Showcase{background:#123027;color:#63e6c0;border:1px solid #2f7d6f;}
+  .tier-Prototype{background:#2a2612;color:var(--yellow);border:1px solid #6f5f2f;}
+  .tier-Hangar{background:#2f2312;color:var(--amber);border:1px solid #6f4f2f;}
+  .tier-DontBuild{background:#2f1416;color:var(--red);border:1px solid #6f2f34;}
+  .dims{display:flex;gap:8px;flex-wrap:wrap;font-family:var(--mono);font-size:.72rem;}
+  .dims .dim{background:var(--panel2);border:1px solid var(--border);border-radius:6px;padding:4px 8px;color:var(--muted);}
+  .dims .dim b{color:var(--text);}
+
+  .err-box{background:#2a1416;border:1px solid #6f2f34;color:#ffb3bb;border-radius:8px;padding:10px 14px;font-size:.85rem;font-family:var(--mono);margin-top:8px;}
+  .copybtn{float:right;font-size:.68rem;padding:4px 9px;}
+  footer{text-align:center;color:var(--faint);font-family:var(--mono);font-size:.7rem;margin-top:24px;line-height:1.7;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="brand">cap<b>t</b>Kernel — c2b</div>
+    <a class="back" href="/">← back to captkernel.com</a>
+  </header>
+
+  <!-- HERO -->
+  <div class="win hero">
+    <div class="bar"><span class="ic">▸_</span> chat2business — console</div>
+    <div class="body">
+      <h1>Chat<span class="g">2</span>Business</h1>
+      <p>Turn a rough idea into a <strong>pressure-tested MVP</strong>. A five-persona Claude Council
+         adversarially reviews your idea, scores it, and — only for the ideas that survive — drafts an
+         MVP spec. A "don't build" verdict is a win: it saves you the build.</p>
+      <div class="pipe">capture → <b>structure</b> → <b>research</b> → <b>council</b> (5 parallel) → <b>decide</b> → <b>mvp</b></div>
+    </div>
+  </div>
+
+  <!-- CONFIG -->
+  <div class="win">
+    <div class="bar"><span class="ic">⚙</span> setup — bring your own Anthropic key</div>
+    <div class="body">
+      <div class="field">
+        <label for="apiKey">Anthropic API key</label>
+        <input id="apiKey" type="password" placeholder="sk-ant-..." autocomplete="off" spellcheck="false" />
+        <div class="hint warn">Your key stays in <strong>this browser only</strong> and is sent only to api.anthropic.com — this page loads no third-party scripts. Get a key at <a href="https://console.anthropic.com/settings/keys" target="_blank" rel="noopener">console.anthropic.com</a>. You pay Anthropic for usage.</div>
+        <div class="btnrow">
+          <label class="checkline"><input type="checkbox" id="remember" /> remember on this device</label>
+          <button class="ghost" id="clearKey" type="button">clear saved key</button>
+        </div>
+      </div>
+      <div class="row">
+        <div class="field" style="flex:1">
+          <label for="model">Model</label>
+          <select id="model">
+            <option value="claude-sonnet-5">Claude Sonnet 5 — balanced (recommended)</option>
+            <option value="claude-opus-5">Claude Opus 5 — deepest, priciest</option>
+            <option value="claude-haiku-4-5">Claude Haiku 4.5 — fastest, cheapest</option>
+          </select>
+          <div class="hint">A full run is ~7 model calls (5 run in parallel for the Council).</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- INPUT -->
+  <div class="win">
+    <div class="bar"><span class="ic">✎</span> your idea</div>
+    <div class="body">
+      <div class="field">
+        <label for="idea">The idea (or paste a transcript)</label>
+        <textarea id="idea" placeholder="Describe your product/business idea in plain words. e.g. 'An app where you sing into your mic and it plays a synth that follows your voice — for people who can't play keyboard.'"></textarea>
+      </div>
+      <div class="field">
+        <label for="instr">Special instructions <span style="text-transform:none;color:var(--faint)">(optional — applied to every stage)</span></label>
+        <textarea id="instr" style="min-height:64px" placeholder="e.g. Focus on the India market. Be extra harsh. Assume a $0 marketing budget. Target Gen Z. Physical product, not software."></textarea>
+      </div>
+      <div class="btnrow">
+        <button class="primary" id="run" type="button">▸ Run C2B</button>
+        <button class="ghost" id="rerunCouncil" type="button" disabled>re-run council only</button>
+        <button class="ghost" id="reset" type="button">reset</button>
+        <span class="cost" id="cost">tokens: <b>0</b> in / <b>0</b> out · ~$<b>0.0000</b></span>
+      </div>
+      <div id="cfgErr"></div>
+    </div>
+  </div>
+
+  <!-- OUTPUT STAGES -->
+  <div class="win stage" id="s-brief" hidden>
+    <div class="bar"><span class="ic">≡</span> idea brief <span class="dot" id="d-brief"></span></div>
+    <div class="body"><button class="ghost copybtn" data-copy="o-brief" type="button">copy</button><div class="out" id="o-brief"><span class="placeholder">idle</span></div></div>
+  </div>
+
+  <div class="win stage" id="s-research" hidden>
+    <div class="bar"><span class="ic">◍</span> research dossier <span class="dot" id="d-research"></span></div>
+    <div class="body"><button class="ghost copybtn" data-copy="o-research" type="button">copy</button><div class="out" id="o-research"><span class="placeholder">idle</span></div></div>
+  </div>
+
+  <div class="win stage" id="s-council" hidden>
+    <div class="bar"><span class="ic">⚖</span> the council — 5 independent personas <span class="dot" id="d-council"></span></div>
+    <div class="body">
+      <div class="council-grid" id="council-grid"></div>
+    </div>
+  </div>
+
+  <div class="win stage" id="s-verdict" hidden>
+    <div class="bar"><span class="ic">§</span> chair's verdict &amp; score <span class="dot" id="d-verdict"></span></div>
+    <div class="body">
+      <div class="verdict-badge" id="verdict-badge"></div>
+      <button class="ghost copybtn" data-copy="o-verdict" type="button">copy</button>
+      <div class="out" id="o-verdict"><span class="placeholder">idle</span></div>
+    </div>
+  </div>
+
+  <div class="win stage" id="s-mvp" hidden>
+    <div class="bar"><span class="ic">▲</span> <span id="mvp-title">mvp spec + go-to-market</span> <span class="dot" id="d-mvp"></span></div>
+    <div class="body"><button class="ghost copybtn" data-copy="o-mvp" type="button">copy</button><div class="out" id="o-mvp"><span class="placeholder">idle</span></div></div>
+  </div>
+
+  <footer>
+    Chat2Business runs client-side against the Anthropic API with your own key · nothing is stored on any server ·
+    built by <a href="/">captKernel</a><br>
+    This is a decision aid, not investment advice. Verdicts are model output — sanity-check before you build (or don't).
+  </footer>
+
+</div>
+
+<script>
+"use strict";
+/* ============================ C2B browser pipeline ============================ */
+
+const API_URL = "https://api.anthropic.com/v1/messages";
+const LS_KEY = "c2b.apikey.v1";
+const LS_STATE = "c2b.state.v1";
+
+/* per-Mtok pricing (USD): [input, output] */
+const PRICING = {
+  "claude-opus-5":   [5, 25],
+  "claude-sonnet-5": [3, 15],
+  "claude-haiku-4-5":[1, 5],
+};
+
+const $ = id => document.getElementById(id);
+const esc = s => s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+
+/* ---- tiny, safe markdown renderer (escape first, then a few patterns) ---- */
+function md(src){
+  const lines = src.split(/\r?\n/);
+  let html = "", inList = false;
+  const inline = t => esc(t)
+    .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
+    .replace(/`([^`]+)`/g, "<code>$1</code>");
+  for (let raw of lines){
+    const line = raw.replace(/\s+$/,"");
+    let m;
+    if (/^\s*[-*]\s+/.test(line)){
+      if(!inList){html+="<ul>";inList=true;}
+      html += "<li>"+inline(line.replace(/^\s*[-*]\s+/,""))+"</li>";
+      continue;
+    }
+    if(inList){html+="</ul>";inList=false;}
+    if(!line){continue;}
+    if((m=line.match(/^#{1,2}\s+(.*)/))){ html+="<h2>"+inline(m[1])+"</h2>"; }
+    else if((m=line.match(/^#{3,}\s+(.*)/))){ html+="<h3>"+inline(m[1])+"</h3>"; }
+    else { html += "<p>"+inline(line)+"</p>"; }
+  }
+  if(inList)html+="</ul>";
+  return html;
+}
+
+/* ---- cost meter ---- */
+let tokIn = 0, tokOut = 0;
+function addUsage(u, model){
+  if(!u) return;
+  tokIn += (u.input_tokens||0) + (u.cache_read_input_tokens||0) + (u.cache_creation_input_tokens||0);
+  tokOut += (u.output_tokens||0);
+  const p = PRICING[model] || [3,15];
+  const usd = (tokIn/1e6)*p[0] + (tokOut/1e6)*p[1];
+  $("cost").innerHTML = "tokens: <b>"+tokIn.toLocaleString()+"</b> in / <b>"+tokOut.toLocaleString()+"</b> out · ~$<b>"+usd.toFixed(4)+"</b>";
+}
+
+/* ---- one streaming Claude call ---- */
+async function callClaude({system, user, model, maxTokens, onDelta}){
+  const key = $("apiKey").value.trim();
+  const res = await fetch(API_URL, {
+    method:"POST",
+    headers:{
+      "content-type":"application/json",
+      "x-api-key":key,
+      "anthropic-version":"2023-06-01",
+      "anthropic-dangerous-direct-browser-access":"true",
+    },
+    body: JSON.stringify({
+      model, max_tokens:maxTokens, stream:true,
+      system, messages:[{role:"user", content:user}],
+    }),
+  });
+  if(!res.ok){
+    let detail = "";
+    try{ const j = await res.json(); detail = j.error && j.error.message ? j.error.message : JSON.stringify(j); }
+    catch(e){ detail = await res.text().catch(()=>res.statusText); }
+    const hint = res.status===401 ? " — check your API key"
+              : res.status===403 ? " — your key lacks access to this model, or org policy blocks it"
+              : res.status===429 ? " — rate limited; wait and retry, or pick a cheaper model"
+              : res.status===400 ? " — bad request" : "";
+    throw new Error("HTTP "+res.status+hint+": "+detail);
+  }
+  const reader = res.body.getReader();
+  const dec = new TextDecoder();
+  let buf = "", text = "", usage = null, model_used = model;
+  while(true){
+    const {done, value} = await reader.read();
+    if(done) break;
+    buf += dec.decode(value, {stream:true});
+    const parts = buf.split("\n\n");
+    buf = parts.pop();
+    for(const part of parts){
+      const dl = part.split("\n").find(l => l.startsWith("data:"));
+      if(!dl) continue;
+      const data = dl.slice(5).trim();
+      if(!data || data==="[DONE]") continue;
+      let ev; try{ ev = JSON.parse(data); }catch(e){ continue; }
+      if(ev.type==="content_block_delta" && ev.delta && ev.delta.type==="text_delta"){
+        text += ev.delta.text; if(onDelta) onDelta(text);
+      } else if(ev.type==="message_start" && ev.message){
+        if(ev.message.usage) usage = Object.assign({}, ev.message.usage);
+        if(ev.message.model) model_used = ev.message.model;
+      } else if(ev.type==="message_delta"){
+        if(ev.usage) usage = Object.assign(usage||{}, ev.usage);
+      }
+    }
+  }
+  addUsage(usage, model);
+  return {text, usage};
+}
+
+/* ---- stage status helpers ---- */
+function show(id){ $(id).hidden=false; }
+function setDot(id, cls){ const d=$(id); d.className="dot"+(cls?(" "+cls):""); }
+function renderInto(id, text){ $(id).innerHTML = md(text) + '<span class="cursor">▋</span>'; }
+function finalInto(id, text){ $(id).innerHTML = md(text); }
+
+/* ---- prompts ---- */
+function siBlock(){
+  const s = $("instr").value.trim();
+  return s ? ("\n\nSPECIAL INSTRUCTIONS from the user — apply these throughout, but KEEP the required output structure and section labels:\n"+s) : "";
+}
+const P = {
+  structure: idea => ({
+    system:"You are the Structurer in the Chat2Business pipeline. Turn a messy spoken/typed idea into a crisp idea brief. Output GitHub-flavored markdown. Use EXACTLY these bold labels on their own lines: **Name:**, **Problem:**, **Target user:**, **Proposed solution:**, **The core bet:** — then a '## Gaps / open questions' section with a bulleted list. Ground everything ONLY in the idea given; do not invent facts. Be concise and specific."+siBlock(),
+    user:"THE IDEA:\n"+idea,
+    max:2200,
+  }),
+  research: brief => ({
+    system:"You are the Researcher in the Chat2Business pipeline. From the idea brief, produce a concise evidence dossier in markdown with these '## ' sections in order: Demand & market size, Competitors / substitutes, Technical feasibility, Distribution & regulatory realities, Willingness to pay, Open questions for the council. Name real competitors/products where you can. You have NO live web access — rely on your own knowledge and clearly flag anything uncertain or likely-outdated. Be adversarial about whether the idea is already served."+siBlock(),
+    user:"IDEA BRIEF:\n"+brief,
+    max:2600,
+  }),
+  persona: (name, lens, brief, research) => ({
+    system:"You are the "+name+" on the Chat2Business Claude Council. Lens: "+lens+" Read the idea brief and research, then write a short, sharp testimony (~150-220 words) in markdown: a one-line verdict, then 3-4 arguments grounded in the evidence, then the single most important point. Be specific and honest — a well-argued 'don't build' that saves wasted effort is a win. Form your own view."+siBlock(),
+    user:"IDEA BRIEF:\n"+brief+"\n\nRESEARCH:\n"+research,
+    max:900,
+  }),
+  chair: (brief, research, testimonies) => ({
+    system:"You are the Council Chair in the Chat2Business pipeline. Synthesize the five persona testimonies into a verdict. Output markdown in this EXACT order and keep these literal labels so they can be parsed:\n"+
+      "1. A line '## Score: N / 100' where N = 2 × (sum of the five dimension scores below).\n"+
+      "2. OPTIONAL line '## Override: <Tier>' — only if a fatal flaw or dominant free incumbent forces a lower tier than the math. Tiers: Launch, Showcase, Prototype, Hangar, Don't Build.\n"+
+      "3. '## Dimensions' with five lines, each 'Pain: X/10 — reason', then Demand, Feasibility, Edge, Core bet (each /10).\n"+
+      "4. '## The single hardest truth' — one blockquote-worthy sentence.\n"+
+      "5. '## Recommendation'.\n"+
+      "6. '## Conditions' — a bulleted list of what must be true.\n"+
+      "Be decisive and adversarial."+siBlock(),
+    user:"IDEA BRIEF:\n"+brief+"\n\nRESEARCH:\n"+research+"\n\nFIVE TESTIMONIES:\n"+testimonies,
+    max:2600,
+  }),
+  mvp: (brief, verdict, tier) => ({
+    system: (tier==="Don't Build"
+      ? "You are the MVP orchestrator, but the council verdict is DON'T BUILD. Do NOT design a product. Instead write a short 'Don't build — here's why, and what to do instead' report in markdown: '## Why not', '## Use this instead' (name the dominant existing solution(s) with what they cost), and '## If you still want to explore' (the one reframe or niche that could change the verdict)."
+      : "You are the MVP orchestrator in the Chat2Business pipeline. The idea survived the council ("+tier+" tier). Write a focused MVP plan in markdown with: '## What the MVP tests' (the smallest thing that tests the core bet), '## Smallest working version' (concretely what to build/do), '## The offer' (Hormozi value-equation framing), '## First 10 customers' (a concrete plan), and '## Kill / proceed criteria'. Scale ambition to the tier. Be concrete, not generic.")+siBlock(),
+    user:"IDEA BRIEF:\n"+brief+"\n\nCOUNCIL VERDICT:\n"+verdict,
+    max:3200,
+  }),
+};
+
+const PERSONAS = [
+  ["Contrarian","Find the fatal flaw — argue why this fails."],
+  ["First-Principles Analyst","Strip to fundamentals — what must be true, and is it?"],
+  ["Optimist","The strongest realistic upside — if it works, why, and how big?"],
+  ["Outsider","The angle insiders miss — reframe it."],
+  ["Executor","Can it be built and sold, cheaply and soon? Does the money work?"],
+];
+
+/* ---- scoring / tiers ---- */
+const TIERS = [[80,"Launch"],[60,"Showcase"],[40,"Prototype"],[20,"Hangar"],[0,"Don't Build"]];
+function tierFor(score){ for(const [f,n] of TIERS){ if(score>=f) return n; } return "Don't Build"; }
+function tierClass(n){ return "tier-"+n.replace(/[^A-Za-z]/g,""); }
+function parseVerdict(text){
+  const dimLabels = ["pain","demand","feasibility","edge","core bet"];
+  const dims = {};
+  text.split(/\r?\n/).forEach(line=>{
+    const m = line.match(/(\d{1,2})\s*\/\s*10/);
+    if(!m) return;
+    const low = line.toLowerCase();
+    for(const lab of dimLabels){ if(low.includes(lab) && dims[lab]===undefined){ dims[lab]=Math.max(0,Math.min(10,parseInt(m[1],10))); } }
+  });
+  const vals = dimLabels.filter(l=>dims[l]!==undefined).map(l=>dims[l]);
+  let score = vals.length===5 ? 2*vals.reduce((a,b)=>a+b,0) : null;
+  if(score===null){ const sm = text.match(/score[:\s#]*?(\d{1,3})/i); if(sm) score = Math.max(0,Math.min(100,parseInt(sm[1],10))); }
+  let tier = score!==null ? tierFor(score) : null;
+  const ov = text.match(/##?\s*Override:\s*([A-Za-z' ]+)/i);
+  if(ov){ const cand=ov[1].trim().replace(/[^A-Za-z' ]/g,"").trim(); const known=TIERS.map(t=>t[1]).find(n=>n.toLowerCase().replace(/[^a-z]/g,"")===cand.toLowerCase().replace(/[^a-z]/g,"")); if(known) tier=known; }
+  return {score, tier, dims};
+}
+function renderBadge(v){
+  const el = $("verdict-badge"); el.innerHTML="";
+  if(v.score!==null){ const r=document.createElement("div"); r.className="score-ring"; r.textContent=v.score+" / 100"; el.appendChild(r); }
+  if(v.tier){ const t=document.createElement("div"); t.className="tier-tag "+tierClass(v.tier); t.textContent=v.tier; el.appendChild(t); }
+  const order=["pain","demand","feasibility","edge","core bet"];
+  const labs={pain:"Pain",demand:"Demand",feasibility:"Feas",edge:"Edge","core bet":"Core"};
+  const dd=document.createElement("div"); dd.className="dims";
+  order.forEach(k=>{ if(v.dims[k]!==undefined){ const d=document.createElement("div"); d.className="dim"; d.innerHTML=labs[k]+" <b>"+v.dims[k]+"</b>"; dd.appendChild(d);} });
+  if(dd.children.length) el.appendChild(dd);
+}
+
+/* ---- run the pipeline ---- */
+let running = false;
+let lastBrief = "", lastResearch = "";
+
+function cfgError(msg){ $("cfgErr").innerHTML = msg ? '<div class="err-box">'+esc(msg)+'</div>' : ""; }
+function stageErr(id, msg){ setDot("d-"+id,"err"); const o=$("o-"+id); if(o) o.innerHTML += '<div class="err-box">'+esc(msg)+'</div>'; }
+
+function guard(){
+  cfgError("");
+  if(!$("apiKey").value.trim()){ cfgError("Enter your Anthropic API key first."); return false; }
+  if(!$("idea").value.trim()){ cfgError("Describe your idea first."); return false; }
+  return true;
+}
+
+async function runFull(){
+  if(running || !guard()) return;
+  running = true; setBusy(true);
+  const model = $("model").value;
+  const idea = $("idea").value.trim();
+  tokIn=0; tokOut=0; addUsage(null, model);
+  saveState();
+  try{
+    // 1. structure
+    show("s-brief"); setDot("d-brief","run"); renderInto("o-brief","");
+    const b = P.structure(idea);
+    const brief = (await callClaude({...b, model, maxTokens:b.max, onDelta:t=>renderInto("o-brief",t)})).text;
+    finalInto("o-brief", brief); setDot("d-brief","done"); lastBrief = brief;
+
+    // 2. research
+    show("s-research"); setDot("d-research","run"); renderInto("o-research","");
+    const r = P.research(brief);
+    const research = (await callClaude({...r, model, maxTokens:r.max, onDelta:t=>renderInto("o-research",t)})).text;
+    finalInto("o-research", research); setDot("d-research","done"); lastResearch = research;
+
+    // 3+4. council + chair
+    await runCouncil(brief, research, model);
+  } catch(e){
+    cfgError(e.message || String(e));
+  } finally {
+    running=false; setBusy(false); saveState();
+  }
+}
+
+async function runCouncil(brief, research, model){
+  brief = brief || lastBrief; research = research || lastResearch;
+  if(!brief){ cfgError("Run the full pipeline first — the council needs an idea brief."); return; }
+  // build persona cards
+  show("s-council"); setDot("d-council","run");
+  const grid = $("council-grid"); grid.innerHTML="";
+  const bodies = {};
+  PERSONAS.forEach(([name],i)=>{
+    const card=document.createElement("div"); card.className="persona";
+    card.innerHTML='<div class="ph"><span>'+esc(name)+'</span><span class="d run" id="pd-'+i+'"></span></div><div class="pbody out" id="pb-'+i+'"><span class="placeholder">thinking…</span></div>';
+    grid.appendChild(card); bodies[i]=$("pb-"+i);
+  });
+  const results = await Promise.all(PERSONAS.map(([name,lens],i)=>{
+    const pp = P.persona(name, lens, brief, research);
+    return callClaude({...pp, model, maxTokens:pp.max, onDelta:t=>{ bodies[i].innerHTML = md(t)+'<span class="cursor">▋</span>'; }})
+      .then(res=>{ bodies[i].innerHTML = md(res.text); $("pd-"+i).className="d done"; return {name, text:res.text}; })
+      .catch(err=>{ bodies[i].innerHTML = '<div class="err-box">'+esc(err.message)+'</div>'; $("pd-"+i).className="d err"; return {name, text:"(failed: "+err.message+")"}; });
+  }));
+  setDot("d-council","done");
+
+  // chair
+  show("s-verdict"); setDot("d-verdict","run"); renderInto("o-verdict","");
+  const testimonies = results.map(r=>"### "+r.name+"\n"+r.text).join("\n\n");
+  const c = P.chair(brief, research, testimonies);
+  const verdict = (await callClaude({...c, model, maxTokens:c.max, onDelta:t=>renderInto("o-verdict",t)})).text;
+  finalInto("o-verdict", verdict); setDot("d-verdict","done");
+  const v = parseVerdict(verdict); renderBadge(v);
+
+  // 5. mvp / report
+  const tier = v.tier || "Prototype";
+  show("s-mvp"); setDot("d-mvp","run"); renderInto("o-mvp","");
+  $("mvp-title").textContent = (tier==="Don't Build") ? "don't-build report" : "mvp spec + go-to-market";
+  const m = P.mvp(brief, verdict, tier);
+  const mvp = (await callClaude({...m, model, maxTokens:m.max, onDelta:t=>renderInto("o-mvp",t)})).text;
+  finalInto("o-mvp", mvp); setDot("d-mvp","done");
+  $("rerunCouncil").disabled = false;
+}
+
+function setBusy(b){
+  $("run").disabled=b; $("run").textContent = b ? "running…" : "▸ Run C2B";
+  $("rerunCouncil").disabled = b || !lastBrief;
+}
+
+/* ---- persistence (inputs + key only; not outputs) ---- */
+function saveState(){
+  try{ localStorage.setItem(LS_STATE, JSON.stringify({idea:$("idea").value, instr:$("instr").value, model:$("model").value})); }catch(e){}
+}
+function loadState(){
+  try{
+    const s = JSON.parse(localStorage.getItem(LS_STATE)||"{}");
+    if(s.idea) $("idea").value=s.idea;
+    if(s.instr) $("instr").value=s.instr;
+    if(s.model) $("model").value=s.model;
+  }catch(e){}
+  const k = localStorage.getItem(LS_KEY);
+  if(k){ $("apiKey").value=k; $("remember").checked=true; }
+}
+
+/* ---- wire up ---- */
+$("run").addEventListener("click", runFull);
+$("rerunCouncil").addEventListener("click", ()=>{ if(running) return; running=true; setBusy(true);
+  runCouncil(lastBrief, lastResearch, $("model").value).catch(e=>cfgError(e.message)).finally(()=>{running=false;setBusy(false);}); });
+$("reset").addEventListener("click", ()=>{
+  ["s-brief","s-research","s-council","s-verdict","s-mvp"].forEach(id=>$(id).hidden=true);
+  lastBrief=""; lastResearch=""; $("rerunCouncil").disabled=true; cfgError("");
+  tokIn=0;tokOut=0;addUsage(null,$("model").value);
+});
+$("remember").addEventListener("change", e=>{
+  if(e.target.checked){ try{ localStorage.setItem(LS_KEY, $("apiKey").value.trim()); }catch(_){} }
+  else { localStorage.removeItem(LS_KEY); }
+});
+$("apiKey").addEventListener("input", ()=>{ if($("remember").checked){ try{ localStorage.setItem(LS_KEY, $("apiKey").value.trim()); }catch(_){} } });
+$("clearKey").addEventListener("click", ()=>{ localStorage.removeItem(LS_KEY); $("apiKey").value=""; $("remember").checked=false; });
+$("model").addEventListener("change", saveState);
+$("idea").addEventListener("input", saveState);
+$("instr").addEventListener("input", saveState);
+document.addEventListener("click", e=>{
+  const b = e.target.closest("[data-copy]"); if(!b) return;
+  const el = $(b.getAttribute("data-copy")); if(!el) return;
+  navigator.clipboard.writeText(el.innerText).then(()=>{ const t=b.textContent; b.textContent="copied"; setTimeout(()=>b.textContent=t,1200); });
+});
+
+loadState();
+</script>
+</body>
+</html>

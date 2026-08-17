@@ -538,6 +538,7 @@
   <div class="app" data-open="work">▦<span class="lab">work</span></div>
   <div class="app" data-open="kernel">✎<span class="lab">kernel</span></div>
   <div class="app" data-open="connect">✉<span class="lab">connect</span></div>
+  <div class="app" data-link="c2b">◆<span class="lab">c2b</span></div>
   <div class="sep"></div>
   <div class="app" data-link="github">⌥<span class="lab">gh</span></div>
   <div class="app" data-link="x">𝕏<span class="lab">x</span></div>
@@ -1433,7 +1434,7 @@ function initMobile(){
 
 /* ---------------- boot ---------------- */
 document.querySelectorAll('.dock .app[data-open]').forEach(function(a){a.addEventListener('click',function(){openApp(a.getAttribute('data-open'));});});
-document.querySelectorAll('.dock .app[data-link]').forEach(function(a){a.addEventListener('click',function(){var k=a.getAttribute('data-link');var u=({github:'https://github.com/captkernel',x:'https://x.com/captkernel'})[k];if(u)window.open(u,'_blank','noopener');});});
+document.querySelectorAll('.dock .app[data-link]').forEach(function(a){a.addEventListener('click',function(){var k=a.getAttribute('data-link');var u=({github:'https://github.com/captkernel',x:'https://x.com/captkernel',c2b:'/c2b/'})[k];if(u){if(k==='c2b')location.href=u;else window.open(u,'_blank','noopener');}});});
 window.addEventListener('resize',function(){relayout();if(patOn)buildPat();});
 /* dock auto-hide: peeks at the bottom; reveal on hovering the peek/strip, hide on leave */
 var dockEl=document.querySelector('.dock'), dockPeek=document.getElementById('dockpeek'), wmctlEl=document.getElementById('wmctl');
