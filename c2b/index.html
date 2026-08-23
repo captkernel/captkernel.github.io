@@ -144,8 +144,8 @@
         <div class="field" style="flex:1">
           <label for="model">Model</label>
           <select id="model">
-            <option value="claude-sonnet-5">Claude Sonnet 5 — balanced (recommended)</option>
-            <option value="claude-opus-5">Claude Opus 5 — deepest, priciest</option>
+            <option value="claude-sonnet-4-6">Claude Sonnet 4.6 — balanced (recommended)</option>
+            <option value="claude-opus-4-8">Claude Opus 4.8 — deepest, priciest</option>
             <option value="claude-haiku-4-5">Claude Haiku 4.5 — fastest, cheapest</option>
           </select>
           <div class="hint">A full run is ~7 model calls (5 run in parallel for the Council).</div>
@@ -226,9 +226,9 @@ const LS_STATE = "c2b.state.v1";
 
 /* per-Mtok pricing (USD): [input, output] */
 const PRICING = {
-  "claude-opus-5":   [5, 25],
-  "claude-sonnet-5": [3, 15],
-  "claude-haiku-4-5":[1, 5],
+  "claude-opus-4-8":   [5, 25],
+  "claude-sonnet-4-6": [3, 15],
+  "claude-haiku-4-5":  [1, 5],
 };
 
 const $ = id => document.getElementById(id);
