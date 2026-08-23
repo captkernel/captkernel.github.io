@@ -1770,6 +1770,7 @@ var IS_MOBILE=window.matchMedia('(max-width:820px)').matches;
 try{var _qos=new URLSearchParams(location.search).get('os');if(_qos==='macos'||_qos==='linux'||_qos==='ios')osMode=_qos;}catch(e){}   /* ?os= preview override */
 document.body.classList.toggle('macos',osMode==='macos');
 document.body.classList.toggle('ios',osMode==='ios');
+if(osMode==='ios'){var _tc=document.querySelector('meta[name="theme-color"]');if(_tc)_tc.setAttribute('content','#000000');}
 [].forEach.call(document.querySelectorAll('#osswitch button'),function(b){b.classList.toggle('on',b.getAttribute('data-os')===osMode);b.addEventListener('click',function(){applyOs(b.getAttribute('data-os'));});});
 updateClock();
 if(osMode==='ios'){P.count=Math.min(P.count,700);P.cursorGlowA=0;if(typeof initIOS==='function')initIOS();startEmpty();}
