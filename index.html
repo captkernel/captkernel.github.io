@@ -520,6 +520,15 @@
   body.ios .ios-scroll .conn-app .row,body.ios .w-conn .row{border-radius:14px;background:#1c1c1e;margin-bottom:8px;border:.5px solid rgba(255,255,255,.06);}
   body.ios .ios-scroll .k-boot{display:none;}     /* drop the Linux dmesg boot lines, like macOS does */
   body.ios .ios-scroll input{font-size:16px;}     /* prevent iOS zoom-on-focus */
+  /* narrow-width content fits (mirrors the #mobile rules) */
+  body.ios #empty{display:block!important;position:fixed;inset:0;z-index:0;cursor:default;pointer-events:none;}
+  body.ios .ios-scroll .work-feat,body.ios .ios-scroll .work-wip{grid-template-columns:1fr;}
+  body.ios .ios-scroll .det-grid,body.ios .ios-scroll .ag-grid{grid-template-columns:1fr;}
+  body.ios .ios-scroll .fhead,body.ios .ios-scroll .frow{grid-template-columns:22px 1fr 58px;}
+  body.ios .ios-scroll .ty,body.ios .ios-scroll .src{display:none;}
+  body.ios .ios-scroll .k-row{flex-wrap:wrap;} body.ios .ios-scroll .k-row .ti{flex:1 1 100%;}
+  body.ios .ios-scroll{scrollbar-width:none;} body.ios .ios-scroll::-webkit-scrollbar{display:none;}
+  body.ios.sheet-open .osswitch{display:none;}   /* the switch belongs to the springboard, not inside apps */
   /* terminal app */
   #ios .ios-sheet.app-term .ios-scroll{display:flex;flex-direction:column;padding:12px 14px calc(env(safe-area-inset-bottom,0px) + 14px);
     font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:13px;background:#0b0d0c;}
@@ -1539,10 +1548,10 @@ function iosOpen(key){
     sheet.querySelector('.nav-back').addEventListener('click',iosClose);
     _iosSheets[key]=sheet;
   }
-  requestAnimationFrame(function(){Object.keys(_iosSheets).forEach(function(k){_iosSheets[k].classList.toggle('open',k===key);});});
+  requestAnimationFrame(function(){Object.keys(_iosSheets).forEach(function(k){_iosSheets[k].classList.toggle('open',k===key);});document.body.classList.add('sheet-open');});
   if(key==='term'){var inp=sheet.querySelector('.terminline input');if(inp)setTimeout(function(){inp.focus();},280);}
 }
-function iosClose(){Object.keys(_iosSheets).forEach(function(k){_iosSheets[k].classList.remove('open');});}
+function iosClose(){Object.keys(_iosSheets).forEach(function(k){_iosSheets[k].classList.remove('open');});document.body.classList.remove('sheet-open');}
 function initIOS(){
   var host=document.getElementById('ios');if(!host)return;
   host.innerHTML=
