@@ -105,6 +105,65 @@
   .err-box{background:#2a1416;border:1px solid #6f2f34;color:#ffb3bb;border-radius:8px;padding:10px 14px;font-size:.85rem;font-family:var(--mono);margin-top:8px;}
   .copybtn{float:right;font-size:.68rem;padding:4px 9px;}
   footer{text-align:center;color:var(--faint);font-family:var(--mono);font-size:.7rem;margin-top:24px;line-height:1.7;}
+
+  /* ---- capture: mode toggle ---- */
+  .labelnote{text-transform:none;letter-spacing:0;color:var(--faint);font-weight:400;}
+  .modeseg{display:inline-flex;gap:3px;padding:3px;background:var(--panel2);border:1px solid var(--border);border-radius:10px;margin-bottom:14px;}
+  .seg-btn{font-family:var(--mono);font-size:.74rem;padding:7px 16px;border:none;background:transparent;color:var(--muted);border-radius:7px;}
+  .seg-btn:hover{color:var(--text);}
+  .seg-btn.on{background:var(--accent-dim);color:#eafff1;}
+  .modehint{color:var(--muted);font-size:.86rem;margin:2px 0 0;}
+
+  /* ---- voice capture ---- */
+  .voicerow{display:flex;gap:10px;align-items:stretch;}
+  .drop{flex:1;border:1.5px dashed var(--border);border-radius:10px;padding:14px 16px;text-align:center;cursor:pointer;transition:.14s;display:flex;flex-direction:column;justify-content:center;gap:4px;}
+  .drop:hover,.drop:focus-visible{border-color:var(--accent-dim);outline:none;}
+  .drop.hot{border-color:var(--accent);background:rgba(70,209,122,.06);}
+  .drop-main{font-size:.9rem;color:var(--text);}
+  .drop .hint{margin-top:0;}
+  .linklike{color:var(--accent);text-decoration:underline;cursor:pointer;}
+  .recbtn{display:flex;align-items:center;gap:8px;white-space:nowrap;}
+  .recdot{width:9px;height:9px;border-radius:50%;background:var(--muted);flex:none;transition:.14s;}
+  .recbtn.rec{border-color:var(--red);color:#ffb3bb;}
+  .recbtn.rec .recdot{background:var(--red);animation:pulse 1s infinite;}
+  .voicefoot{display:flex;gap:14px;align-items:flex-end;margin-top:12px;flex-wrap:wrap;}
+  .engine-field{flex:1;min-width:200px;margin-bottom:0;}
+  .voicebtns{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+  #voiceStatus{margin-top:10px;}
+  .vstatus{padding:8px 12px;border-radius:8px;font-size:.82rem;font-family:var(--mono);border:1px solid var(--border);background:var(--panel2);color:var(--muted);display:flex;align-items:center;gap:9px;}
+  .vstatus.ok{color:var(--accent);border-color:var(--accent-dim);}
+  .vstatus.err{color:#ffb3bb;border-color:#6f2f34;background:#2a1416;}
+  .vstatus .spin{width:11px;height:11px;border-radius:50%;border:2px solid var(--accent-dim);border-top-color:var(--accent);animation:vspin .7s linear infinite;flex:none;}
+  @keyframes vspin{to{transform:rotate(360deg)}}
+  .vbar{height:4px;border-radius:3px;background:var(--border);overflow:hidden;margin-top:8px;}
+  .vbar>i{display:block;height:100%;background:var(--accent);width:0;transition:width .2s;}
+
+  /* ---- os switch (shared ckOS with the main site) ---- */
+  .osswitch{position:fixed;left:14px;bottom:14px;z-index:200;display:flex;gap:3px;padding:3px;border-radius:11px;
+    background:rgba(15,20,17,.85);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid var(--border);
+    font-family:var(--mono);font-size:.66rem;box-shadow:0 8px 26px rgba(0,0,0,.45);}
+  .osswitch button{border:none;background:transparent;color:var(--muted);padding:.34rem .62rem;border-radius:8px;}
+  .osswitch button.on{background:rgba(70,209,122,.18);color:var(--accent);}
+  @media(max-width:820px){.osswitch{bottom:auto;top:.6rem;right:.7rem;left:auto;}}
+
+  /* ===================== macOS skin (body.macos) ===================== */
+  body.macos{
+    --bg:#1c1c1f; --panel:rgba(44,44,48,.72); --panel2:rgba(58,58,63,.55);
+    --border:rgba(255,255,255,.10); --border-active:#0a84ff; --accent:#0a84ff; --accent-dim:#0a6fd6;
+    --text:#f2f2f5; --muted:#a6a6ad; --faint:#6f6f78;
+    --sans:-apple-system,BlinkMacSystemFont,'SF Pro Text','Inter',system-ui,sans-serif;
+    background:linear-gradient(160deg,#3a2f52 0%,#1c1c1f 46%,#12222b 100%);
+  }
+  body.macos ::selection{background:#0a84ff;color:#fff;}
+  body.macos .win{border-radius:12px;background:var(--panel);backdrop-filter:blur(30px) saturate(1.5);-webkit-backdrop-filter:blur(30px) saturate(1.5);box-shadow:0 30px 70px rgba(0,0,0,.5);}
+  body.macos .win>.bar{height:38px;justify-content:center;position:relative;background:rgba(58,58,63,.5);}
+  body.macos .win>.bar .ic{display:none;}
+  body.macos .win>.bar .dot{position:absolute;right:.85rem;}
+  body.macos .win>.bar::before{content:"";position:absolute;left:14px;top:50%;transform:translateY(-50%);width:12px;height:12px;border-radius:50%;
+    background:#ff5f57;box-shadow:20px 0 0 #febc2e,40px 0 0 #28c840;}
+  body.macos .seg-btn.on,body.macos button.primary{color:#fff;}
+  body.macos .osswitch button.on{background:rgba(10,132,255,.32);color:#fff;}
+  body.macos .drop.hot{background:rgba(10,132,255,.08);}
 </style>
 </head>
 <body>
@@ -154,17 +213,53 @@
     </div>
   </div>
 
-  <!-- INPUT -->
+  <!-- CAPTURE -->
   <div class="win">
-    <div class="bar"><span class="ic">✎</span> your idea</div>
+    <div class="bar"><span class="ic">◉</span> start here — speak it or write it</div>
     <div class="body">
-      <div class="field">
-        <label for="idea">The idea (or paste a transcript)</label>
-        <textarea id="idea" placeholder="Describe your product/business idea in plain words. e.g. 'An app where you sing into your mic and it plays a synth that follows your voice — for people who can't play keyboard.'"></textarea>
+      <div class="modeseg" role="tablist" aria-label="capture mode">
+        <button class="seg-btn on" data-mode="voice" role="tab" aria-selected="true" type="button">voice note</button>
+        <button class="seg-btn" data-mode="text" role="tab" aria-selected="false" type="button">long text</button>
+      </div>
+
+      <!-- voice capture -->
+      <div id="mode-voice" class="mode">
+        <div class="voicerow">
+          <div class="drop" id="drop" tabindex="0" role="button" aria-label="upload a voice memo">
+            <div class="drop-main">drop a voice memo, or <label class="linklike">browse<input id="audioFile" type="file" accept="audio/*,video/mp4,video/webm" hidden></label></div>
+            <div class="hint">m4a · mp3 · wav · ogg · webm — transcribed into the idea below</div>
+          </div>
+          <button class="recbtn" id="recBtn" type="button" aria-label="record from microphone"><span class="recdot"></span><span class="reclabel">record</span></button>
+        </div>
+        <div class="voicefoot">
+          <div class="field engine-field">
+            <label for="engine">transcription</label>
+            <select id="engine">
+              <option value="local">in this browser — private &amp; free</option>
+              <option value="fast">fast mode — via server</option>
+            </select>
+          </div>
+          <div class="voicebtns">
+            <button class="primary" id="transcribeBtn" type="button" disabled>▸ transcribe</button>
+            <button class="ghost" id="sendBtn" type="button" disabled title="Queue this note for captKernel's own pipeline to review later">send to my pipeline</button>
+          </div>
+        </div>
+        <div id="voiceStatus"></div>
+      </div>
+
+      <!-- text capture: the shared idea buffer below is the input; nothing extra needed -->
+      <div id="mode-text" class="mode" hidden>
+        <p class="modehint">Type or paste your idea (or a transcript) straight into the box below, then Run.</p>
+      </div>
+
+      <!-- shared, always-editable idea buffer — the single source of truth for the run -->
+      <div class="field" style="margin-top:16px">
+        <label for="idea">the idea <span class="labelnote">editable · this is what runs</span></label>
+        <textarea id="idea" placeholder="Your idea lands here. Speak it, drop a memo, or paste text — then edit and Run C2B."></textarea>
       </div>
       <div class="field">
-        <label for="instr">Special instructions <span style="text-transform:none;color:var(--faint)">(optional — applied to every stage)</span></label>
-        <textarea id="instr" style="min-height:64px" placeholder="e.g. Focus on the India market. Be extra harsh. Assume a $0 marketing budget. Target Gen Z. Physical product, not software."></textarea>
+        <label for="instr">special instructions <span class="labelnote">optional · applied to every stage</span></label>
+        <textarea id="instr" style="min-height:60px" placeholder="e.g. Focus on the India market. Be extra harsh. Assume a $0 marketing budget. Physical product, not software."></textarea>
       </div>
       <div class="btnrow">
         <button class="primary" id="run" type="button">▸ Run C2B</button>
@@ -209,11 +304,18 @@
   </div>
 
   <footer>
-    Chat2Business runs client-side against the Anthropic API with your own key · nothing is stored on any server ·
-    built by <a href="/">captKernel</a><br>
-    This is a decision aid, not investment advice. Verdicts are model output — sanity-check before you build (or don't).
+    Chat2Business runs client-side against the Anthropic API with your own key. Voice notes are transcribed
+    <b>in your browser</b> by default (audio never leaves your device; the Whisper model loads once from jsDelivr).
+    Fast mode, when enabled, sends audio to captKernel's server for transcription only and stores nothing;
+    "send to my pipeline" queues the audio until captKernel's own machine reviews it. Built by <a href="/">captKernel</a>.<br>
+    This is a decision aid, not investment advice. Verdicts are model output. Sanity-check before you build (or don't).
   </footer>
 
+</div>
+
+<div class="osswitch" id="osswitch" aria-label="interface skin">
+  <button data-os="linux" type="button">linux</button>
+  <button data-os="macos" type="button">macos</button>
 </div>
 
 <script>
@@ -223,6 +325,12 @@
 const API_URL = "https://api.anthropic.com/v1/messages";
 const LS_KEY = "c2b.apikey.v1";
 const LS_STATE = "c2b.state.v1";
+
+/* transcription: local in-browser Whisper + optional hosted "fast mode".
+   WORKER_URL empty = server modes unavailable (page still fully works locally). */
+const WORKER_URL = "";
+const WHISPER_MODEL = "onnx-community/whisper-base";
+const TRANSFORMERS_CDN = "https://cdn.jsdelivr.net/npm/@huggingface/transformers@4.2.0";
 
 /* per-Mtok pricing (USD): [input, output] */
 const PRICING = {
@@ -513,6 +621,226 @@ function loadState(){
   const k = localStorage.getItem(LS_KEY);
   if(k){ $("apiKey").value=k; $("remember").checked=true; }
 }
+
+/* ============================ capture: voice + text ============================ */
+const voiceState = { file:null, filename:"", pcm:null };
+
+function setVoiceStatus(msg, cls){
+  const el = $("voiceStatus");
+  if(!msg){ el.innerHTML=""; return; }
+  const spin = cls==="run" ? '<span class="spin"></span>' : "";
+  el.innerHTML = '<div class="vstatus '+(cls==="run"?"":cls||"")+'">'+spin+'<span>'+msg+'</span></div>';
+}
+function setVoiceBar(pct){
+  const el = $("voiceStatus").querySelector(".vstatus");
+  if(!el) return;
+  let bar = el.parentNode.querySelector(".vbar");
+  if(!bar){ bar=document.createElement("div"); bar.className="vbar"; bar.innerHTML="<i></i>"; el.parentNode.appendChild(bar); }
+  bar.querySelector("i").style.width = Math.max(0,Math.min(100,pct))+"%";
+}
+
+/* decode any browser-supported container to 16kHz mono PCM (m4a/mp3/wav/ogg/webm) */
+async function decodeToPCM(blob){
+  const AC = window.AudioContext || window.webkitAudioContext;
+  const ctx = new AC({ sampleRate:16000 });
+  try{
+    const buf = await ctx.decodeAudioData(await blob.arrayBuffer());
+    if(buf.numberOfChannels === 1) return buf.getChannelData(0).slice();
+    const out = new Float32Array(buf.length);
+    for(let c=0;c<buf.numberOfChannels;c++){
+      const d = buf.getChannelData(c);
+      for(let i=0;i<d.length;i++) out[i] += d[i]/buf.numberOfChannels;
+    }
+    return out;
+  } finally { ctx.close(); }
+}
+function encodeWAV(f32, sampleRate){
+  sampleRate = sampleRate || 16000;
+  const buf = new ArrayBuffer(44 + f32.length*2), v = new DataView(buf);
+  const wstr = (o,s)=>{ for(let i=0;i<s.length;i++) v.setUint8(o+i, s.charCodeAt(i)); };
+  wstr(0,"RIFF"); v.setUint32(4,36+f32.length*2,true); wstr(8,"WAVE");
+  wstr(12,"fmt "); v.setUint32(16,16,true); v.setUint16(20,1,true); v.setUint16(22,1,true);
+  v.setUint32(24,sampleRate,true); v.setUint32(28,sampleRate*2,true); v.setUint16(32,2,true); v.setUint16(34,16,true);
+  wstr(36,"data"); v.setUint32(40,f32.length*2,true);
+  for(let i=0;i<f32.length;i++){ const s=Math.max(-1,Math.min(1,f32[i])); v.setInt16(44+i*2, s<0?s*0x8000:s*0x7FFF, true); }
+  return new Blob([buf],{type:"audio/wav"});
+}
+function sliceChunks(f32, seconds){
+  const n = (seconds||30)*16000, out = [];
+  for(let i=0;i<f32.length;i+=n) out.push(f32.subarray(i, Math.min(i+n, f32.length)));
+  return out;
+}
+
+async function acceptAudio(blob, name){
+  voiceState.file = blob; voiceState.filename = name || blob.name || "recording.webm"; voiceState.pcm = null;
+  $("transcribeBtn").disabled = true; $("sendBtn").disabled = true;
+  setVoiceStatus("decoding "+esc(voiceState.filename)+"…", "run");
+  try{
+    voiceState.pcm = await decodeToPCM(blob);
+    const secs = Math.round(voiceState.pcm.length/16000);
+    setVoiceStatus("✓ "+esc(voiceState.filename)+" · "+secs+"s ready", "ok");
+    $("transcribeBtn").disabled = false;
+    $("sendBtn").disabled = !WORKER_URL;
+  }catch(e){
+    setVoiceStatus("couldn't decode this file. Supported: m4a, mp3, wav, ogg, webm.", "err");
+  }
+}
+
+/* local Whisper in an inline module worker; weights cached by the browser after first run */
+let whisperWorker = null;
+function getWhisperWorker(){
+  if(whisperWorker) return whisperWorker;
+  const src = `
+    import { pipeline } from "${TRANSFORMERS_CDN}";
+    let asr = null;
+    self.onmessage = async (e) => {
+      try{
+        if(!asr){
+          const device = ("gpu" in navigator) ? "webgpu" : "wasm";
+          asr = await pipeline("automatic-speech-recognition", "${WHISPER_MODEL}", {
+            device, dtype:"q8",
+            progress_callback: p => { if(p.status==="progress" && p.total)
+              self.postMessage({type:"dl", pct: Math.round(100*p.loaded/p.total)}); },
+          });
+          self.postMessage({type:"ready"});
+        }
+        const out = await asr(e.data.audio, { chunk_length_s:30, stride_length_s:5 });
+        self.postMessage({type:"done", text: (out && out.text || "").trim() });
+      }catch(err){ self.postMessage({type:"error", message: String(err && err.message || err)}); }
+    };`;
+  whisperWorker = new Worker(URL.createObjectURL(new Blob([src],{type:"text/javascript"})), {type:"module"});
+  return whisperWorker;
+}
+function transcribeLocal(pcm){
+  return new Promise((resolve,reject)=>{
+    const w = getWhisperWorker();
+    w.onmessage = e=>{
+      const m = e.data;
+      if(m.type==="dl"){ setVoiceStatus("downloading model (first time only) · "+m.pct+"%","run"); setVoiceBar(m.pct); }
+      else if(m.type==="ready") setVoiceStatus("transcribing your voice note…","run");
+      else if(m.type==="done") resolve(m.text);
+      else if(m.type==="error") reject(new Error(m.message));
+    };
+    w.onerror = e=>reject(new Error(e.message||"worker failed"));
+    setVoiceStatus("loading whisper…","run");
+    w.postMessage({ audio: pcm });
+  });
+}
+async function transcribeFast(pcm){
+  const chunks = sliceChunks(pcm, 30);
+  let text = "";
+  for(let i=0;i<chunks.length;i++){
+    setVoiceStatus("fast mode · chunk "+(i+1)+"/"+chunks.length+"…","run");
+    const res = await fetch(WORKER_URL+"/transcribe", {method:"POST", body: encodeWAV(chunks[i])});
+    if(!res.ok){ const j=await res.json().catch(()=>({})); throw new Error("HTTP "+res.status+": "+(j.error||res.statusText)); }
+    text += (text?" ":"") + ((await res.json()).text||"");
+  }
+  return text.trim();
+}
+
+function appendToIdea(text){
+  const box = $("idea");
+  box.value = (box.value.trim() ? box.value.trim()+"\n\n" : "") + text;
+  saveState();
+}
+
+async function doTranscribe(){
+  if(!voiceState.pcm) return;
+  $("transcribeBtn").disabled = true;
+  const engine = $("engine").value;
+  try{
+    let text;
+    if(engine==="fast" && WORKER_URL){
+      try{ text = await transcribeFast(voiceState.pcm); }
+      catch(e){ setVoiceStatus("fast mode failed ("+esc(e.message)+"). Using local whisper…","err"); text = await transcribeLocal(voiceState.pcm); }
+    } else {
+      text = await transcribeLocal(voiceState.pcm);
+    }
+    if(!text){ setVoiceStatus("no speech detected in that audio.","err"); return; }
+    appendToIdea(text);
+    setVoiceStatus("✓ transcript added below. Edit it, then Run C2B.","ok");
+  }catch(e){
+    setVoiceStatus("transcription failed: "+esc(e.message||String(e)),"err");
+  }finally{
+    $("transcribeBtn").disabled = false;
+  }
+}
+
+async function doSend(){
+  if(!voiceState.file || !WORKER_URL) return;
+  $("sendBtn").disabled = true;
+  setVoiceStatus("sending to the pipeline…","run");
+  try{
+    const fd = new FormData();
+    fd.append("audio", voiceState.file, voiceState.filename);
+    const note = $("instr").value.trim(); if(note) fd.append("note", note.slice(0,2000));
+    const res = await fetch(WORKER_URL+"/inbox", {method:"POST", body: fd});
+    const j = await res.json().catch(()=>({}));
+    if(!res.ok) throw new Error(j.error || ("HTTP "+res.status));
+    setVoiceStatus("✓ queued as "+esc(j.id)+" — it'll be reviewed on captKernel's machine.","ok");
+  }catch(e){
+    setVoiceStatus("send failed: "+esc(e.message||String(e)),"err"); $("sendBtn").disabled = false;
+  }
+}
+
+/* mode toggle */
+function setMode(mode){
+  const voice = mode!=="text";
+  $("mode-voice").hidden = !voice;
+  $("mode-text").hidden = voice;
+  document.querySelectorAll(".seg-btn").forEach(b=>{
+    const on = b.getAttribute("data-mode")===mode;
+    b.classList.toggle("on", on); b.setAttribute("aria-selected", on?"true":"false");
+  });
+  if(!voice) $("idea").focus();
+}
+
+/* drag-drop + browse */
+const drop = $("drop");
+drop.addEventListener("dragover", e=>{ e.preventDefault(); drop.classList.add("hot"); });
+drop.addEventListener("dragleave", ()=>drop.classList.remove("hot"));
+drop.addEventListener("drop", e=>{ e.preventDefault(); drop.classList.remove("hot");
+  const f = e.dataTransfer.files[0]; if(f) acceptAudio(f, f.name); });
+$("audioFile").addEventListener("change", e=>{ const f=e.target.files[0]; if(f) acceptAudio(f, f.name); });
+
+/* live mic recording */
+let recorder=null, recChunks=[];
+$("recBtn").addEventListener("click", async ()=>{
+  if(recorder && recorder.state==="recording"){ recorder.stop(); return; }
+  try{
+    const stream = await navigator.mediaDevices.getUserMedia({audio:true});
+    const mime = (window.MediaRecorder && MediaRecorder.isTypeSupported("audio/webm")) ? "audio/webm" : "";
+    recorder = new MediaRecorder(stream, mime?{mimeType:mime}:undefined);
+    recChunks = [];
+    recorder.ondataavailable = e=>{ if(e.data.size) recChunks.push(e.data); };
+    recorder.onstop = ()=>{ stream.getTracks().forEach(t=>t.stop());
+      $("recBtn").classList.remove("rec"); $("recBtn").querySelector(".reclabel").textContent="record";
+      acceptAudio(new Blob(recChunks,{type: recorder.mimeType||"audio/webm"}), "recording.webm"); };
+    recorder.start();
+    $("recBtn").classList.add("rec"); $("recBtn").querySelector(".reclabel").textContent="stop";
+    setVoiceStatus("recording… click stop when done.","run");
+  }catch(e){ setVoiceStatus("microphone unavailable: "+esc(e.message||String(e)),"err"); }
+});
+
+document.querySelectorAll(".seg-btn").forEach(b=> b.addEventListener("click", ()=>setMode(b.getAttribute("data-mode"))));
+
+/* if fast mode / send can't work (no server yet), reflect it in the UI */
+if(!WORKER_URL){
+  const fast = $("engine").querySelector('option[value="fast"]');
+  if(fast){ fast.textContent = "fast mode — server (not deployed yet)"; fast.disabled = true; }
+  $("sendBtn").title = "Not available yet — captKernel's pipeline server isn't deployed.";
+}
+
+/* ---- OS skin, shared with captkernel.com via localStorage.ckOS ---- */
+function applyOs(m){
+  const os = (m==="macos") ? "macos" : "linux";   /* console has linux + macos skins */
+  try{ localStorage.setItem("ckOS", os); }catch(e){}
+  document.body.classList.toggle("macos", os==="macos");
+  document.querySelectorAll("#osswitch button").forEach(b=> b.classList.toggle("on", b.getAttribute("data-os")===os));
+  const tc = document.querySelector('meta[name="theme-color"]'); if(tc) tc.setAttribute("content", os==="macos" ? "#1c1c1f" : "#0a0d0b");
+}
+document.querySelectorAll("#osswitch button").forEach(b=> b.addEventListener("click", ()=>applyOs(b.getAttribute("data-os"))));
+applyOs((function(){ try{ const v=localStorage.getItem("ckOS"); return v==="macos"?"macos":"linux"; }catch(e){ return "linux"; } })());
 
 /* ---- wire up ---- */
 $("run").addEventListener("click", runFull);
