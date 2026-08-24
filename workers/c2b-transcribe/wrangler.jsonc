@@ -1,0 +1,8 @@
+{
+  "name": "c2b-transcribe",
+  "main": "worker.js",
+  "compatibility_date": "2026-08-01",
+  "ai": { "binding": "AI" },
+  "r2_buckets": [{ "binding": "INBOX", "bucket_name": "c2b-inbox" }],
+  "kv_namespaces": [{ "binding": "RATE", "id": "FILL_IN_TASK_2" }]
+}
