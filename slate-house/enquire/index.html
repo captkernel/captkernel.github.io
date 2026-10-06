@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Enquire · Slate House</title>
+<meta name="description" content="Choose your dates and a room, see an estimate, and send your enquiry by WhatsApp or email.">
+<meta name="robots" content="noindex">
+<link rel="canonical" href="https://captkernel.com/slate-house/enquire/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Slate House">
+<meta property="og:title" content="Enquire · Slate House">
+<meta property="og:description" content="Choose your dates and a room, see an estimate, and send your enquiry by WhatsApp or email.">
+<meta property="og:url" content="https://captkernel.com/slate-house/enquire/">
+<meta property="og:image" content="https://captkernel.com/slate-house/assets/img/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#10151a">
+<link rel="icon" href="../assets/img/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../assets/img/apple-touch-icon.png">
+<link rel="manifest" href="../site.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&amp;family=DM+Mono:wght@400;500&amp;family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&amp;display=swap">
+<link rel="stylesheet" href="../assets/site.css?v=e3d73d5a">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="head head-page">
+  <a class="mark" href="../">Slate House<small>B&amp;B</small></a>
+  <nav class="nav mono" aria-label="Main">
+    <a href="../rooms/">Rooms</a><a href="../house/">The house</a><a href="../visit/">Visit</a>
+    <a class="btn" href="../enquire/">Enquire</a>
+    <details class="menu"><summary>Menu</summary><ul><li><a href="../">Home</a></li><li><a href="../rooms/">Rooms</a></li><li><a href="../house/">The house</a></li><li><a href="../visit/">Visit</a></li><li><a href="../enquire/">Enquire</a></li></ul></details>
+  </nav>
+</header>
+<main id="main">
+  <header class="page-head">
+    <div class="mono eyebrow">Enquire</div>
+    <h1>Pick your dates</h1>
+    <p class="lede">Choose your dates and a room. The message writes itself as you go. Send it by WhatsApp or email and we'll reply with what's free.</p>
+  </header>
+
+  <section class="sec" style="padding-top:0">
+    <form class="enq" id="enq" novalidate>
+      <div class="fields">
+        <label class="mono" for="f-in">Check-in<input id="f-in" name="checkin" type="date" required></label>
+        <label class="mono" for="f-out">Check-out<input id="f-out" name="checkout" type="date" required></label>
+        <label class="mono" for="f-guests">Guests<input id="f-guests" name="guests" type="number" min="1" max="32" value="2" inputmode="numeric"></label>
+        <label class="mono" for="f-count">Rooms<input id="f-count" name="rooms" type="number" min="1" max="12" value="1" inputmode="numeric"></label>
+        <label class="mono full" for="f-room">Room<select id="f-room" name="room"><option value="">No preference, suggest one</option><option value="valley-room">Valley Room · sleeps 2 · from ₹4,800</option><option value="balcony-suite">Balcony Suite · sleeps 3 · from ₹6,500</option><option value="terrace-suite">Terrace Family Suite · sleeps 4 · from ₹8,900</option><option value="loft">Loft · sleeps 2 · from ₹5,600</option></select></label>
+        <label class="mono full" for="f-name">Your name<input id="f-name" name="name" type="text" autocomplete="name"></label>
+        <label class="mono full" for="f-note">Anything we should know<input id="f-note" name="note" type="text" placeholder="Arrival time, children, access needs"></label>
+        <p class="problem" id="problem" role="alert" hidden></p>
+      </div>
+      <div class="out">
+        <label class="mono" for="f-msg">Your enquiry<textarea id="f-msg" readonly></textarea></label>
+        <p class="total" id="total"></p>
+        <div class="send">
+          <a class="btn btn-solid" id="send-wa" href="https://wa.me/910000000000" target="_blank" rel="noopener">Send on WhatsApp</a>
+          <a class="btn" id="send-mail" href="mailto:stay@slatehouse.example">Send by email</a>
+          <button class="btn" type="submit">Copy</button>
+        </div>
+        <p class="mono send-status" id="copied" aria-live="polite"></p>
+        <p class="note">Sending opens WhatsApp or your email app with the message filled in. Nothing is booked until we confirm. We reply within one working day.</p>
+      </div>
+    </form>
+    <noscript><p class="note">The enquiry builder needs JavaScript. You can write to us directly using the details below.</p></noscript>
+  </section>
+
+  <section class="sec" id="contact">
+    <div class="mono eyebrow">Direct</div>
+    <h2 class="title">Or just get in touch</h2>
+    <div class="split">
+      <dl class="contact">
+        <div><dt class="mono">Phone and WhatsApp</dt><dd><a href="tel:+910000000000">+91 00000 00000</a></dd></div>
+        <div><dt class="mono">Email</dt><dd><a href="mailto:stay@slatehouse.example">stay@slatehouse.example</a></dd></div>
+        <div><dt class="mono">Address</dt><dd>12 Orchard Lane<br>Old Bazaar Road<br>Your Town 000000</dd></div>
+        <div><dt class="mono">Reception</dt><dd>Reception is staffed 7 am to 10 pm. We reply within one working day.</dd></div>
+      </dl>
+      <div>
+        <p class="prose">Booking the whole house, a long stay or a group? Write with your dates and numbers and we'll put a rate together.</p>
+        <div class="cta-row"><a class="more" href="../visit/#booking">Booking and cancelling</a><a class="more" href="../visit/#getting-here">Getting here</a></div>
+      </div>
+    </div>
+  </section>
+</main>
+<footer class="foot">
+  <div class="foot-in">
+    <div>
+      <a class="mark" href="../">Slate House</a>
+      <p class="note">A twelve-room bed and breakfast stacked five floors high in slate and limestone, with a shared terrace and breakfast cooked to order.</p>
+    </div>
+    <div>
+      <h2>Explore</h2>
+      <ul>
+        <li><a href="../rooms/">All rooms and rates</a></li>
+        <li><a href="../house/">The house</a></li>
+        <li><a href="../house/#brick-room">Breakfast</a></li>
+        <li><a href="../visit/">Getting here</a></li>
+        <li><a href="../visit/#booking">Booking and cancelling</a></li>
+        <li><a href="../visit/#faq">Questions</a></li>
+      </ul>
+    </div>
+    <div>
+      <h2>Rooms</h2>
+      <ul><li><a href="../rooms/valley-room/">Valley Room</a></li><li><a href="../rooms/balcony-suite/">Balcony Suite</a></li><li><a href="../rooms/terrace-suite/">Terrace Family Suite</a></li><li><a href="../rooms/loft/">Loft</a></li></ul>
+    </div>
+    <div>
+      <h2>Find us</h2>
+      <address>12 Orchard Lane<br>Old Bazaar Road<br>Your Town 000000<br><br>
+        <a href="tel:+910000000000">+91 00000 00000</a><br>
+        <a href="mailto:stay@slatehouse.example">stay@slatehouse.example</a>
+      </address>
+    </div>
+  </div>
+  <div class="foot-note mono">
+    <span>© 2026 Slate House</span>
+    <span>Demo site. Name, rooms, rates and contact details are placeholders.</span>
+  </div>
+</footer>
+<script type="application/json" id="site-data">{"name": "Slate House", "email": "stay@slatehouse.example", "whatsapp": "910000000000", "peak": [{"from": "04-15", "to": "06-30"}, {"from": "12-20", "to": "01-05"}], "maxNights": 21, "rooms": [{"slug": "valley-room", "name": "Valley Room", "sleeps": 2, "count": 4, "rate": 4800, "rate_peak": 5800, "extra_bed": null}, {"slug": "balcony-suite", "name": "Balcony Suite", "sleeps": 3, "count": 4, "rate": 6500, "rate_peak": 7800, "extra_bed": null}, {"slug": "terrace-suite", "name": "Terrace Family Suite", "sleeps": 4, "count": 2, "rate": 8900, "rate_peak": 10700, "extra_bed": 1200}, {"slug": "loft", "name": "Loft", "sleeps": 2, "count": 2, "rate": 5600, "rate_peak": 6700, "extra_bed": null}]}</script>
+<script src="../assets/site.js?v=1451a648" defer></script>
+</body>
+</html>
