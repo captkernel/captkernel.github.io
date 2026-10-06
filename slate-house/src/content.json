@@ -1,0 +1,192 @@
+{
+  "site": {
+    "name": "Slate House",
+    "kind": "Bed & breakfast",
+    "url": "https://captkernel.com/slate-house/",
+    "indexable": false,
+    "demo_notice": true,
+    "description": "A twelve-room bed and breakfast stacked five floors high in slate and limestone, with a shared terrace and breakfast cooked to order.",
+    "opening_note": "Finishing work is under way. Enquire now and we'll write as soon as dates open.",
+    "checkin": "1 pm",
+    "checkout": "11 am",
+    "checkin_iso": "13:00",
+    "checkout_iso": "11:00",
+    "contact": {
+      "email": "stay@slatehouse.example",
+      "phone_display": "+91 00000 00000",
+      "phone_e164": "+910000000000",
+      "whatsapp": "910000000000",
+      "address": ["12 Orchard Lane", "Old Bazaar Road", "Your Town 000000"],
+      "region": "Your State",
+      "country": "IN",
+      "reception": "Reception is staffed 7 am to 10 pm",
+      "reply": "We reply within one working day."
+    }
+  },
+
+  "seasons": {
+    "peak": [
+      { "from": "04-15", "to": "06-30", "label": "15 April to 30 June" },
+      { "from": "12-20", "to": "01-05", "label": "20 December to 5 January" }
+    ],
+    "max_nights": 21
+  },
+
+  "floors": [
+    { "k": "G", "level": "Ground floor", "elev": "±0.00 m", "name": "The Brick Room",
+      "line": "Reception, the kitchen and one long breakfast table, behind the only brick walls in the house.",
+      "specs": [["Breakfast", "7:30 to 10:30"], ["Open", "All day"], ["Seats", "24"]],
+      "meta": "Breakfast room · reception", "link": "house/#brick-room", "link_label": "The Brick Room",
+      "at": [150, 1100], "fade": true,
+      "poly": [[150,998],[388,934],[1000,946],[1120,948],[1040,985],[990,1010],[900,1112],[900,1215],[150,1215]] },
+    { "k": "1", "level": "First floor", "elev": "+3.30 m", "name": "Valley Rooms", "room": "valley-room",
+      "line": "Four rooms across four bays. Each one opens onto a balcony behind a slate half-wall.",
+      "at": [62, 948],
+      "poly": [[150,778],[156,748],[388,700],[1340,720],[1640,734],[1640,880],[1290,880],[1160,947],[1000,946],[388,934],[150,998],[55,992],[70,917],[150,898]] },
+    { "k": "2", "level": "Second floor", "elev": "+6.60 m", "name": "Balcony Suites", "room": "balcony-suite",
+      "line": "The same four bays with more room behind them: a sitting corner, a desk and a longer view.",
+      "at": [62, 738],
+      "poly": [[150,542],[156,508],[385,446],[1340,502],[1540,512],[1640,516],[1640,734],[1340,720],[388,700],[156,748],[150,778],[55,770],[70,704],[150,678]] },
+    { "k": "3", "level": "Third floor", "elev": "+9.90 m", "name": "Terrace Floor", "room": "terrace-suite",
+      "line": "Two family suites that share the open terrace and its white pergola at the corner of the house.",
+      "at": [64, 492],
+      "poly": [[58,534],[64,460],[155,430],[155,362],[462,247],[650,259],[700,278],[1050,318],[1300,351],[1540,382],[1540,512],[1340,502],[385,446],[156,508],[150,542]] },
+    { "k": "A", "level": "Attic", "elev": "+13.20 m", "name": "The Lofts", "room": "loft",
+      "line": "Two rooms under the gables, with dormer windows that look across to the far ridge.",
+      "at": [462, 236],
+      "poly": [[462,246],[484,206],[492,206],[740,240],[824,207],[832,209],[900,258],[1022,231],[1036,240],[1078,195],[1090,193],[1372,228],[1372,244],[1625,285],[1625,300],[1550,294],[1550,384],[1540,382],[1300,351],[1050,318],[700,278],[650,259]] }
+  ],
+
+  "rooms": [
+    { "slug": "valley-room", "name": "Valley Room", "floor": "1", "count": 4, "numbers": "101 to 104",
+      "size_m2": 24, "outdoor": "5 m² balcony", "bed": "Queen bed, or two singles on request", "bed_short": "Queen or twin",
+      "sleeps": 2, "view": "Valley and lane", "rate": 4800, "rate_peak": 5800, "extra_bed": null,
+      "summary": "The house's standard room: a queen bed, a proper desk and a balcony wide enough for two chairs.",
+      "body": [
+        "Four Valley Rooms run side by side across the first floor, one to each bay of the front. You come in past the bathroom and wardrobe, and the room opens up toward a glass door and the balcony beyond it.",
+        "The balcony sits behind a waist-high slate wall, so you can leave the door open and still feel tucked in. Morning sun reaches it by about eight. The first floor is the easiest climb in the house and the closest to breakfast."
+      ],
+      "highlights": ["Private balcony behind a slate half-wall", "Queen bed, or two singles if you ask when booking", "Writing desk with sockets at desk height", "One floor up from breakfast"],
+      "in_room": ["Queen bed with wool quilt and spare blanket", "Writing desk and chair", "Armchair by the window", "Wardrobe with hanging rail and safe", "Electric kettle with tea and coffee", "Panel heater, October to March", "Blackout curtains", "Wi-Fi"],
+      "bathroom": ["Walk-in shower", "Hot water all day", "Towels and basic toiletries", "Hairdryer on request"],
+      "know": ["Rooms 101 and 104 are corner rooms with a second, smaller window.", "A cot for a child under three fits here at no charge. There is no space for an extra bed.", "The lane is quiet after 9 pm, but you will hear the town wake up."],
+      "plan": "valley" },
+
+    { "slug": "balcony-suite", "name": "Balcony Suite", "floor": "2", "count": 4, "numbers": "201 to 204",
+      "size_m2": 34, "outdoor": "6 m² balcony", "bed": "King bed and a daybed", "bed_short": "King + daybed",
+      "sleeps": 3, "view": "Valley, above the rooftops", "rate": 6500, "rate_peak": 7800, "extra_bed": null,
+      "summary": "A larger room on the second floor with a king bed, a daybed that sleeps a third guest and a sitting corner by the glass.",
+      "body": [
+        "The Balcony Suites sit directly above the Valley Rooms and share their four-bay layout, but each one is a third larger. The extra space goes to a sitting corner by the balcony door and a daybed along the wall, made up as a single bed when three of you are staying.",
+        "One floor higher makes a difference. From here the view clears the neighbouring roofs and you look straight down the valley. The bathroom has two basins and a larger shower."
+      ],
+      "highlights": ["King bed plus a daybed for a third guest", "Sitting corner by the balcony door", "Two basins and a larger shower", "View clear of the rooftops"],
+      "in_room": ["King bed with wool quilt and spare blanket", "Daybed, made up as a single on request", "Low table and two chairs", "Writing desk and chair", "Wardrobe with hanging rail and safe", "Electric kettle with tea and coffee", "Panel heater, October to March", "Blackout curtains", "Wi-Fi"],
+      "bathroom": ["Walk-in shower", "Two basins", "Hot water all day", "Towels, robes and basic toiletries", "Hairdryer"],
+      "know": ["The rate covers two guests. A third guest on the daybed is included at no extra charge.", "Suites 201 and 204 are corner suites with a second window.", "The lift stops on this floor."],
+      "plan": "balcony" },
+
+    { "slug": "terrace-suite", "name": "Terrace Family Suite", "floor": "3", "count": 2, "numbers": "301 and 302",
+      "size_m2": 52, "outdoor": "Opens onto the shared terrace", "bed": "King bed and two singles, in separate rooms", "bed_short": "King + two singles",
+      "sleeps": 4, "view": "Terrace and valley", "rate": 8900, "rate_peak": 10700, "extra_bed": 1200,
+      "summary": "Two connected rooms on the terrace floor: a king bedroom, a twin room for children or friends, and a door straight onto the terrace.",
+      "body": [
+        "Each Terrace Family Suite is two rooms joined by an inner door. The main bedroom has the king bed and a glass door onto the terrace. The second room has two single beds and a desk, and closes off for children who go to bed early.",
+        "The third floor is where the house changes from open bays to solid slate walls, so these are the quietest rooms on the front. The terrace outside is shared with other guests until 10 pm. After that it belongs to this floor."
+      ],
+      "highlights": ["Two rooms with a door between them", "Direct access to the terrace", "Sleeps four, or five with an extra bed", "Thick slate walls on the quietest floor"],
+      "in_room": ["King bed in the main bedroom", "Two single beds in the second room", "Two armchairs by the terrace door", "Desk in the second room", "Wardrobe with hanging rail and safe", "Electric kettle with tea and coffee", "Panel heaters in both rooms, October to March", "Blackout curtains", "Wi-Fi"],
+      "bathroom": ["Walk-in shower", "Two basins", "Hot water all day", "Towels, robes and basic toiletries", "Hairdryer"],
+      "know": ["One extra bed can be added to the main bedroom for a fifth guest.", "The terrace door has a low threshold. Tell us if anyone in your group uses a wheelchair.", "The lift stops on this floor."],
+      "plan": "terrace" },
+
+    { "slug": "loft", "name": "Loft", "floor": "A", "count": 2, "numbers": "401 and 402",
+      "size_m2": 28, "outdoor": "Two dormer windows", "bed": "Queen bed under the gable", "bed_short": "Queen",
+      "sleeps": 2, "view": "Far ridge, from the highest windows in the house", "rate": 5600, "rate_peak": 6700, "extra_bed": null,
+      "summary": "A room under the roof with a sloping timber ceiling, two dormer windows and the highest view in the house.",
+      "body": [
+        "The two Lofts sit under the gables at the top of the house. The ceiling follows the roof, rising to just over three metres along the ridge and coming down to low storage along the eaves. The bed sits under the gable end, with a dormer window on each side of the room.",
+        "These are the rooms for people who like to be at the top of the stairs. There is no balcony, but the dormers look out over the roofs to the far ridge, and the terrace is one flight down."
+      ],
+      "highlights": ["Sloping timber ceiling, 3.1 m at the ridge", "Two dormer windows facing the far ridge", "Reading chair under the dormer", "The quietest rooms in the house"],
+      "in_room": ["Queen bed with wool quilt and spare blanket", "Reading chair under the dormer", "Desk under the second dormer", "Low storage along the eaves", "Electric kettle with tea and coffee", "Panel heater, October to March", "Blackout blinds on both dormers", "Wi-Fi"],
+      "bathroom": ["Walk-in shower", "Hot water all day", "Towels and basic toiletries", "Hairdryer on request"],
+      "know": ["The lift stops at the third floor. The Lofts are one more flight up, 16 steps.", "Headroom is 1.4 m along the eaves. Tall guests should mind the edges of the room.", "Not suitable for an extra bed or cot."],
+      "plan": "loft" }
+  ],
+
+  "house": {
+    "breakfast": {
+      "hours": "7:30 to 10:30",
+      "intro": "Breakfast is cooked to order and served at one long table in the Brick Room. It is included in every rate.",
+      "menu": [
+        ["From the griddle", "Parathas with home-made butter and pickle, or eggs any way with toast."],
+        ["From the valley", "Seasonal fruit, local honey and apple preserve."],
+        ["On Sundays", "Steamed siddu with ghee, made that morning."],
+        ["To drink", "Masala chai, filter coffee, and a pot of whichever you like left on the table."]
+      ],
+      "notes": "Tell us about allergies or early starts when you book. A packed breakfast is ready from 6 am if you ask the night before."
+    },
+    "terrace": "The third-floor terrace runs across the corner of the house under a white steel pergola. It has tables for breakfast on warm mornings and is open to every guest until 10 pm. Tea and coffee are served there on request.",
+    "facilities": [
+      ["Heating", "Panel heaters in every room from October to March, with extra quilts in the wardrobe."],
+      ["Hot water", "All day, in every bathroom."],
+      ["Wi-Fi", "Throughout the house, including the terrace."],
+      ["Lift", "From the ground floor to the third floor. The Lofts are one flight further."],
+      ["Parking", "Four cars off the lane. Tell us you're driving and we'll hold a space."],
+      ["Laundry", "Same-day wash and fold if handed in before 9 am, charged per load."],
+      ["Luggage", "Bags can wait at reception before check-in and after check-out."],
+      ["Power", "Backup power for lights, sockets and hot water."]
+    ],
+    "materials": [
+      { "img": "slate", "name": "Slate", "text": "Hand-dressed slate covers the walls and balcony fronts. It darkens in rain and dries pale." },
+      { "img": "limestone", "name": "Limestone", "text": "Each floor slab is faced in pale limestone where it steps out past the corner." },
+      { "img": "gables", "name": "Gables", "text": "Five gables break up the roof and bring light into the Lofts beneath them." },
+      { "img": "pergola", "name": "Steel", "text": "A white steel pergola covers the terrace without closing it in." }
+    ],
+    "access": "The ground floor is step-free from the lane, and the lift reaches the third floor. Doorways on the first to third floors are 90 cm wide. The Lofts can only be reached by stairs. Tell us what you need and we'll suggest the right room."
+  },
+
+  "visit": {
+    "getting_here": [
+      ["By road", "Orchard Lane turns off Old Bazaar Road beside the post office. Follow it 200 m uphill and the house is on your left. The last stretch is narrow, so larger vehicles should stop at the bottom."],
+      ["By bus", "Overnight buses from the plains reach the town bus stand each morning. The house is 1.5 km from the stand, ten minutes by taxi."],
+      ["By air", "The nearest airport is 40 km away, about an hour and a quarter by road. We can book a taxi to meet you."],
+      ["On foot", "The bazaar is a ten-minute walk downhill. The walk back takes fifteen."]
+    ],
+    "seasons": [
+      ["March to mid-April", "Orchards in blossom, cool nights", "Regular"],
+      ["Mid-April to June", "Warm days, the busiest months", "Peak"],
+      ["July to September", "Monsoon: green, quiet, some road delays", "Regular"],
+      ["October to mid-December", "Clear skies, cold mornings", "Regular"],
+      ["Late December to early January", "Holiday weeks, snow on the ridges", "Peak"],
+      ["Mid-January to February", "Coldest and quietest", "Regular"]
+    ],
+    "rules": [
+      "Check-in is from 1 pm and check-out is by 11 am. Early arrival or a late start is free when the room is ready.",
+      "Every adult guest needs a government photo ID at check-in. Guests from abroad need a passport and visa.",
+      "The house is quiet from 10 pm to 7 am.",
+      "Smoking is allowed on balconies and the terrace, not inside.",
+      "Children of all ages are welcome. Under-threes stay free in a cot.",
+      "We're sorry, but we can't take pets.",
+      "Visitors who aren't staying are welcome in the Brick Room until 9 pm."
+    ],
+    "booking": [
+      ["To confirm", "A deposit of 30% holds your room. The balance is paid at check-in."],
+      ["Paying", "UPI, bank transfer, cards and cash."],
+      ["Cancelling", "Free up to 7 days before arrival. Within 7 days the deposit is kept. Within 48 hours, or if you don't arrive, the first night is charged."],
+      ["Peak dates", "For peak-season stays, free cancellation ends 14 days before arrival."],
+      ["Taxes", "Rates include breakfast. GST is added at the current rate."]
+    ],
+    "faq": [
+      ["Is breakfast included?", "Yes, for every guest, every morning. It's cooked to order between 7:30 and 10:30."],
+      ["Do you serve other meals?", "Dinner is a set menu served at 8 pm for guests who book it by noon. There is no lunch service, but the bazaar is ten minutes away."],
+      ["Is there a lift?", "Yes, from the ground floor to the third floor. The two Lofts are one more flight up by stairs."],
+      ["Will the room be warm in winter?", "Every room has a panel heater from October to March, wool quilts and hot water all day."],
+      ["Can I arrive late at night?", "Reception closes at 10 pm. Tell us your arrival time and someone will wait up."],
+      ["Can you arrange taxis and day trips?", "Yes. Ask at reception or mention it when you enquire, and we'll book a driver we know."],
+      ["Can I book the whole house?", "Yes. All twelve rooms sleep 32 guests. Write to us with your dates for a whole-house rate."],
+      ["Is the Wi-Fi good enough to work on?", "It handles video calls in the rooms and on the terrace. There is a desk in every room."]
+    ]
+  }
+}
