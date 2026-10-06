@@ -1,0 +1,433 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Slate House Flight</title>
+<meta name="description" content="Demo bed and breakfast site. Scroll to fly a drone up the front of the house, over the roof and onto the terrace.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#10151a">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=DM+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap">
+<style>
+/* Layout: one pinned drone flight scrubbed by the scrollbar, with captions timed to what the camera sees;
+   below it, a lift directory whose rows sit on limestone slabs that overhang left like the balconies. */
+:root{
+  --paper:#e8ebed; --bay:#dbe0e4; --ink:#1a2229; --muted:#55616b; --rule:#c2cad0; --field:#f5f7f8;
+  --lime:#c9bc95; --tin:#176f59; --tin-ink:#ffffff;
+  /* the stage is a photograph, so its colours hold in both themes */
+  --stage-bg:#10151a; --stage-glow:#1d2731; --stage-ink:#efe9da; --stage-muted:#b3bcc2;
+  --stage-tin:#62d1ae; --stage-line:rgba(239,233,218,.5);
+  --scrim-3:rgba(16,21,26,.94); --scrim-2:rgba(16,21,26,.6); --scrim-0:rgba(16,21,26,0);
+  --display:"Big Shoulders Display","Big Shoulders","Arial Narrow","Roboto Condensed",Impact,sans-serif;
+  --text:"Newsreader",Georgia,"Times New Roman",serif;
+  --mono:"DM Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+  --gutter:clamp(16px,4vw,44px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#141a20; --bay:#1b232b; --ink:#e9e4d6; --muted:#97a3ad; --rule:#2b353e; --field:#10151a;
+    --lime:#d8cfb4; --tin:#56c7a5; --tin-ink:#0e1418; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#141a20; --bay:#1b232b; --ink:#e9e4d6; --muted:#97a3ad; --rule:#2b353e; --field:#10151a;
+  --lime:#d8cfb4; --tin:#56c7a5; --tin-ink:#0e1418; color-scheme:dark;
+}
+
+*,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none!important}
+img{max-width:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--text);font-size:1.125rem;line-height:1.55;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+:focus-visible{outline:2px solid currentColor;outline-offset:3px}
+.mono{font:500 .72rem/1.4 var(--mono);letter-spacing:.1em;text-transform:uppercase}
+
+.btn{display:inline-block;font:500 .76rem/1 var(--mono);letter-spacing:.09em;text-transform:uppercase;text-decoration:none;
+  padding:15px 18px;border:1px solid currentColor;background:none;color:inherit;cursor:pointer;border-radius:0}
+.btn:hover{background:currentColor}
+.btn:hover span{color:var(--stage-bg)}
+.stage .btn-solid{background:var(--stage-tin);border-color:var(--stage-tin);color:var(--stage-bg)}
+.stage .btn-solid:hover{background:var(--stage-ink);border-color:var(--stage-ink)}
+main .btn-solid{background:var(--tin);border-color:var(--tin);color:var(--tin-ink)}
+main .btn-solid:hover{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+
+/* ---------- stage: a drone flight you scrub with the scrollbar ---------- */
+.stage{position:relative;height:100vh;height:100svh;overflow:hidden;color:var(--stage-ink);background:var(--stage-bg)}
+.is-live .track{height:1100vh;height:1100svh}
+.is-live .stage{position:sticky;top:0}
+.fill{position:absolute;inset:0;display:block;width:100%;height:100%;max-width:none;object-fit:cover}
+#flight{opacity:0;transition:opacity .6s ease}
+#flight.on{opacity:1}
+.done{opacity:0;object-position:30% 36%}
+.grain{position:absolute;inset:0;pointer-events:none;opacity:.4;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .5 0 0 0 0 .5 0 0 0 0 .5 0 0 0 .6 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.scrim{position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:linear-gradient(to top,var(--scrim-3) 0%,var(--scrim-2) 26%,var(--scrim-0) 56%),linear-gradient(to bottom,var(--scrim-2),var(--scrim-0) 20%)}
+
+.nav{position:absolute;z-index:4;top:0;left:0;right:0;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px var(--gutter)}
+.mark{font:900 1.5rem/1 var(--display);letter-spacing:.04em;text-transform:uppercase;text-decoration:none}
+.mark small{font:500 .62rem/1 var(--mono);letter-spacing:.12em;margin-left:8px;color:var(--stage-muted)}
+.nav nav{display:flex;align-items:center;gap:clamp(14px,2.4vw,30px)}
+.nav nav a{text-decoration:none}
+.nav nav a:not(.btn):hover{text-decoration:underline;text-underline-offset:5px}
+.nav .btn{padding:11px 14px}
+
+.hero,.end,.caps{position:absolute;z-index:2;left:var(--gutter);right:var(--gutter);bottom:clamp(68px,11vh,100px)}
+.hero,.end{display:grid;gap:clamp(10px,2vh,20px)}
+.hero h1{margin:0;font:900 clamp(4rem,12.5vw,11rem)/.8 var(--display);letter-spacing:-.005em;text-transform:uppercase}
+.hero-row{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px 40px}
+.hero-row p{margin:0;max-width:36ch;font-size:clamp(1.05rem,1.5vw,1.3rem);line-height:1.4;min-width:0}
+.acts{display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px}
+.hint{color:var(--stage-muted)}
+.hero .mono,.end .mono,.caps .mono{text-shadow:0 0 4px var(--stage-bg),0 0 16px var(--stage-bg)}
+.end{opacity:0;visibility:hidden}
+.end h2{margin:0;max-width:14ch;font:900 clamp(2.8rem,9vw,7.5rem)/.86 var(--display);text-transform:uppercase;text-wrap:balance}
+
+.caps{display:grid;pointer-events:none}
+.caps article{grid-area:1/1;min-width:0;opacity:0;visibility:hidden;transform:translateY(16px);transition:opacity .45s ease,transform .55s ease,visibility 0s .45s}
+.caps article.on{opacity:1;visibility:visible;transform:none;transition-delay:0s}
+.caps .lvl{color:var(--stage-tin)}
+.caps h2{margin:.14em 0 .2em;font:900 clamp(2.8rem,8.4vw,6.5rem)/.86 var(--display);text-transform:uppercase;text-wrap:balance}
+.caps p{margin:0;max-width:36ch;font-size:clamp(1.05rem,1.5vw,1.3rem);line-height:1.4}
+
+.hud{position:absolute;z-index:3;left:var(--gutter);right:var(--gutter);bottom:16px;display:flex;align-items:center;gap:16px;color:var(--stage-muted)}
+.rail{position:relative;flex:1;min-width:0;height:24px}
+.rail::before{content:"";position:absolute;left:0;right:0;top:50%;height:1px;background:var(--stage-line)}
+#head{position:absolute;left:0;right:0;top:calc(50% - 1px);height:3px;background:var(--stage-tin);transform-origin:0 50%;transform:scaleX(0)}
+.tick{position:absolute;top:0;width:24px;height:24px;margin-left:-12px;padding:0;border:0;background:none;cursor:pointer}
+.tick::before{content:"";position:absolute;left:11px;top:6px;width:2px;height:12px;background:var(--stage-ink)}
+.tick:hover::before,.tick.on::before{background:var(--stage-tin)}
+#clock{font-variant-numeric:tabular-nums;white-space:nowrap}
+
+.is-playing .hero,.is-playing .scrim,.is-playing .grain{display:none}
+.is-playing #flight{z-index:2}
+@media (max-width:620px){.nav nav a:not(.btn){display:none}}
+
+/* ---------- below the stage ---------- */
+main{padding-inline:var(--gutter)}
+.sec{max-width:68rem;margin-inline:auto;padding-block:clamp(56px,9vw,116px)}
+.sec + .sec{border-top:1px solid var(--rule)}
+.eyebrow{color:var(--muted)}
+.title{margin:.3em 0 .5em;font:800 clamp(2.5rem,6.6vw,4.75rem)/.9 var(--display);text-transform:uppercase;text-wrap:balance}
+.lede{max-width:60ch;margin:0 0 2.2em}
+
+.dir{list-style:none;margin:0;padding:0 0 0 10px}
+.dir li{position:relative;display:grid;grid-template-columns:3rem minmax(0,1.5fr) minmax(0,1fr) minmax(8.5rem,auto);gap:6px 28px;align-items:start;padding:24px 20px 34px;background:var(--bay)}
+.dir li::after{content:"";position:absolute;left:-10px;right:0;bottom:0;height:9px;background:var(--lime)}
+.dir-k{display:grid;place-items:center;width:2.6rem;height:2.6rem;border:1px solid var(--ink);font:500 1rem/1 var(--mono)}
+.dir h3{margin:0;font:800 1.9rem/1 var(--display);letter-spacing:.01em;text-transform:uppercase}
+.dir p{margin:.35em 0 0;max-width:44ch;color:var(--muted);font-size:1.02rem;line-height:1.45}
+.dir-meta{color:var(--muted);padding-top:.45rem}
+.dir-rate{text-align:right;font-variant-numeric:tabular-nums}
+.dir-rate b{display:block;font:800 1.9rem/1 var(--display)}
+.dir-rate span{color:var(--muted)}
+@media (max-width:760px){
+  .dir li{grid-template-columns:2.6rem minmax(0,1fr);gap:10px 16px;padding:20px 16px 30px}
+  .dir-meta,.dir-rate{grid-column:2;text-align:left;padding-top:0}
+  .dir-rate b{display:inline;margin-right:8px}
+}
+
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(15rem,1fr));gap:30px 44px;margin:0}
+.facts dt{color:var(--tin);padding-bottom:8px;margin-bottom:10px;border-bottom:1px solid var(--rule)}
+.facts dd{margin:0;max-width:38ch}
+
+.enq{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:36px 56px;align-items:start}
+@media (max-width:820px){.enq{grid-template-columns:minmax(0,1fr)}}
+.fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 16px}
+.fields .full{grid-column:1/-1}
+label{display:grid;gap:7px;color:var(--muted)}
+input,select,textarea{width:100%;min-width:0;padding:12px 13px;border:1px solid var(--rule);border-radius:0;background:var(--field);color:var(--ink);font:400 1.05rem/1.4 var(--text);letter-spacing:0;text-transform:none}
+textarea{resize:vertical;min-height:11.5rem}
+.out{display:grid;gap:14px;min-width:0}
+.total{margin:0;font-variant-numeric:tabular-nums}
+.total b{font:800 1.9rem/1 var(--display);margin-right:8px}
+.send{display:flex;flex-wrap:wrap;align-items:center;gap:12px 18px}
+.send [aria-live]{color:var(--tin)}
+.contact{margin:0;color:var(--muted);font-size:1rem;overflow-wrap:anywhere}
+.contact b{color:var(--ink);font-weight:500;user-select:all}
+
+footer{max-width:68rem;margin-inline:auto;padding-block:28px 44px;border-top:1px solid var(--rule);color:var(--muted);display:flex;flex-wrap:wrap;gap:8px 24px;justify-content:space-between}
+
+@media (prefers-reduced-motion:reduce){.caps article,#flight{transition:none}}
+</style>
+</head>
+<body>
+<div class="track" id="track">
+  <section class="stage" id="stage" aria-label="A drone flight around Slate House">
+    <img class="fill" src="poster.jpg" alt="Drone view of a multi-storey mountain house with a gabled roof, a valley town and cloud-covered ridges behind it.">
+    <video class="fill" id="flight" muted playsinline preload="none" tabindex="-1"></video>
+    <img class="fill done" id="done" src="house.jpg" alt="The house from the lane: dark slate walls, pale limestone balcony bands and a gabled roof.">
+    <div class="grain"></div>
+    <div class="scrim"></div>
+
+    <header class="nav">
+      <a class="mark" href="#track">Slate House<small>B&amp;B</small></a>
+      <nav class="mono" aria-label="Sections">
+        <a href="../slate-house/">Floor view</a>
+        <a href="#floors">Floors</a>
+        <a href="#stay">The stay</a>
+        <a class="btn" href="#enquire">Enquire</a>
+      </nav>
+    </header>
+
+    <div class="hero" id="hero">
+      <div class="mono">Bed &amp; breakfast · Five floors · Twelve rooms</div>
+      <h1>Slate House</h1>
+      <div class="hero-row">
+        <p>Fly it before you book. Scroll and the camera climbs the front, crosses the roof and lands on the terrace.</p>
+        <div class="acts">
+          <a class="btn btn-solid" href="#enquire">Check dates</a>
+          <span class="mono hint" id="hint">Scroll to fly</span>
+          <button class="btn" type="button" id="play" hidden>Play the flight</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="caps" id="caps" aria-live="polite"></div>
+
+    <div class="end" id="end">
+      <div class="mono hint">Now in slate and limestone</div>
+      <h2>Five floors, one front door.</h2>
+      <div class="acts"><a class="btn btn-solid" href="#enquire">Check dates</a><a class="btn" href="#floors">Rooms and rates</a></div>
+    </div>
+
+    <div class="hud mono" id="hud" hidden>
+      <div class="rail" id="rail"><i id="head"></i></div>
+      <span id="clock">Loading flight</span>
+    </div>
+  </section>
+</div>
+
+<main>
+  <section class="sec" id="floors">
+    <div class="mono eyebrow">Directory</div>
+    <h2 class="title">The house, top to bottom</h2>
+    <p class="lede">Twelve rooms on four floors, with the breakfast room at street level. Rates are per room, per night, with breakfast for everyone staying in it.</p>
+    <ol class="dir" id="dir"></ol>
+  </section>
+
+  <section class="sec" id="stay">
+    <div class="mono eyebrow">The stay</div>
+    <h2 class="title">What a night includes</h2>
+    <dl class="facts">
+      <div><dt class="mono">Breakfast</dt><dd>Cooked to order in the Brick Room, 7:30 to 10:30. Tea and coffee are out all day.</dd></div>
+      <div><dt class="mono">Arriving</dt><dd>Check in from 1 pm, check out by 11 am. Bags can wait at reception either side.</dd></div>
+      <div><dt class="mono">Warmth</dt><dd>Every room is heated from October to March, with extra quilts in the wardrobe.</dd></div>
+      <div><dt class="mono">Driving</dt><dd>Four cars fit off the lane. Tell us you're driving and we'll hold a space.</dd></div>
+      <div><dt class="mono">The terrace</dt><dd>The third-floor terrace is open to every guest until 10 pm.</dd></div>
+      <div><dt class="mono">Opening</dt><dd>Finishing work is under way. Enquire now and we'll write as soon as dates open.</dd></div>
+    </dl>
+  </section>
+
+  <section class="sec" id="enquire">
+    <div class="mono eyebrow">Enquire</div>
+    <h2 class="title">Pick your dates</h2>
+    <p class="lede">Choose the dates and a floor. The message writes itself, ready to copy and send.</p>
+    <form class="enq" id="enq" novalidate>
+      <div class="fields">
+        <label class="mono full" for="f-arrive">Arriving<input id="f-arrive" type="date" required></label>
+        <label class="mono" for="f-nights">Nights<input id="f-nights" type="number" min="1" max="30" value="2" inputmode="numeric"></label>
+        <label class="mono" for="f-guests">Guests<input id="f-guests" type="number" min="1" max="8" value="2" inputmode="numeric"></label>
+        <label class="mono full" for="f-floor">Floor<select id="f-floor"><option value="">No preference</option></select></label>
+        <label class="mono full" for="f-name">Your name<input id="f-name" type="text" autocomplete="name" placeholder="Optional"></label>
+      </div>
+      <div class="out">
+        <label class="mono" for="f-msg">Your enquiry<textarea id="f-msg" readonly></textarea></label>
+        <p class="total" id="total"></p>
+        <div class="send">
+          <button class="btn btn-solid" type="submit">Copy enquiry</button>
+          <span class="mono" id="copied" aria-live="polite"></span>
+        </div>
+        <p class="contact">Send it to <b>stay@slatehouse.example</b> or WhatsApp <b>+91 00000 00000</b>.</p>
+      </div>
+    </form>
+  </section>
+
+  <footer class="mono">
+    <span>Slate House · Demo site</span>
+    <span>Name, rooms, rates and contact details are placeholders</span>
+  </footer>
+</main>
+
+<script>
+/* ------- everything to rebrand lives here ------- */
+const HOUSE = {
+  name: 'Slate House',
+  floors: [ // ground first, roof last
+    { k:'G', level:'Ground floor', elev:'±0.00 m', name:'The Brick Room',
+      line:'Reception, the kitchen and one long breakfast table, behind the only brick walls in the house.',
+      specs:[['Breakfast','7:30 to 10:30'],['Open','All day'],['Seats','24']],
+      meta:'Breakfast room · reception', rate:null },
+    { k:'1', level:'First floor', elev:'+3.30 m', name:'Valley Rooms',
+      line:'Four rooms across four bays. Each one opens onto a balcony behind a slate half-wall.',
+      specs:[['Rooms','4'],['Sleeps','2 each'],['From','₹4,800']],
+      meta:'4 rooms · sleeps 2 each', rate:4800 },
+    { k:'2', level:'Second floor', elev:'+6.60 m', name:'Balcony Suites',
+      line:'The same four bays with more room behind them: a sitting corner, a desk and a longer view.',
+      specs:[['Suites','4'],['Sleeps','3 each'],['From','₹6,500']],
+      meta:'4 suites · sleeps 3 each', rate:6500 },
+    { k:'3', level:'Third floor', elev:'+9.90 m', name:'Terrace Floor',
+      line:'Two family suites that share the open terrace and its white pergola at the corner of the house.',
+      specs:[['Suites','2'],['Sleeps','4 each'],['From','₹8,900']],
+      meta:'2 family suites · sleeps 4 each', rate:8900 },
+    { k:'A', level:'Attic', elev:'+13.20 m', name:'The Lofts',
+      line:'Two rooms under the gables, with dormer windows that look across to the far ridge.',
+      specs:[['Lofts','2'],['Sleeps','2 each'],['From','₹5,600']],
+      meta:'2 loft rooms · sleeps 2 each', rate:5600 }
+  ]
+};
+
+const $ = id => document.getElementById(id);
+const inr = n => '₹' + n.toLocaleString('en-IN');
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const F = HOUSE.floors, N = F.length;
+
+/* ------- directory, top floor first like a lift panel ------- */
+$('dir').innerHTML = F.slice().reverse().map(f => `
+  <li>
+    <span class="dir-k" aria-hidden="true">${esc(f.k)}</span>
+    <div><h3>${esc(f.name)}</h3><p>${esc(f.line)}</p></div>
+    <div class="dir-meta mono">${esc(f.level)} · ${esc(f.elev)}<br>${esc(f.meta)}</div>
+    <div class="dir-rate">${f.rate ? `<b>${inr(f.rate)}</b><span class="mono">sample rate / night</span>` : `<span class="mono">Open to every guest</span>`}</div>
+  </li>`).join('');
+
+/* ------- enquiry builder ------- */
+(function(){
+  const arrive=$('f-arrive'), nights=$('f-nights'), guests=$('f-guests'), floor=$('f-floor'), name=$('f-name'), msg=$('f-msg'), total=$('total'), copied=$('copied');
+  F.filter(f=>f.rate).forEach(f => floor.insertAdjacentHTML('beforeend', `<option value="${esc(f.k)}">${esc(f.name)} (${esc(f.level.toLowerCase())})</option>`));
+  const d = new Date(); d.setDate(d.getDate()+14);
+  arrive.value = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  const int = (el,lo,hi) => Math.min(hi, Math.max(lo, parseInt(el.value,10) || lo));
+  function build(){
+    const n = int(nights,1,30), g = int(guests,1,8), f = F.find(x => x.k === floor.value);
+    const [y,m,dd] = (arrive.value || '').split('-').map(Number);
+    const when = y ? new Date(y, m-1, dd).toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long',year:'numeric'}) : 'a date still to be fixed';
+    msg.value = `Hello ${HOUSE.name},\n\nI'd like to stay ${n} night${n>1?'s':''} from ${when}, for ${g} guest${g>1?'s':''}.\n` +
+      (f ? `If it's free, I'd like the ${f.name} on the ${f.level.toLowerCase()}.` : `I have no floor preference.`) +
+      `\n\nPlease let me know what's available and the rate.\n\nThank you` + (name.value.trim() ? `,\n${name.value.trim()}` : '');
+    total.innerHTML = f ? `<b>${inr(f.rate*n)}</b><span class="mono">sample total · ${n} night${n>1?'s':''} · breakfast included</span>`
+                        : `<span class="mono">Choose a floor to see a sample total</span>`;
+    copied.textContent = '';
+  }
+  [arrive,nights,guests,floor,name].forEach(el => el.addEventListener('input', build));
+  $('enq').addEventListener('submit', e => {
+    e.preventDefault();
+    const fallback = () => { msg.focus(); msg.select(); copied.textContent = 'Selected. Copy it from here'; };
+    try { navigator.clipboard.writeText(msg.value).then(() => { copied.textContent = 'Copied'; }, fallback); } catch (err) { fallback(); }
+  });
+  build();
+})();
+
+/* ------- the stage: scroll position sets the time of the flight ------- */
+const FLIGHT = {
+  src: 'flight.mp4', length: 62.6,
+  heroOut: [2.6, 5.4],        // seconds over which the title clears
+  dissolve: [59.4, 62.2],     // seconds over which the flight gives way to the photo
+  chapters: [                 // t = second of the flight at which the caption comes in
+    { t: 6.6,  lvl: 'Attic · +13.20 m',       name: 'The Lofts',          line: 'Two rooms under the gables, with dormer windows that look across to the far ridge.' },
+    { t: 12.6, lvl: 'From the roof',          name: 'The whole valley',   line: 'Above the ridge line the valley opens both ways, with the town laid out along the road below.' },
+    { t: 24.6, lvl: 'Third floor · +9.90 m',  name: 'Terrace Floor',      line: 'Two family suites share the open terrace and its white pergola.' },
+    { t: 31.7, lvl: 'Inside',                 name: 'Rooms taking shape', line: 'The walls are up and the roof is insulated. Finishing work is under way.' },
+    { t: 37.7, lvl: 'The terrace',            name: 'Open till ten',      line: 'Every guest can use the terrace until 10 pm. Bring a shawl after sunset.' },
+    { t: 43.1, lvl: 'First floor · +3.30 m',  name: 'Valley Rooms',       line: 'Four rooms side by side, each opening onto its own balcony.' },
+    { t: 49.6, lvl: 'Second floor · +6.60 m', name: 'Balcony Suites',     line: 'The same plan with more room behind it: a sitting corner, a desk and a longer view.' },
+    { t: 55.9, lvl: 'Third floor · +9.90 m',  name: 'Under the pergola',  line: 'The flight ends where most evenings do, out on the terrace.' }
+  ]
+};
+
+(function(){
+  const track=$('track'), stage=$('stage'), v=$('flight'), done=$('done'), hero=$('hero'), caps=$('caps'), end=$('end'), hud=$('hud'), rail=$('rail'), head=$('head'), clock=$('clock');
+  const LEN = FLIGHT.length, C = FLIGHT.chapters;
+  const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (reduce) {                              // no scroll-driven motion: offer the flight as an ordinary video
+    $('hint').hidden = true;
+    const play = $('play'); play.hidden = false;
+    play.addEventListener('click', () => {
+      v.src = FLIGHT.src; v.controls = true; v.removeAttribute('tabindex'); v.classList.add('on');
+      stage.classList.add('is-playing');
+      const p = v.play(); if (p) p.catch(() => {});
+    });
+    return;
+  }
+
+  caps.innerHTML = C.map(c => `<article><div class="mono lvl">${esc(c.lvl)}</div><h2>${esc(c.name)}</h2><p>${esc(c.line)}</p></article>`).join('');
+  const cards = [...caps.children];
+  const ticks = C.map((c,i) => {
+    const b = document.createElement('button');
+    b.className = 'tick'; b.type = 'button'; b.style.left = (c.t/LEN*100).toFixed(2) + '%';
+    b.setAttribute('aria-label', 'Jump to ' + c.name);
+    b.addEventListener('click', () => jump(c.t + 0.8));
+    rail.appendChild(b); return b;
+  });
+  document.documentElement.classList.add('is-live');
+  hud.hidden = false;
+
+  const clamp = (x,a,b) => Math.min(b, Math.max(a, x));
+  const smooth = (a,b,x) => { const k = clamp((x-a)/(b-a),0,1); return k*k*(3-2*k); };
+  const mmss = s => String(Math.floor(s/60)).padStart(2,'0') + ':' + String(Math.floor(s%60)).padStart(2,'0');
+  const travel = () => track.offsetHeight - stage.offsetHeight;
+  const goal = () => { const d = travel(); return d > 0 ? clamp(-track.getBoundingClientRect().top/d, 0, 1)*LEN : 0; };
+  function jump(t){ window.scrollTo({top: window.scrollY + track.getBoundingClientRect().top + (t/LEN)*travel(), behavior:'smooth'}); }
+
+  /* fetch the whole file first so every seek is instant, and show how far along it is */
+  let ready = false, pct = null;
+  function attach(url){ v.preload = 'auto'; v.src = url; }
+  v.addEventListener('loadeddata', () => {
+    ready = true; v.classList.add('on');
+    const p = v.play(); if (p) p.then(() => v.pause()).catch(() => {});   // wakes the decoder on phones
+    wake();
+  });
+  v.addEventListener('seeked', () => wake());
+  (async () => {
+    try {
+      const r = await fetch(FLIGHT.src);
+      if (!r.ok || !r.body) throw new Error('no stream');
+      const total = +r.headers.get('content-length') || 0, type = r.headers.get('content-type') || 'video/mp4';
+      const rd = r.body.getReader(), parts = []; let got = 0;
+      for (;;) { const {done:fin, value} = await rd.read(); if (fin) break; parts.push(value); got += value.length; if (total) { pct = Math.round(got/total*100); wake(); } }
+      attach(URL.createObjectURL(new Blob(parts, {type})));
+    } catch (e) { attach(FLIGHT.src); }
+  })();
+
+  let cur = -1, shown = -2, raf = 0;
+  function render(){
+    if (ready && !v.seeking && Math.abs(v.currentTime - cur) > 0.03) v.currentTime = clamp(cur, 0, LEN - 0.08);
+
+    const h = 1 - smooth(FLIGHT.heroOut[0], FLIGHT.heroOut[1], cur);
+    hero.style.opacity = h.toFixed(3);
+    hero.style.transform = `translate3d(0,${((1-h)*-28).toFixed(1)}px,0)`;
+    hero.style.visibility = h < 0.02 ? 'hidden' : 'visible';
+
+    let idx = -1;
+    if (cur < FLIGHT.dissolve[0]) for (let i = 0; i < C.length; i++) if (cur >= C[i].t) idx = i;
+    if (idx !== shown) { shown = idx; cards.forEach((el,i) => el.classList.toggle('on', i === idx)); ticks.forEach((el,i) => el.classList.toggle('on', i === idx)); }
+
+    done.style.opacity = smooth(FLIGHT.dissolve[0], FLIGHT.dissolve[1], cur).toFixed(3);
+    const z = smooth(FLIGHT.dissolve[0] + 1.1, FLIGHT.dissolve[1] + 0.2, cur);
+    end.style.opacity = z.toFixed(3);
+    end.style.transform = `translate3d(0,${((1-z)*28).toFixed(1)}px,0)`;
+    end.style.visibility = z < 0.02 ? 'hidden' : 'visible';
+
+    head.style.transform = `scaleX(${(cur/LEN).toFixed(4)})`;
+    clock.textContent = ready ? `${mmss(cur)} / ${mmss(LEN)}` : (pct === null ? 'Loading flight' : `Loading flight ${pct}%`);
+  }
+  function tick(){
+    const g = goal();
+    if (cur < 0) cur = g;
+    cur += (g - cur)*0.12;
+    const settled = Math.abs(g - cur) < 0.01;
+    if (settled) cur = g;
+    render();
+    raf = settled ? 0 : requestAnimationFrame(tick);
+  }
+  const wake = () => { if (!raf) raf = requestAnimationFrame(tick); };
+  window.addEventListener('scroll', wake, {passive:true});
+  window.addEventListener('resize', wake);
+  wake();
+})();
+</script>
+</body>
+</html>
