@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Questions for Shrey — Structural Software</title>
+<meta name="description" content="Engineering questions on a free browser-based RC building analysis and design tool for the Indian codes.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0d1117; --panel:#161b22; --panel-2:#1c232c; --border:#30363d;
+    --text:#e6edf3; --muted:#8b949e; --accent:#3fb950; --accent-dim:#2ea043;
+    --link:#58a6ff; --warn:#d29922; --radius:10px; --maxw:820px;
+    --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    --sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--bg); color:var(--text);
+    font-family:var(--sans); font-size:16px; line-height:1.65;
+    -webkit-text-size-adjust:100%;
+  }
+  .wrap{max-width:var(--maxw); margin:0 auto; padding:32px 20px 80px}
+  @media(min-width:700px){ .wrap{padding:56px 24px 96px} }
+
+  .eyebrow{
+    font-family:var(--mono); font-size:12px; letter-spacing:.08em;
+    text-transform:uppercase; color:var(--accent); margin:0 0 14px;
+  }
+  h1{
+    font-size:clamp(26px,6vw,40px); line-height:1.15; font-weight:800;
+    margin:0 0 14px; letter-spacing:-.02em;
+  }
+  .meta{
+    font-family:var(--mono); font-size:13px; color:var(--muted);
+    margin:0 0 28px; line-height:1.8;
+  }
+  .lede{font-size:17px; color:var(--text); margin:0 0 14px}
+  p{margin:0 0 14px}
+  a{color:var(--link)}
+
+  .cta{
+    display:block; background:var(--accent); color:#06120a; font-weight:700;
+    text-decoration:none; text-align:center; padding:16px 20px;
+    border-radius:var(--radius); margin:28px 0; font-size:17px;
+  }
+  .cta:hover{background:var(--accent-dim)}
+  .cta small{display:block; font-weight:500; font-size:13px; opacity:.75; margin-top:4px}
+
+  hr{border:0; border-top:1px solid var(--border); margin:40px 0}
+
+  h2{
+    font-size:13px; font-family:var(--mono); font-weight:700; letter-spacing:.1em;
+    text-transform:uppercase; color:var(--accent); margin:0 0 6px;
+  }
+  .block-title{font-size:clamp(20px,4.5vw,26px); font-weight:700; margin:0 0 10px; letter-spacing:-.01em}
+  .block-note{color:var(--muted); font-size:15px; margin:0 0 24px}
+
+  section.block{
+    background:var(--panel); border:1px solid var(--border);
+    border-radius:var(--radius); padding:24px 20px; margin:0 0 20px;
+  }
+  @media(min-width:700px){ section.block{padding:30px 28px} }
+  section.block.priority{border-color:var(--accent); border-width:1px}
+
+  .q{border-top:1px solid var(--border); padding:18px 0 0; margin:18px 0 0}
+  .q:first-of-type{border-top:0; padding-top:0; margin-top:0}
+  .q-id{
+    font-family:var(--mono); font-size:12px; font-weight:700;
+    color:var(--accent); display:inline-block; margin-bottom:4px;
+  }
+  .q-text{font-weight:600; margin:0 0 8px}
+  .q-sub{color:var(--muted); font-size:14.5px; margin:0}
+  .q-sub ul{margin:8px 0 0; padding-left:20px}
+  .q-sub li{margin:2px 0}
+  .tag{
+    font-family:var(--mono); font-size:10.5px; font-weight:700; letter-spacing:.06em;
+    text-transform:uppercase; background:rgba(210,153,34,.14); color:var(--warn);
+    border:1px solid rgba(210,153,34,.35); border-radius:4px;
+    padding:2px 7px; margin-left:8px; vertical-align:2px; white-space:nowrap;
+  }
+
+  .callout{
+    background:var(--panel-2); border-left:3px solid var(--warn);
+    border-radius:0 6px 6px 0; padding:16px 18px; margin:24px 0 0;
+    font-size:15px; color:var(--text);
+  }
+  .callout strong{color:var(--warn)}
+  .callout.neutral{border-left-color:var(--link)}
+  .callout.neutral strong{color:var(--link)}
+
+  code{
+    font-family:var(--mono); font-size:.88em; background:var(--panel-2);
+    border:1px solid var(--border); border-radius:4px; padding:1px 5px;
+  }
+  .std{font-family:var(--mono); font-size:14px; color:var(--text); line-height:2}
+  footer{color:var(--muted); font-size:15px; margin-top:44px; text-align:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <p class="eyebrow">Open questions · v1 design</p>
+  <h1>Questions for Shrey</h1>
+  <p class="meta">
+    From Karan · 7 October 2026<br>
+    Free browser-based RC building analysis &amp; design · Indian codes
+  </p>
+
+  <p class="lede">
+    I'm building a <strong>free, browser-based structural analysis and design tool for RC building
+    frames</strong>, designed to the Indian codes. No install, no licence, no account — it opens in
+    a browser tab. The aim is the part of commercial building-analysis software that engineers
+    actually use day to day, with the learning curve designed out.
+  </p>
+  <p>
+    The research is done — workflow, solver mathematics, IS code clauses, validation benchmarks.
+    But there are gaps only someone in practice can close, and some of them are safety-critical.
+    I'm not willing to guess a code coefficient, so I'd rather ask you than ship something I can't
+    stand behind.
+  </p>
+  <p>
+    Four blocks below. Skip anything you can't answer — partial is genuinely useful. Short answers
+    are completely fine.
+  </p>
+
+  <a class="cta" href="https://docs.google.com/document/d/1gfQCdMopUQiZM2KhxySZwINBEDqMCzSNYewhLebludY/edit">
+    Answer in the Google Doc
+    <small>Type straight under each question — nothing to download</small>
+  </a>
+
+  <hr>
+
+  <!-- BLOCK A -->
+  <section class="block priority">
+    <h2>Block A</h2>
+    <p class="block-title">The three that gate everything</p>
+    <p class="block-note">
+      If you only answer three questions, make it these. They decide whether the design-check half
+      of the tool can ship at all.
+    </p>
+
+    <div class="q">
+      <span class="q-id">A1</span>
+      <p class="q-text">Which of these standards do you have current copies of?</p>
+      <p class="std">
+        IS 456:2000 · IS 1893 (Part 1):2016 · IS 13920:2016<br>
+        IS 875 Parts 1, 2, 3, 5 · SP 16 · SP 34
+      </p>
+    </div>
+
+    <div class="q">
+      <span class="q-id">A2</span>
+      <p class="q-text">Would you be willing to check the code-design implementation against the actual standards?</p>
+      <p class="q-sub">
+        Rough sense of the time you could give it — an hour? A day spread over a few weeks?
+        No wrong answer, I just need to plan around it.
+      </p>
+    </div>
+
+    <div class="q">
+      <span class="q-id">A3</span>
+      <p class="q-text">Are you a licensed / chartered engineer who signs off drawings?</p>
+      <p class="q-sub">
+        Only asking because it changes how the liability disclaimer is worded. Nothing else
+        depends on it.
+      </p>
+    </div>
+
+    <div class="callout neutral">
+      <strong>Why A1 and A2 matter so much.</strong> Without the real BIS text, the tool can still
+      do full <em>analysis</em> — forces, moments, drift, periods, seismic base shear — because
+      that's mathematics I can verify against textbook closed-form solutions. What it cannot do is
+      claim to be a <em>code compliance check</em>. That half is blocked on the books, and on a
+      review by someone who actually practises.
+    </div>
+  </section>
+
+  <!-- BLOCK B -->
+  <section class="block">
+    <h2>Block B</h2>
+    <p class="block-title">How you actually work</p>
+    <p class="block-note">
+      I've made modelling assumptions from research. I need to know whether they match reality —
+      the whole architecture rests on B1.
+    </p>
+
+    <div class="q">
+      <span class="q-id">B1</span><span class="tag">most important</span>
+      <p class="q-text">
+        On a normal RC building job — do you mesh the slabs, or use a rigid diaphragm and
+        distribute slab load to the beams by tributary area / yield-line (45°)?
+      </p>
+      <p class="q-sub">
+        The entire design assumes the second approach is standard practice. If that's wrong, I need
+        to know now rather than after building it.
+      </p>
+    </div>
+
+    <div class="q">
+      <span class="q-id">B2</span>
+      <p class="q-text">
+        Do you design slabs separately using the IS 456 coefficient tables, rather than taking slab
+        design from the analysis model?
+      </p>
+    </div>
+
+    <div class="q">
+      <span class="q-id">B3</span>
+      <p class="q-text">Roughly what share of your jobs involve —</p>
+      <p class="q-sub">
+        <ul>
+          <li>Shear walls or a lift / stair core</li>
+          <li>Flat slabs (no beams)</li>
+          <li>Transfer plates / podium floors</li>
+        </ul>
+      </p>
+    </div>
+
+    <div class="q">
+      <span class="q-id">B4</span>
+      <p class="q-text">Typical job size — how many storeys, how many bays each way, rough plan dimensions?</p>
+    </div>
+
+    <div class="q">
+      <span class="q-id">B5</span>
+      <p class="q-text">In practice, OMRF (R = 3) or SMRF (R = 5)?</p>
+      <p class="q-sub">
+        And if SMRF — is the IS 13920 ductile detailing genuinely enforced on site, or is it more
+        of a drawing-office formality?
+      </p>
+    </div>
+
+    <div class="q">
+      <span class="q-id">B6</span>
+      <p class="q-text">Equivalent static, response spectrum, or both?</p>
+      <p class="q-sub">Does any authority or client ever specifically demand one over the other?</p>
+    </div>
+
+    <div class="q">
+      <span class="q-id">B7</span>
+      <p class="q-text">
+        Do you always apply the cracked-section modifiers (0.35 I<sub>g</sub> beams,
+        0.70 I<sub>g</sub> columns), or only on taller buildings?
+      </p>
+    </div>
+
+    <div class="q">
+      <span class="q-id">B8</span>
+      <p class="q-text">How many load combinations do you actually end up running on a job?</p>
+      <p class="q-sub">And do you ever need to know <em>which</em> combination governed a particular member?</p>
+    </div>
+
+    <div class="q">
+      <span class="q-id">B9</span>
+      <p class="q-text">Do you run P-Delta? On what sort of buildings?</p>
+    </div>
+  </section>
+
+  <!-- BLOCK C -->
+  <section class="block">
+    <h2>Block C</h2>
+    <p class="block-title">Code values I could not verify</p>
+    <p class="block-note">
+      Every item below came back either <strong>contradicted between sources</strong> or
+      <strong>completely unconfirmed</strong>. Getting any of them wrong makes the output unsafe
+      rather than merely wrong — which is why I'd rather leave them blank than fill them in from a
+      blog post. Only worth attempting with the books to hand.
+    </p>
+
+    <div class="q">
+      <span class="q-id">C1</span>
+      <p class="q-text">IS 1893 Table 7 — minimum design base shear as a % of seismic weight, by zone.</p>
+      <p class="q-sub">
+        I have 0.7 / 1.1 / 1.6 / 2.4 % from secondary sources, but <em>zero</em> sources actually
+        confirmed it. What are the real values?
+      </p>
+    </div>
+
+    <div class="q">
+      <span class="q-id">C2</span>
+      <p class="q-text">IS 1893 Cl. 7.7.1 — at what building height does dynamic analysis become mandatory?</p>
+      <p class="q-sub">
+        I've seen 40 m and 90 m quoted, plus 12 m for some cases. Sources directly contradicted
+        each other, and this decides whether equivalent static is even legal for a given building.
+      </p>
+    </div>
+
+    <div class="q">
+      <span class="q-id">C3</span>
+      <p class="q-text">IS 1893 Tables 5 and 6 (2016 edition) — the irregularity thresholds.</p>
+      <p class="q-sub">
+        Specifically mass irregularity % and vertical geometric irregularity %. One source gave me
+        200% / 150%, which I believe are the <em>2002</em> numbers rather than 2016.
+      </p>
+    </div>
+
+    <div class="q">
+      <span class="q-id">C4</span>
+      <p class="q-text">IS 1893 Cl. 7.10 — what does the 2016 edition require for an open ground storey (stilt parking)?</p>
+      <p class="q-sub">A hard prohibition, a multiplier on forces, or just a warning?</p>
+    </div>
+
+    <div class="q">
+      <span class="q-id">C5</span><span class="tag">most important</span>
+      <p class="q-text">IS 13920:2016 Cl. 7.2 — strong-column-weak-beam. Is the factor 1.4?</p>
+      <p class="q-sub">
+        i.e. sum of column moment capacities ≥ 1.4 × sum of beam moment capacities at every joint?
+      </p>
+    </div>
+
+    <div class="q">
+      <span class="q-id">C6</span><span class="tag">most important</span>
+      <p class="q-text">IS 13920:2016 Cl. 7.6 — special confining reinforcement.</p>
+      <p class="q-sub">
+        The A<sub>sh</sub> formula coefficients, the length l<sub>0</sub> over which it's required,
+        and the maximum spacing. I could not get the IS 13920 text at all.
+      </p>
+    </div>
+
+    <div class="q">
+      <span class="q-id">C7</span>
+      <p class="q-text">IS 1893 Table 9 — R values beyond OMRF = 3 and SMRF = 5.</p>
+      <p class="q-sub">Specifically ductile shear wall with SMRF: 4.0 or 5.0? I got both.</p>
+    </div>
+
+    <div class="q">
+      <span class="q-id">C8</span>
+      <p class="q-text">IS 1893 Cl. 6.4.2.1 — soil type boundaries by SPT N value.</p>
+      <p class="q-sub">
+        Two conflicting sets: <code>N &gt; 30 / 10–30 / ≤ 10</code> versus
+        <code>N &gt; 50 / 15–50 / &lt; 15</code>.
+      </p>
+    </div>
+
+    <div class="q">
+      <span class="q-id">C9</span>
+      <p class="q-text">IS 1893 Table 8 — is there an importance factor I = 1.2 row in the 2016 edition, or only 1.0 and 1.5?</p>
+    </div>
+
+    <div class="q">
+      <span class="q-id">C10</span>
+      <p class="q-text">IS 1893 Cl. 7.11.1 — storey drift limit of 0.004h.</p>
+      <p class="q-sub">
+        Is the drift taken directly from the R-reduced design forces, or multiplied back up by
+        something first?
+      </p>
+    </div>
+
+    <div class="q">
+      <span class="q-id">C11</span>
+      <p class="q-text">IS 456 Cl. 39.1 — the strain condition for a column section wholly in compression.</p>
+      <p class="q-sub">This sets the top of the P-M interaction curve.</p>
+    </div>
+
+    <div class="q">
+      <span class="q-id">C12</span>
+      <p class="q-text">
+        IS 875 Part 3 — Table 2 k<sub>2</sub> values above the 10 m height row, and Table 25 force
+        coefficients C<sub>f</sub> for rectangular buildings.
+      </p>
+    </div>
+
+    <div class="callout">
+      <strong>A decision I've already made — argue with it.</strong> Until C5 and C6 are confirmed
+      against the real text, the tool will offer <strong>OMRF R = 3 only</strong> and block SMRF
+      entirely. Letting someone divide their base shear by 5 when the software can't verify the
+      ductile detailing is enforced seemed like the wrong call — that's a 40% force reduction
+      against a promise the tool never checks, and soft-storey failure is the dominant RC collapse
+      mode here. If you think that's over-cautious, say so.
+    </div>
+  </section>
+
+  <!-- BLOCK D -->
+  <section class="block">
+    <h2>Block D</h2>
+    <p class="block-title">Outputs, and what wastes your time</p>
+
+    <div class="q">
+      <span class="q-id">D1</span>
+      <p class="q-text">What do you actually hand over at the end of a job?</p>
+      <p class="q-sub">Which tables, which drawings, in what format?</p>
+    </div>
+
+    <div class="q">
+      <span class="q-id">D2</span>
+      <p class="q-text">For approval or submission — what does the design basis report need to contain?</p>
+    </div>
+
+    <div class="q">
+      <span class="q-id">D3</span>
+      <p class="q-text">Rebar detailing — by hand, or does software give you the bar schedule?</p>
+    </div>
+
+    <div class="q">
+      <span class="q-id">D4</span>
+      <p class="q-text">What wastes the most time in the software you currently use?</p>
+      <p class="q-sub">The thing that makes you sigh.</p>
+    </div>
+
+    <div class="q">
+      <span class="q-id">D5</span>
+      <p class="q-text">
+        Blunt question: would you use a free browser-based tool for actual paid work, or only to
+        cross-check something you'd already done properly?
+      </p>
+      <p class="q-sub">
+        Either answer is useful. I'd rather build the right thing than the flattering thing, so
+        please don't be polite about this one.
+      </p>
+    </div>
+
+    <div class="q">
+      <span class="q-id">D6</span>
+      <p class="q-text">Anything I haven't asked that I should have?</p>
+    </div>
+  </section>
+
+  <a class="cta" href="https://docs.google.com/document/d/1gfQCdMopUQiZM2KhxySZwINBEDqMCzSNYewhLebludY/edit">
+    Answer in the Google Doc
+    <small>Or just reply on WhatsApp with the question numbers</small>
+  </a>
+
+  <footer>
+    Thanks Shrey. Whatever you manage to answer, you'll get the tool to try before anyone else sees it.
+  </footer>
+
+</div>
+</body>
+</html>
