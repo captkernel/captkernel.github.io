@@ -187,6 +187,13 @@
   .w-work .ag:before{content:'▸';position:absolute;left:0;top:0;color:var(--blue);font-size:.68rem;}
   .w-work .ag b{color:var(--text);font-weight:600;} .w-work .ag span{color:var(--muted);}
   /* ---- press / mentions in the detail view ---- */
+  .w-work .det-reel{display:flex;gap:.8rem;align-items:center;padding:.15rem 1rem .6rem;}
+  .w-work .det-reel video{width:126px;aspect-ratio:9/16;border-radius:8px;border:1px solid var(--border);background:#f3ede1;display:block;flex:none;}
+  .w-work .det-reel h4{margin:0 0 .3rem;font-size:.62rem;text-transform:uppercase;letter-spacing:.4px;color:var(--accent);}
+  .w-work .det-reel p{margin:0;font-size:.78rem;line-height:1.5;color:var(--muted);}
+  .w-work .det-reel a{color:var(--accent);text-decoration:none;border-bottom:1px solid transparent;}
+  .w-work .det-reel a:hover{border-bottom-color:var(--accent);}
+  @media (max-width:560px){.w-work .det-reel{flex-direction:column;align-items:flex-start;}}
   .w-work .det-press{padding:.1rem 1rem .55rem;}
   .w-work .det-press h4{margin:.2rem 0 .4rem;font-size:.62rem;text-transform:uppercase;letter-spacing:.4px;color:var(--blue);}
   .w-work .det-press a{display:block;text-decoration:none;padding:.4rem .6rem;border:1px solid var(--border);border-radius:6px;margin-bottom:.3rem;transition:border-color .12s,background .12s;}
@@ -804,6 +811,8 @@ var FEATURED=[
   pitch:'A trust-rated catalog plus real judgment: it tells you which skills actually fit your project — your stack, deps, and CLAUDE.md — recommends with pros and cons, security-scans before you install, and persists every decision.',
   why:'The Claude skills ecosystem grew faster than anyone could vet. I had no reliable way to know which skills fit my project, which were safe to install, or which I had already judged — so I built the layer that scores fit, security-scans, rewrites skills to match your project, and remembers every decision.',
   who:'Claude Code and claude.ai users drowning in skills who want to install only what fits — safely.',
+  reel:'video/skills-curator-reel.mp4', reelPoster:'video/skills-curator-poster.jpg',
+  reelCap:'32 seconds — a skill decomposed, scored, and rewritten for your project.',
   press:[{t:'The Man Who Taught His AI to Shut Up and Use His Voice',pub:'Strategic Tensors · Nishant Sharma',h:'https://strategictensors.substack.com/p/the-man-who-taught-his-ai-to-shut'}],
   groups:[
    {h:'Judges fit',i:['Recommends by fit, not popularity','Flags duplicate and conflicting skills','Per-project verdict + decision registry']},
@@ -816,6 +825,8 @@ var FEATURED=[
   pitch:'Drop in one skill and Claude starts working like a seasoned pro: persistent memory, agent teams that size themselves, the good ecosystem skills, and the habits that take weeks to work out. Answer one question and it runs.',
   why:'On every new project I was rebuilding the same foundation by hand — persistent memory, agent structures, the good skills, the guardrails. Claunchpad packages all of it into one skill: install it, answer one question, and Claude starts working like it knows what it\'s doing.',
   who:'Anyone starting a project with Claude Code — beginners who want a safe default, experts who want the full machine.',
+  reel:'video/claunchpad-reel.mp4', reelPoster:'video/claunchpad-poster.jpg',
+  reelCap:'37 seconds — the setup you never have to do, and the team that sizes itself.',
   groups:[
    {h:'🧠 Memory',i:['Remembers decisions, fixed bugs, techniques','A hook reloads it at every session start','Survives /clear and context compaction']},
    {h:'👥 Orchestration',i:['Teams that size themselves: solo → pair → fan-out','Escalates only when the task earns it','Knowledge passed between agents, not lost']},
@@ -904,6 +915,8 @@ function cardHtml(f,cardCls){var h='<div class="'+cardCls+'" data-key="'+f.k+'">
 function featBandHtml(){var h='<div class="work-feat"><div class="feat-cap"><b>★ shipped</b> — finished, in the wild</div>';FEATURED.forEach(function(f){h+=cardHtml(f,'feat-card');});return h+'</div>';}
 function wipBandHtml(){var h='<div class="work-wip"><div class="feat-cap wip"><b>◐ in progress</b> — building in the open</div>';WIP.forEach(function(f){h+=cardHtml(f,'wip-card');});return h+'</div>';}
 function detailHtml(f){var h='<button class="feat-back">← all systems</button><div class="det-head"><h3>'+f.ico+' '+f.nm+' <span class="feat-badge">'+f.badge+'</span></h3><div class="det-tag">'+f.tag+'</div></div><div class="det-pitch">'+f.pitch+'</div>';
+  if(f.reel)h+='<div class="det-reel"><video src="'+f.reel+'" poster="'+f.reelPoster+'" muted loop playsinline controls preload="none"></video>'+
+    '<div><h4>The film</h4><p>'+f.reelCap+' <a href="'+f.reel+'" target="_blank" rel="noopener">open full size ↗</a></p></div></div>';
   if(f.why)h+='<div class="det-why"><h4>Why I built it</h4><p>'+f.why+'</p>'+(f.who?'<p class="det-who"><b>Who it\'s for:</b> '+f.who+'</p>':'')+'</div>';
   else if(f.who)h+='<div class="det-why"><p class="det-who"><b>Who it\'s for:</b> '+f.who+'</p></div>';
   if(f.agents&&f.agents.length){h+='<div class="det-agents"><h4>An agent for every department</h4><div class="ag-grid">';f.agents.forEach(function(a){h+='<div class="ag"><b>'+a[0]+'</b> <span>'+a[1]+'</span></div>';});h+='</div></div>';}
