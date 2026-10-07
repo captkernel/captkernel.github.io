@@ -187,13 +187,37 @@
   .w-work .ag:before{content:'▸';position:absolute;left:0;top:0;color:var(--blue);font-size:.68rem;}
   .w-work .ag b{color:var(--text);font-weight:600;} .w-work .ag span{color:var(--muted);}
   /* ---- press / mentions in the detail view ---- */
-  .w-work .det-reel{display:flex;gap:.8rem;align-items:center;padding:.15rem 1rem .6rem;}
-  .w-work .det-reel video{width:126px;aspect-ratio:9/16;border-radius:8px;border:1px solid var(--border);background:#f3ede1;display:block;flex:none;}
-  .w-work .det-reel h4{margin:0 0 .3rem;font-size:.62rem;text-transform:uppercase;letter-spacing:.4px;color:var(--accent);}
-  .w-work .det-reel p{margin:0;font-size:.78rem;line-height:1.5;color:var(--muted);}
-  .w-work .det-reel a{color:var(--accent);text-decoration:none;border-bottom:1px solid transparent;}
-  .w-work .det-reel a:hover{border-bottom-color:var(--accent);}
-  @media (max-width:560px){.w-work .det-reel{flex-direction:column;align-items:flex-start;}}
+  /* ---- reel player: compact while idle, opens up while it plays ---- */
+  .w-work .reelp{display:flex;gap:.85rem;align-items:flex-start;padding:.15rem 1rem .65rem;}
+  .w-work .reelp-stage{position:relative;flex:none;width:118px;aspect-ratio:9/16;border-radius:9px;overflow:hidden;
+    border:1px solid var(--border);background:#0b0d12;cursor:pointer;
+    transition:width .36s cubic-bezier(.16,1,.3,1),border-color .2s;}
+  .w-work .reelp[data-state="playing"] .reelp-stage{width:206px;border-color:var(--accent);}
+  .w-work .reelp-stage:hover{border-color:var(--accent);}
+  .w-work .reelp-stage video{width:100%;height:100%;object-fit:cover;display:block;}
+  .w-work .reelp-scrim{position:absolute;inset:0;display:grid;place-items:center;background:rgba(8,10,14,.34);
+    opacity:1;transition:opacity .22s;}
+  .w-work .reelp[data-state="playing"] .reelp-scrim{opacity:0;pointer-events:none;}
+  .w-work .reelp-play{width:34px;height:34px;border-radius:50%;background:rgba(10,12,16,.72);
+    border:1px solid rgba(255,255,255,.34);display:grid;place-items:center;}
+  .w-work .reelp-play::after{content:"";margin-left:3px;border-style:solid;border-width:7px 0 7px 11px;
+    border-color:transparent transparent transparent #fff;}
+  .w-work .reelp[data-state="paused"] .reelp-play::after{margin-left:0;border-width:0;width:10px;height:12px;
+    border-left:3px solid #fff;border-right:3px solid #fff;}
+  .w-work .reelp-bar{position:absolute;left:0;right:0;bottom:0;height:3px;background:rgba(255,255,255,.16);cursor:pointer;}
+  .w-work .reelp-fill{height:100%;width:0;background:var(--accent);}
+  .w-work .reelp-mute{position:absolute;right:5px;top:5px;width:22px;height:22px;border-radius:5px;border:0;
+    background:rgba(10,12,16,.62);color:#fff;font-size:.6rem;line-height:1;cursor:pointer;opacity:0;transition:opacity .2s;}
+  .w-work .reelp[data-state="playing"] .reelp-mute,.w-work .reelp-stage:hover .reelp-mute{opacity:1;}
+  .w-work .reelp-meta h4{margin:0 0 .3rem;font-size:.62rem;text-transform:uppercase;letter-spacing:.4px;color:var(--accent);}
+  .w-work .reelp-meta p{margin:0 0 .4rem;font-size:.78rem;line-height:1.5;color:var(--muted);}
+  .w-work .reelp-ratios{display:flex;flex-wrap:wrap;gap:.3rem;}
+  .w-work .reelp-ratios a{font-size:.6rem;letter-spacing:.3px;text-decoration:none;color:var(--muted);
+    border:1px solid var(--border);border-radius:5px;padding:.14rem .36rem;transition:border-color .12s,color .12s;}
+  .w-work .reelp-ratios a:hover{border-color:var(--accent);color:var(--accent);}
+  @media (max-width:560px){.w-work .reelp{flex-direction:column;}
+    .w-work .reelp[data-state="playing"] .reelp-stage{width:100%;max-width:240px;}}
+  @media (prefers-reduced-motion:reduce){.w-work .reelp-stage{transition:none;}}
   .w-work .det-press{padding:.1rem 1rem .55rem;}
   .w-work .det-press h4{margin:.2rem 0 .4rem;font-size:.62rem;text-transform:uppercase;letter-spacing:.4px;color:var(--blue);}
   .w-work .det-press a{display:block;text-decoration:none;padding:.4rem .6rem;border:1px solid var(--border);border-radius:6px;margin-bottom:.3rem;transition:border-color .12s,background .12s;}
@@ -812,6 +836,7 @@ var FEATURED=[
   why:'The Claude skills ecosystem grew faster than anyone could vet. I had no reliable way to know which skills fit my project, which were safe to install, or which I had already judged — so I built the layer that scores fit, security-scans, rewrites skills to match your project, and remembers every decision.',
   who:'Claude Code and claude.ai users drowning in skills who want to install only what fits — safely.',
   reel:'video/skills-curator-reel.mp4', reelPoster:'video/skills-curator-poster.jpg',
+  reelRatios:[{l:'9:16 · reels',h:'video/skills-curator-reel.mp4'},{l:'4:5 · feed',h:'video/skills-curator-reel-4x5.mp4'}],
   reelCap:'32 seconds — a skill decomposed, scored, and rewritten for your project.',
   press:[{t:'The Man Who Taught His AI to Shut Up and Use His Voice',pub:'Strategic Tensors · Nishant Sharma',h:'https://strategictensors.substack.com/p/the-man-who-taught-his-ai-to-shut'}],
   groups:[
@@ -826,6 +851,7 @@ var FEATURED=[
   why:'On every new project I was rebuilding the same foundation by hand — persistent memory, agent structures, the good skills, the guardrails. Claunchpad packages all of it into one skill: install it, answer one question, and Claude starts working like it knows what it\'s doing.',
   who:'Anyone starting a project with Claude Code — beginners who want a safe default, experts who want the full machine.',
   reel:'video/claunchpad-reel.mp4', reelPoster:'video/claunchpad-poster.jpg',
+  reelRatios:[{l:'9:16 · reels',h:'video/claunchpad-reel.mp4'},{l:'4:5 · feed',h:'video/claunchpad-reel-4x5.mp4'}],
   reelCap:'37 seconds — the setup you never have to do, and the team that sizes itself.',
   groups:[
    {h:'🧠 Memory',i:['Remembers decisions, fixed bugs, techniques','A hook reloads it at every session start','Survives /clear and context compaction']},
@@ -914,9 +940,38 @@ function cardHtml(f,cardCls){var h='<div class="'+cardCls+'" data-key="'+f.k+'">
   return h+'</div>';}
 function featBandHtml(){var h='<div class="work-feat"><div class="feat-cap"><b>★ shipped</b> — finished, in the wild</div>';FEATURED.forEach(function(f){h+=cardHtml(f,'feat-card');});return h+'</div>';}
 function wipBandHtml(){var h='<div class="work-wip"><div class="feat-cap wip"><b>◐ in progress</b> — building in the open</div>';WIP.forEach(function(f){h+=cardHtml(f,'wip-card');});return h+'</div>';}
+function reelHtml(f){
+  var r='<div class="reelp" data-state="idle"><div class="reelp-stage">'+
+    '<video src="'+f.reel+'" poster="'+f.reelPoster+'" muted loop playsinline preload="none"></video>'+
+    '<div class="reelp-scrim"><div class="reelp-play"></div></div>'+
+    '<button class="reelp-mute" aria-label="Toggle sound">♪</button>'+
+    '<div class="reelp-bar"><div class="reelp-fill"></div></div></div>'+
+    '<div class="reelp-meta"><h4>The film</h4><p>'+f.reelCap+'</p><div class="reelp-ratios">';
+  (f.reelRatios||[]).forEach(function(x){r+='<a href="'+x.h+'" target="_blank" rel="noopener">'+x.l+'</a>';});
+  return r+'</div></div></div>';}
+
+/* The stage grows while the film plays and folds back down when it stops, so a panel that is
+   mostly prose is not permanently half video. */
+function mountReel(root){var p=root.querySelector('.reelp');if(!p)return;
+  var v=p.querySelector('video'),st=p.querySelector('.reelp-stage'),
+      bar=p.querySelector('.reelp-bar'),fill=p.querySelector('.reelp-fill'),mu=p.querySelector('.reelp-mute');
+  function set(x){p.setAttribute('data-state',x);}
+  st.addEventListener('click',function(e){
+    if(e.target===mu||e.target===bar||e.target===fill)return;
+    if(v.paused){v.play();}else{v.pause();}});
+  v.addEventListener('play',function(){set('playing');});
+  v.addEventListener('pause',function(){set(v.currentTime?'paused':'idle');});
+  v.addEventListener('ended',function(){set('idle');v.currentTime=0;fill.style.width='0';});
+  v.addEventListener('timeupdate',function(){
+    if(v.duration)fill.style.width=(v.currentTime/v.duration*100)+'%';});
+  bar.addEventListener('click',function(e){
+    var b=bar.getBoundingClientRect();
+    if(v.duration)v.currentTime=Math.max(0,Math.min(1,(e.clientX-b.left)/b.width))*v.duration;});
+  mu.addEventListener('click',function(e){e.stopPropagation();
+    v.muted=!v.muted;mu.textContent=v.muted?'♪':'◂';});}
+
 function detailHtml(f){var h='<button class="feat-back">← all systems</button><div class="det-head"><h3>'+f.ico+' '+f.nm+' <span class="feat-badge">'+f.badge+'</span></h3><div class="det-tag">'+f.tag+'</div></div><div class="det-pitch">'+f.pitch+'</div>';
-  if(f.reel)h+='<div class="det-reel"><video src="'+f.reel+'" poster="'+f.reelPoster+'" muted loop playsinline controls preload="none"></video>'+
-    '<div><h4>The film</h4><p>'+f.reelCap+' <a href="'+f.reel+'" target="_blank" rel="noopener">open full size ↗</a></p></div></div>';
+  if(f.reel)h+=reelHtml(f);
   if(f.why)h+='<div class="det-why"><h4>Why I built it</h4><p>'+f.why+'</p>'+(f.who?'<p class="det-who"><b>Who it\'s for:</b> '+f.who+'</p>':'')+'</div>';
   else if(f.who)h+='<div class="det-why"><p class="det-who"><b>Who it\'s for:</b> '+f.who+'</p></div>';
   if(f.agents&&f.agents.length){h+='<div class="det-agents"><h4>An agent for every department</h4><div class="ag-grid">';f.agents.forEach(function(a){h+='<div class="ag"><b>'+a[0]+'</b> <span>'+a[1]+'</span></div>';});h+='</div></div>';}
@@ -947,6 +1002,7 @@ function mountWork(el){var feat=el.querySelector('.work-feat'),wip=el.querySelec
   function showDetail(k){var f=null;ALL.forEach(function(x){if(x.k===k)f=x;});if(!f)return;
     det.innerHTML=detailHtml(f);[feat,wip,list].forEach(function(x){if(x)x.style.display='none';});det.style.display='';
     var b=det.querySelector('.feat-back');if(b)b.addEventListener('click',showList);
+  mountReel(det);
     det.querySelectorAll('[data-detail]').forEach(function(d){d.addEventListener('click',function(e){e.preventDefault();showDetail(d.getAttribute('data-detail'));});});}
   el.querySelectorAll('.feat-card,.wip-card').forEach(function(c){c.addEventListener('click',function(e){if(e.target.closest('a'))return;showDetail(c.getAttribute('data-key'));});});
   el.querySelectorAll('.work-feat [data-detail],.work-wip [data-detail]').forEach(function(d){d.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();showDetail(d.getAttribute('data-detail'));});});}
