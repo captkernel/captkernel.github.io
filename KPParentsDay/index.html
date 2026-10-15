@@ -49,13 +49,27 @@ h3{font:700 13px Mukta;letter-spacing:1.5px;text-transform:uppercase;color:var(-
 .tag{font-size:11px;background:#F0EBDF;color:var(--mute);border-radius:4px;padding:1px 6px}
 .tag.logo{background:var(--cream);color:var(--deep)}
 .cbox{margin-top:8px;border-top:1px dashed var(--line);padding-top:7px;cursor:auto}
-.cbox textarea{width:100%;min-height:52px;resize:vertical;font:13px/1.35 Mukta,system-ui,sans-serif;color:var(--ink);background:#FBF9F4;border:1px solid var(--line);border-radius:6px;padding:6px 8px;display:block}
+.clist{display:flex;flex-direction:column;gap:6px;margin-bottom:6px}
+.cm{background:#F7F3EA;border-radius:6px;padding:5px 7px;font-size:12.5px;line-height:1.35;word-wrap:break-word}
+.cm .who{font-weight:700;color:var(--green)}
+.cm .when{color:var(--mute);font-size:11px}
+.cm .st{font-size:10px;font-weight:700;border-radius:4px;padding:0 5px;margin-left:4px;background:var(--cream);color:var(--deep)}
+.cm .st.done{background:var(--green);color:#fff}
+.cm.pending{opacity:.7;font-style:italic}
+.cbox textarea{width:100%;min-height:46px;resize:vertical;font:13px/1.35 Mukta,system-ui,sans-serif;color:var(--ink);background:#FBF9F4;border:1px solid var(--line);border-radius:6px;padding:6px 8px;display:block}
 .cbox textarea:focus{outline:2px solid var(--gold);outline-offset:0;background:#fff}
-.cbox .cs{font-size:11px;color:var(--mute);margin-top:3px;min-height:14px}
+.crow{display:flex;gap:6px;align-items:center;margin-top:5px}
+.crow .cs{flex:1;font-size:11px;color:var(--mute);min-height:14px}
+.crow button{border:0;border-radius:999px;padding:4px 12px;font:700 12px Mukta;cursor:pointer}
+.post{background:var(--green);color:#fff}.post:disabled{opacity:.45;cursor:default}
+.lnk{background:#F0EBDF;color:var(--mute)}
 .tile.has-c{border-color:var(--gold);box-shadow:inset 0 3px 0 var(--gold)}
-#send{border:0;border-radius:999px;padding:7px 14px;font:700 14px Mukta;background:var(--gold);color:var(--deep);cursor:pointer}
-#send:disabled{opacity:.55;cursor:default}
-#toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:var(--deep);color:#fff;padding:9px 16px;border-radius:999px;font-size:14px;z-index:60;display:none}
+.tile.hl{outline:3px solid var(--gold);outline-offset:2px}
+.tile .ccount{font-size:11px;font-weight:700;background:var(--gold);color:var(--deep);border-radius:4px;padding:1px 6px}
+#who{min-width:140px;max-width:180px}
+#sync{font-size:12px;color:var(--cream)}
+#toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:var(--deep);color:#fff;padding:9px 16px;border-radius:999px;font-size:14px;z-index:60;display:none;max-width:90vw;text-align:center}
+#lbc{background:var(--gold)!important;color:var(--deep)!important;font-weight:700!important}
 .empty{color:var(--mute);padding:40px 0;text-align:center}
 #lb{position:fixed;inset:0;z-index:50;background:rgba(10,14,11,.94);display:none;flex-direction:column}
 #lb.on{display:flex}
@@ -88,15 +102,17 @@ main{padding:6px 14px 60px}.tile.wide{grid-column:1/-1}.grid{grid-template-colum
     <select id="fch" aria-label="Channel"><option value="">Every channel</option></select>
     <select id="fcamp" aria-label="Campaign"><option value="">Every campaign</option></select>
     <input id="fq" type="search" placeholder="Search…" aria-label="Search">
+    <div class="seg" id="fcm"><button data-v="" class="on">All items</button><button data-v="1">With comments</button></div>
+    <input id="who" type="text" placeholder="Your name" aria-label="Your name (shown on your comments)" maxlength="80">
     <span class="count" id="count"></span>
-    <button id="send" type="button" disabled>Send comments (0)</button>
+    <span id="sync" aria-live="polite"></span>
   </div>
 </header>
 <nav class="camps" id="camps"></nav>
 <main id="main"></main>
 <div id="toast" role="status"></div>
 <div id="lb" role="dialog" aria-modal="true">
-  <div class="top"><div class="t" id="lbt"></div><button id="lbz" title="Actual size (Z)">Zoom</button><a id="lbd" download>Download</a><button id="lbx" title="Close (Esc)">Close ✕</button></div>
+  <div class="top"><div class="t" id="lbt"></div><button id="lbc" title="Comment on this">Comment</button><button id="lbz" title="Actual size (Z)">Zoom</button><a id="lbd" download>Download</a><button id="lbx" title="Close (Esc)">Close ✕</button></div>
   <div class="stage" id="lbs"><button class="nav prev" id="lbp" aria-label="Previous">‹</button><button class="nav next" id="lbn" aria-label="Next">›</button></div>
 </div>
 <script>
@@ -107,15 +123,47 @@ chans.forEach(c=>$("#fch").insertAdjacentHTML("beforeend",`<option>${c}</option>
 CAMPS.forEach(c=>$("#fcamp").insertAdjacentHTML("beforeend",`<option value="${c.n}">${c.n} · ${c.name}</option>`));
 const esc=s=>String(s).replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]));
 let shown=[];
-const CKEY="kp-review-comments";
-let CM={};try{CM=JSON.parse(localStorage.getItem(CKEY)||"{}")||{}}catch(e){CM={}}
-function saveCM(){try{localStorage.setItem(CKEY,JSON.stringify(CM))}catch(e){}}
-function updSend(){const n=Object.values(CM).filter(v=>v&&v.trim()).length;const b=$("#send");b.textContent=`Send comments (${n})`;b.disabled=!n;}
+// Comments backend: Google Apps Script web app that writes to the "Kids Planet · Campaign review comments" sheet.
+const COMMENTS_ENDPOINT="";
+const SITE_URL="https://captkernel.com/KPParentsDay/";
+const mid=i=>i.full.split("/").pop().replace(/\.[^.]+$/,"");
+ITEMS.forEach(i=>i.id=mid(i));
+const BYID=Object.fromEntries(ITEMS.map(i=>[i.id,i]));
+const LS={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+// drafts (unsent text), keyed by media id; migrate the earlier device-only comments into drafts
+let DR=LS.get("kp-review-drafts",{});
+(()=>{const old=LS.get("kp-review-comments",null);if(!old)return;Object.entries(old).forEach(([full,t])=>{const it=ITEMS.find(i=>i.full===full);if(it&&t&&t.trim()&&!DR[it.id])DR[it.id]=t});LS.set("kp-review-drafts",DR);try{localStorage.removeItem("kp-review-comments")}catch(e){}})();
+let Q=LS.get("kp-review-queue",[]);          // posted here but not yet confirmed on the server
+let SV=LS.get("kp-review-cache",[]);         // last copy of the server's comments
+state.cm="";
+const commentsFor=id=>[...SV.filter(c=>c.mediaId===id),...Q.filter(c=>c.mediaId===id&&!SV.some(x=>x.id===c.id)).map(c=>({...c,pending:true}))];
+const hasC=id=>commentsFor(id).length>0;
+function fmtWhen(iso){const d=new Date(iso);return isNaN(d)?"":d.toLocaleDateString(undefined,{day:"numeric",month:"short"})+" "+d.toLocaleTimeString(undefined,{hour:"2-digit",minute:"2-digit"})}
+function paint(id){const t=document.getElementById("m-"+id);if(!t)return;const cs=commentsFor(id);
+  t.querySelector(".clist").innerHTML=cs.map(c=>`<div class="cm${c.pending?" pending":""}"><span class="who">${esc(c.reviewer||"Anonymous")}</span> <span class="when">${c.pending?"sending…":fmtWhen(c.at)}</span>${!c.pending&&c.status&&c.status!=="Open"?`<span class="st${/done|fixed|resolved/i.test(c.status)?" done":""}">${esc(c.status)}</span>`:""}<div>${esc(c.comment).replace(/\n/g,"<br>")}</div></div>`).join("");
+  t.classList.toggle("has-c",cs.length>0);
+  const cc=t.querySelector(".ccount");cc.textContent=cs.length?`💬 ${cs.length}`:"";cc.style.display=cs.length?"":"none";}
+function setSync(){const n=SV.length,p=Q.length;$("#sync").textContent=!COMMENTS_ENDPOINT?(p?`${p} comment${p>1?"s":""} waiting to sync`:""):p?`Syncing ${p}…`:`${n} comment${n===1?"":"s"} saved`;}
+async function pull(){if(!COMMENTS_ENDPOINT)return;try{const r=await fetch(COMMENTS_ENDPOINT,{cache:"no-store"});const j=await r.json();if(!j.ok)return;
+  SV=j.comments||[];LS.set("kp-review-cache",SV);const ids=new Set(SV.map(c=>c.id));Q=Q.filter(c=>!ids.has(c.id));LS.set("kp-review-queue",Q);
+  ITEMS.forEach(i=>paint(i.id));setSync();}catch(e){}}
+async function flush(){if(!COMMENTS_ENDPOINT||!Q.length){setSync();return}
+  for(const c of [...Q]){try{await fetch(COMMENTS_ENDPOINT,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(c)})}catch(e){setSync();return}}
+  setTimeout(pull,1200);}
+function post(id){const it=BYID[id],ta=document.querySelector(`#m-${id} textarea`),txt=(ta.value||"").trim();if(!txt)return;
+  let who=($("#who").value||"").trim();
+  if(!who){who=(prompt("Your name, so we know who left this comment:")||"").trim();if(who){$("#who").value=who;LS.set("kp-review-name",who)}}
+  const c=CAMPS.find(c=>c.n===it.campaign)||{};
+  Q.push({id:(crypto.randomUUID?crypto.randomUUID():Date.now()+"-"+Math.random().toString(36).slice(2)),at:new Date().toISOString(),reviewer:who||"Anonymous",comment:txt,status:"Open",
+    mediaId:id,title:it.title,campaign:it.campaign,campaignName:c.name||"",version:it.version,kind:it.kind==="video"?"Film":"Advert",channel:it.channel,size:`${it.w}×${it.h}`,file:it.full});
+  LS.set("kp-review-queue",Q);delete DR[id];LS.set("kp-review-drafts",DR);ta.value="";ta.nextElementSibling.querySelector(".post").disabled=true;
+  paint(id);flush();toast(COMMENTS_ENDPOINT?"Comment posted":"Comment saved — it will sync once the comments server is connected");}
+function link(id){const u=SITE_URL+"#m="+id;(navigator.clipboard?navigator.clipboard.writeText(u):Promise.reject()).then(()=>toast("Link to this item copied")).catch(()=>prompt("Link to this item:",u));}
 function toast(t){const e=$("#toast");e.textContent=t;e.style.display="block";clearTimeout(toast.t);toast.t=setTimeout(()=>e.style.display="none",2600);}
 function render(){
   const q=state.q.toLowerCase();
   shown=ITEMS.filter(i=>(!state.kind||i.kind===state.kind)&&(!state.ver||i.version===state.ver)&&(!state.ch||i.channel===state.ch)
-    &&(!state.camp||i.campaign==state.camp)&&(!q||(i.title+" "+i.name+" "+i.channel).toLowerCase().includes(q)));
+    &&(!state.camp||i.campaign==state.camp)&&(!state.cm||hasC(i.id))&&(!q||(i.title+" "+i.name+" "+i.channel).toLowerCase().includes(q)));
   $("#count").textContent=`${shown.length} of ${ITEMS.length}`;
   let h="",nav="";
   CAMPS.forEach(c=>{
@@ -129,20 +177,19 @@ function render(){
         const s=set.filter(i=>i.kind===k); if(!s.length) return;
         h+=`<h3>${v==="Logo-led"?"Logo-led versions · ":""}${lab} (${s.length})</h3><div class="grid">`;
         s.forEach(i=>{const idx=shown.indexOf(i), wide=i.w>i.h*2.2;
-          h+=`<div class="tile${wide?" wide":""}" data-i="${idx}" tabindex="0"><div class="thumb"><img loading="lazy" src="${i.thumb}" alt="${esc(i.title)}" width="${i.w}" height="${i.h}">${i.kind==="video"?`<span class="play">${i.dur}s</span>`:""}</div>
-          <div class="meta"><b>${esc(i.title)}</b><div class="tags"><span class="tag">${esc(i.channel)}</span><span class="tag">${i.w}×${i.h}</span>${i.version==="Logo-led"?'<span class="tag logo">Logo-led</span>':""}</div>
-          <div class="cbox"><textarea data-k="${esc(i.full)}" rows="2" placeholder="Add a comment…" aria-label="Comment on ${esc(i.title)}">${esc(CM[i.full]||"")}</textarea><div class="cs"></div></div></div></div>`;});
+          h+=`<div class="tile${wide?" wide":""}" id="m-${i.id}" data-i="${idx}" tabindex="0"><div class="thumb"><img loading="lazy" src="${i.thumb}" alt="${esc(i.title)}" width="${i.w}" height="${i.h}">${i.kind==="video"?`<span class="play">${i.dur}s</span>`:""}</div>
+          <div class="meta"><b>${esc(i.title)}</b><div class="tags"><span class="tag">${esc(i.channel)}</span><span class="tag">${i.w}×${i.h}</span>${i.version==="Logo-led"?'<span class="tag logo">Logo-led</span>':""}<span class="ccount" style="display:none"></span></div>
+          <div class="cbox"><div class="clist"></div><textarea data-k="${i.id}" rows="2" placeholder="Add a comment on this ${i.kind==="video"?"film":"advert"}…" aria-label="Comment on ${esc(i.title)}">${esc(DR[i.id]||"")}</textarea><div class="crow"><span class="cs"></span><button type="button" class="lnk" data-act="link" title="Copy a link to this exact item">🔗 Link</button><button type="button" class="post" data-act="post"${(DR[i.id]||"").trim()?"":" disabled"}>Post</button></div></div></div></div>`;});
         h+=`</div>`;});
     });
     h+=`</section>`;
   });
   $("#main").innerHTML=h||'<div class="empty">Nothing matches these filters.</div>';
   $("#camps").innerHTML=nav;
-  document.querySelectorAll(".cbox textarea").forEach(t=>{if((CM[t.dataset.k]||"").trim())t.closest(".tile").classList.add("has-c")});
-  updSend();
+  shown.forEach(i=>paint(i.id));setSync();
 }
 function seg(id,key){document.querySelectorAll(`#${id} button`).forEach(b=>b.onclick=()=>{document.querySelectorAll(`#${id} button`).forEach(x=>x.classList.remove("on"));b.classList.add("on");state[key]=b.dataset.v;render();});}
-seg("fkind","kind");seg("fver","ver");
+seg("fkind","kind");seg("fver","ver");seg("fcm","cm");
 $("#fch").onchange=e=>{state.ch=e.target.value;render()};
 $("#fcamp").onchange=e=>{state.camp=e.target.value;render()};
 $("#fq").oninput=e=>{state.q=e.target.value;render()};
@@ -154,28 +201,32 @@ function open(i){cur=i;const it=shown[i];if(!it)return;const s=$("#lbs");s.class
   const c=CAMPS.find(c=>c.n===it.campaign);
   $("#lbt").innerHTML=`${esc(it.title)}<small>${c?c.n+" · "+esc(c.name):""} · ${esc(it.channel)} · ${it.w}×${it.h}${it.dur?" · "+it.dur+" s":""}${it.version==="Logo-led"?" · Logo-led":""} · ${i+1} of ${shown.length}</small>`;
   $("#lbd").href=it.full;$("#lbz").style.display=it.kind==="image"?"":"none";
-  $("#lb").classList.add("on");document.body.style.overflow="hidden";}
-function close(){$("#lb").classList.remove("on");$("#lbs").querySelectorAll("video").forEach(v=>v.pause());document.body.style.overflow="";}
+  $("#lb").classList.add("on");document.body.style.overflow="hidden";
+  const n=commentsFor(it.id).length;$("#lbc").textContent=n?`Comments (${n})`:"Comment";
+  try{history.replaceState(null,"","#m="+it.id)}catch(e){}}
+function close(){if(!$("#lb").classList.contains("on"))return;$("#lb").classList.remove("on");try{history.replaceState(null,"",location.pathname+location.search)}catch(e){}$("#lbs").querySelectorAll("video").forEach(v=>v.pause());document.body.style.overflow="";}
 $("#main").addEventListener("click",e=>{if(e.target.closest(".cbox"))return;const t=e.target.closest(".tile");if(t)open(+t.dataset.i)});
 $("#main").addEventListener("keydown",e=>{if(e.target.closest(".cbox"))return;const t=e.target.closest(".tile");if(t&&e.key==="Enter")open(+t.dataset.i)});
 $("#main").addEventListener("input",e=>{const t=e.target.closest(".cbox textarea");if(!t)return;const k=t.dataset.k;
-  if(t.value.trim())CM[k]=t.value;else delete CM[k];saveCM();updSend();
-  t.closest(".tile").classList.toggle("has-c",!!t.value.trim());
-  const cs=t.nextElementSibling;cs.textContent="Saved on this device";clearTimeout(t._t);t._t=setTimeout(()=>cs.textContent="",1500);});
-function compile(){const lines=["Kids Planet · Campaign review — comments",""];
-  CAMPS.forEach(c=>{const mine=ITEMS.filter(i=>i.campaign===c.n&&(CM[i.full]||"").trim());if(!mine.length)return;
-    lines.push(`${c.n} · ${c.name}`);mine.forEach(i=>lines.push(`• ${i.title}${i.version==="Logo-led"?" (Logo-led)":""}: ${CM[i.full].trim()}`));lines.push("");});
-  return lines.join("\n").trim();}
-$("#send").onclick=async()=>{const txt=compile();
-  if(navigator.share){try{await navigator.share({title:"Campaign review comments",text:txt});return}catch(e){if(e.name==="AbortError")return}}
-  try{await navigator.clipboard.writeText(txt);toast("All comments copied — paste them into WhatsApp or email")}
-  catch(e){const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([txt],{type:"text/plain"}));a.download="kids-planet-review-comments.txt";a.click();toast("Comments downloaded as a text file")}};
+  if(t.value.trim())DR[k]=t.value;else delete DR[k];LS.set("kp-review-drafts",DR);
+  t.parentNode.querySelector(".post").disabled=!t.value.trim();
+  const cs=t.parentNode.querySelector(".cs");cs.textContent="Draft saved";clearTimeout(t._t);t._t=setTimeout(()=>cs.textContent="",1500);});
+$("#main").addEventListener("click",e=>{const b=e.target.closest("[data-act]");if(!b)return;const id=b.closest(".tile").id.slice(2);
+  if(b.dataset.act==="post")post(id);else link(id);});
+$("#main").addEventListener("keydown",e=>{const t=e.target.closest(".cbox textarea");if(t&&e.key==="Enter"&&(e.ctrlKey||e.metaKey)){e.preventDefault();post(t.dataset.k)}});
+$("#who").value=LS.get("kp-review-name","");$("#who").oninput=e=>LS.set("kp-review-name",e.target.value.trim());
+$("#lbc").onclick=()=>{const it=shown[cur];close();focusItem(it.id,true)};
+function focusItem(id,typing){const t=document.getElementById("m-"+id);if(!t)return;t.scrollIntoView({block:"center"});t.classList.add("hl");setTimeout(()=>t.classList.remove("hl"),2500);if(typing)t.querySelector("textarea").focus({preventScroll:true});}
+function fromHash(){const m=location.hash.match(/^#m=([\w-]+)/);if(!m||!BYID[m[1]])return;const id=m[1];
+  if(!shown.some(i=>i.id===id)){state.kind=state.ver=state.ch=state.camp=state.q=state.cm="";["fkind","fver","fcm"].forEach(g=>document.querySelectorAll(`#${g} button`).forEach((b,k)=>b.classList.toggle("on",k===0)));$("#fch").value=$("#fcamp").value=$("#fq").value="";render();}
+  focusItem(id);open(shown.findIndex(i=>i.id===id));}
+window.addEventListener("hashchange",fromHash);
 $("#lbx").onclick=close;$("#lbp").onclick=()=>open((cur-1+shown.length)%shown.length);$("#lbn").onclick=()=>open((cur+1)%shown.length);
 $("#lbz").onclick=()=>$("#lbs").classList.toggle("zoom");
 document.addEventListener("keydown",e=>{if(!$("#lb").classList.contains("on"))return;
   if(e.key==="Escape")close();else if(e.key==="ArrowLeft")$("#lbp").click();else if(e.key==="ArrowRight")$("#lbn").click();else if(e.key.toLowerCase()==="z")$("#lbz").click();});
 $("#lbs").addEventListener("click",e=>{if(e.target.id==="lbs")close()});
-render();
+render();fromHash();flush();pull();setInterval(pull,60000);
 </script>
 </body>
 </html>
