@@ -48,6 +48,14 @@ h3{font:700 13px Mukta;letter-spacing:1.5px;text-transform:uppercase;color:var(-
 .tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:5px}
 .tag{font-size:11px;background:#F0EBDF;color:var(--mute);border-radius:4px;padding:1px 6px}
 .tag.logo{background:var(--cream);color:var(--deep)}
+.cbox{margin-top:8px;border-top:1px dashed var(--line);padding-top:7px;cursor:auto}
+.cbox textarea{width:100%;min-height:52px;resize:vertical;font:13px/1.35 Mukta,system-ui,sans-serif;color:var(--ink);background:#FBF9F4;border:1px solid var(--line);border-radius:6px;padding:6px 8px;display:block}
+.cbox textarea:focus{outline:2px solid var(--gold);outline-offset:0;background:#fff}
+.cbox .cs{font-size:11px;color:var(--mute);margin-top:3px;min-height:14px}
+.tile.has-c{border-color:var(--gold);box-shadow:inset 0 3px 0 var(--gold)}
+#send{border:0;border-radius:999px;padding:7px 14px;font:700 14px Mukta;background:var(--gold);color:var(--deep);cursor:pointer}
+#send:disabled{opacity:.55;cursor:default}
+#toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:var(--deep);color:#fff;padding:9px 16px;border-radius:999px;font-size:14px;z-index:60;display:none}
 .empty{color:var(--mute);padding:40px 0;text-align:center}
 #lb{position:fixed;inset:0;z-index:50;background:rgba(10,14,11,.94);display:none;flex-direction:column}
 #lb.on{display:flex}
@@ -81,10 +89,12 @@ main{padding:6px 14px 60px}.tile.wide{grid-column:1/-1}.grid{grid-template-colum
     <select id="fcamp" aria-label="Campaign"><option value="">Every campaign</option></select>
     <input id="fq" type="search" placeholder="Search…" aria-label="Search">
     <span class="count" id="count"></span>
+    <button id="send" type="button" disabled>Send comments (0)</button>
   </div>
 </header>
 <nav class="camps" id="camps"></nav>
 <main id="main"></main>
+<div id="toast" role="status"></div>
 <div id="lb" role="dialog" aria-modal="true">
   <div class="top"><div class="t" id="lbt"></div><button id="lbz" title="Actual size (Z)">Zoom</button><a id="lbd" download>Download</a><button id="lbx" title="Close (Esc)">Close ✕</button></div>
   <div class="stage" id="lbs"><button class="nav prev" id="lbp" aria-label="Previous">‹</button><button class="nav next" id="lbn" aria-label="Next">›</button></div>
@@ -97,6 +107,11 @@ chans.forEach(c=>$("#fch").insertAdjacentHTML("beforeend",`<option>${c}</option>
 CAMPS.forEach(c=>$("#fcamp").insertAdjacentHTML("beforeend",`<option value="${c.n}">${c.n} · ${c.name}</option>`));
 const esc=s=>String(s).replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]));
 let shown=[];
+const CKEY="kp-review-comments";
+let CM={};try{CM=JSON.parse(localStorage.getItem(CKEY)||"{}")||{}}catch(e){CM={}}
+function saveCM(){try{localStorage.setItem(CKEY,JSON.stringify(CM))}catch(e){}}
+function updSend(){const n=Object.values(CM).filter(v=>v&&v.trim()).length;const b=$("#send");b.textContent=`Send comments (${n})`;b.disabled=!n;}
+function toast(t){const e=$("#toast");e.textContent=t;e.style.display="block";clearTimeout(toast.t);toast.t=setTimeout(()=>e.style.display="none",2600);}
 function render(){
   const q=state.q.toLowerCase();
   shown=ITEMS.filter(i=>(!state.kind||i.kind===state.kind)&&(!state.ver||i.version===state.ver)&&(!state.ch||i.channel===state.ch)
@@ -115,13 +130,16 @@ function render(){
         h+=`<h3>${v==="Logo-led"?"Logo-led versions · ":""}${lab} (${s.length})</h3><div class="grid">`;
         s.forEach(i=>{const idx=shown.indexOf(i), wide=i.w>i.h*2.2;
           h+=`<div class="tile${wide?" wide":""}" data-i="${idx}" tabindex="0"><div class="thumb"><img loading="lazy" src="${i.thumb}" alt="${esc(i.title)}" width="${i.w}" height="${i.h}">${i.kind==="video"?`<span class="play">${i.dur}s</span>`:""}</div>
-          <div class="meta"><b>${esc(i.title)}</b><div class="tags"><span class="tag">${esc(i.channel)}</span><span class="tag">${i.w}×${i.h}</span>${i.version==="Logo-led"?'<span class="tag logo">Logo-led</span>':""}</div></div></div>`;});
+          <div class="meta"><b>${esc(i.title)}</b><div class="tags"><span class="tag">${esc(i.channel)}</span><span class="tag">${i.w}×${i.h}</span>${i.version==="Logo-led"?'<span class="tag logo">Logo-led</span>':""}</div>
+          <div class="cbox"><textarea data-k="${esc(i.full)}" rows="2" placeholder="Add a comment…" aria-label="Comment on ${esc(i.title)}">${esc(CM[i.full]||"")}</textarea><div class="cs"></div></div></div></div>`;});
         h+=`</div>`;});
     });
     h+=`</section>`;
   });
   $("#main").innerHTML=h||'<div class="empty">Nothing matches these filters.</div>';
   $("#camps").innerHTML=nav;
+  document.querySelectorAll(".cbox textarea").forEach(t=>{if((CM[t.dataset.k]||"").trim())t.closest(".tile").classList.add("has-c")});
+  updSend();
 }
 function seg(id,key){document.querySelectorAll(`#${id} button`).forEach(b=>b.onclick=()=>{document.querySelectorAll(`#${id} button`).forEach(x=>x.classList.remove("on"));b.classList.add("on");state[key]=b.dataset.v;render();});}
 seg("fkind","kind");seg("fver","ver");
@@ -138,8 +156,20 @@ function open(i){cur=i;const it=shown[i];if(!it)return;const s=$("#lbs");s.class
   $("#lbd").href=it.full;$("#lbz").style.display=it.kind==="image"?"":"none";
   $("#lb").classList.add("on");document.body.style.overflow="hidden";}
 function close(){$("#lb").classList.remove("on");$("#lbs").querySelectorAll("video").forEach(v=>v.pause());document.body.style.overflow="";}
-$("#main").addEventListener("click",e=>{const t=e.target.closest(".tile");if(t)open(+t.dataset.i)});
-$("#main").addEventListener("keydown",e=>{const t=e.target.closest(".tile");if(t&&e.key==="Enter")open(+t.dataset.i)});
+$("#main").addEventListener("click",e=>{if(e.target.closest(".cbox"))return;const t=e.target.closest(".tile");if(t)open(+t.dataset.i)});
+$("#main").addEventListener("keydown",e=>{if(e.target.closest(".cbox"))return;const t=e.target.closest(".tile");if(t&&e.key==="Enter")open(+t.dataset.i)});
+$("#main").addEventListener("input",e=>{const t=e.target.closest(".cbox textarea");if(!t)return;const k=t.dataset.k;
+  if(t.value.trim())CM[k]=t.value;else delete CM[k];saveCM();updSend();
+  t.closest(".tile").classList.toggle("has-c",!!t.value.trim());
+  const cs=t.nextElementSibling;cs.textContent="Saved on this device";clearTimeout(t._t);t._t=setTimeout(()=>cs.textContent="",1500);});
+function compile(){const lines=["Kids Planet · Campaign review — comments",""];
+  CAMPS.forEach(c=>{const mine=ITEMS.filter(i=>i.campaign===c.n&&(CM[i.full]||"").trim());if(!mine.length)return;
+    lines.push(`${c.n} · ${c.name}`);mine.forEach(i=>lines.push(`• ${i.title}${i.version==="Logo-led"?" (Logo-led)":""}: ${CM[i.full].trim()}`));lines.push("");});
+  return lines.join("\n").trim();}
+$("#send").onclick=async()=>{const txt=compile();
+  if(navigator.share){try{await navigator.share({title:"Campaign review comments",text:txt});return}catch(e){if(e.name==="AbortError")return}}
+  try{await navigator.clipboard.writeText(txt);toast("All comments copied — paste them into WhatsApp or email")}
+  catch(e){const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([txt],{type:"text/plain"}));a.download="kids-planet-review-comments.txt";a.click();toast("Comments downloaded as a text file")}};
 $("#lbx").onclick=close;$("#lbp").onclick=()=>open((cur-1+shown.length)%shown.length);$("#lbn").onclick=()=>open((cur+1)%shown.length);
 $("#lbz").onclick=()=>$("#lbs").classList.toggle("zoom");
 document.addEventListener("keydown",e=>{if(!$("#lb").classList.contains("on"))return;
