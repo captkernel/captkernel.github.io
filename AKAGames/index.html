@@ -211,6 +211,76 @@ a { color: var(--akshat); }
 }
 .toast.bad { border-color: var(--danger); }
 
+/* ---------- view switch ---------- */
+.views { display: flex; gap: 4px; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 3px; margin-left: 18px; }
+.views button { border: 0; background: none; padding: 5px 12px; border-radius: 7px; font-weight: 600; font-size: 14px; color: var(--muted); display: flex; gap: 6px; align-items: center; }
+.views button:hover { color: var(--text); }
+.views button[aria-selected="true"] { background: var(--panel-2); color: var(--text); box-shadow: inset 0 0 0 1px var(--line-2); }
+
+/* ---------- progress ---------- */
+.progress { overflow-y: auto; min-height: 0; }
+.progress-inner { max-width: 1280px; margin: 0 auto; padding: 26px 24px 56px; }
+.pg-hero { display: flex; align-items: flex-end; gap: 24px; flex-wrap: wrap; margin-bottom: 22px; }
+.pg-hero h1 { margin: 0; font-size: 26px; letter-spacing: -.01em; line-height: 1.2; }
+.pg-hero .sub { color: var(--muted); margin-top: 6px; max-width: 70ch; }
+.meter { height: 8px; border-radius: 99px; background: var(--panel-2); border: 1px solid var(--line); overflow: hidden; }
+.meter > i { display: block; height: 100%; background: var(--accent); border-radius: 99px; transition: width .5s ease; }
+.pg-overall { margin-left: auto; flex: 0 1 320px; min-width: 220px; }
+.pg-overall .nums { display: flex; justify-content: space-between; font: 12px var(--mono); color: var(--muted); margin-bottom: 6px; }
+.pg-overall .nums b { color: var(--text); font-weight: 600; }
+.pg-h2 { font: 600 12px var(--mono); text-transform: uppercase; letter-spacing: .1em; color: var(--muted); margin: 0 0 12px; display: flex; justify-content: space-between; }
+.people { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-bottom: 30px; }
+.person { background: var(--panel); border: 1px solid var(--line); border-top: 3px solid var(--c); border-radius: var(--radius); padding: 16px; display: flex; flex-direction: column; gap: 14px; }
+.person .row { display: flex; align-items: center; gap: 10px; }
+.person .row .count { margin-left: auto; }
+.person .label { font: 600 11px var(--mono); text-transform: uppercase; letter-spacing: .08em; color: var(--faint); margin-bottom: 4px; }
+.person p { margin: 0; font-size: 14px; overflow-wrap: anywhere; }
+.person .next { background: color-mix(in srgb, var(--c) 9%, transparent); border: 1px solid color-mix(in srgb, var(--c) 30%, transparent); border-radius: 8px; padding: 9px 11px; }
+.person .next .phase-ref { font: 11px var(--mono); color: var(--faint); display: block; margin-top: 3px; }
+.person .muted { color: var(--faint); }
+.pg-cols { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 28px; align-items: start; }
+.phase { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); margin-bottom: 10px; }
+.phase > summary { list-style: none; cursor: pointer; padding: 14px 16px; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 8px 12px; align-items: center; }
+.phase > summary::-webkit-details-marker { display: none; }
+.phase-num { width: 28px; height: 28px; border-radius: 8px; display: grid; place-items: center; font: 700 12px var(--mono); background: var(--panel-2); border: 1px solid var(--line-2); color: var(--muted); }
+.phase.done .phase-num { background: var(--accent); color: #06130a; border-color: var(--accent); }
+.phase.current { border-color: color-mix(in srgb, var(--accent) 45%, var(--line)); }
+.phase.current .phase-num { border-color: var(--accent); color: var(--accent); }
+.phase-title { font-weight: 600; overflow-wrap: anywhere; }
+.phase-title .now { font: 600 10px var(--mono); text-transform: uppercase; letter-spacing: .08em; color: var(--accent); margin-left: 8px; }
+.phase-count { font: 12px var(--mono); color: var(--muted); }
+.phase summary .meter { grid-column: 2 / 4; height: 5px; }
+.phase-body { padding: 0 16px 14px 56px; }
+.phase-goal { font-size: 14px; color: var(--muted); margin: 0 0 6px; }
+.phase-goal b { color: var(--text); font-weight: 600; }
+.task { display: grid; grid-template-columns: 18px minmax(0, 1fr) auto; gap: 10px; align-items: start; padding: 8px 0; border-top: 1px solid var(--line); font-size: 14px; }
+.task .box { width: 16px; height: 16px; border-radius: 4px; border: 1.5px solid var(--line-2); margin-top: 2px; display: grid; place-items: center; }
+.task.done .box { background: var(--accent); border-color: var(--accent); }
+.task.done .t { color: var(--muted); text-decoration: line-through; text-decoration-color: var(--faint); }
+.task .t { overflow-wrap: anywhere; }
+.owners { display: flex; gap: 3px; }
+.md { font-size: 14px; color: var(--muted); overflow-wrap: anywhere; }
+.md p { margin: 6px 0; }
+.md h3 { font-size: 13px; color: var(--text); margin: 14px 0 4px; }
+.md ul { margin: 4px 0; padding-left: 18px; }
+.md b { color: var(--text); font-weight: 600; }
+.md code, .task code, .person code { font-size: 12.5px; background: var(--panel-2); border: 1px solid var(--line); border-radius: 5px; padding: 0 4px; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 4px 16px; margin-bottom: 26px; }
+.work { display: grid; grid-template-columns: 24px minmax(0, 1fr); gap: 10px; padding: 11px 0; border-top: 1px solid var(--line); }
+.work:first-child { border-top: 0; }
+.work .what { font-size: 14px; overflow-wrap: anywhere; }
+.work .meta { font: 12px var(--mono); color: var(--faint); margin-top: 3px; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.area-pill { font: 11px var(--mono); padding: 0 6px; border-radius: 4px; background: var(--panel-2); border: 1px solid var(--line); color: var(--muted); }
+.area { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 6px 10px; padding: 11px 0; border-top: 1px solid var(--line); align-items: center; }
+.area:first-child { border-top: 0; }
+.area .path { font: 500 13px var(--mono); overflow-wrap: anywhere; }
+.area .bar { grid-column: 1 / -1; display: flex; height: 4px; border-radius: 99px; overflow: hidden; background: var(--panel-2); }
+.area .bar i { display: block; height: 100%; background: var(--c); }
+.area .meta { grid-column: 1 / -1; font: 11px var(--mono); color: var(--faint); }
+.pg-empty { border: 1px dashed var(--line-2); border-radius: var(--radius); padding: 22px; color: var(--muted); font-size: 14px; margin-bottom: 26px; }
+.pg-empty code { font-size: 12.5px; }
+@media (max-width: 1050px) { .pg-cols { grid-template-columns: minmax(0, 1fr); } }
+
 .mobile-nav { display: none; }
 
 @media (max-width: 860px) {
@@ -225,7 +295,11 @@ a { color: var(--akshat); }
   .mobile-nav button[aria-selected="true"] { color: var(--text); border-bottom-color: var(--accent); }
   .main[data-pane="feed"] .side { display: none; }
   .main[data-pane="team"] .feed-wrap { display: none; }
-  .kbd, .sync .label { display: none; }
+  .kbd, .sync .label, .views { display: none; }
+  .people { grid-template-columns: minmax(0, 1fr); }
+  .progress-inner { padding: 18px 16px 40px; }
+  .pg-overall { margin-left: 0; flex-basis: 100%; }
+  .phase-body { padding-left: 16px; }
   .jump { bottom: 140px; }
 }
 </style>
@@ -273,6 +347,10 @@ a { color: var(--akshat); }
       </div>
       <div>AKAGames<small>team board</small></div>
     </div>
+    <div class="views" role="tablist" aria-label="View">
+      <button role="tab" type="button" data-view="messages" aria-selected="true">Messages<span class="badge hidden" id="viewBadge"></span></button>
+      <button role="tab" type="button" data-view="progress" aria-selected="false">Progress</button>
+    </div>
     <div class="spacer"></div>
     <div class="sync" id="sync" title="">
       <span class="dot" id="syncDot"></span><span class="label" id="syncLabel">connecting…</span>
@@ -290,9 +368,36 @@ a { color: var(--akshat); }
   </header>
 
   <nav class="mobile-nav" role="tablist" aria-label="Sections">
-    <button role="tab" aria-selected="true" data-pane="feed">Messages</button>
-    <button role="tab" aria-selected="false" data-pane="team">Status &amp; memory</button>
+    <button role="tab" type="button" aria-selected="true" data-pane="feed">Messages</button>
+    <button role="tab" type="button" aria-selected="false" data-view="progress">Progress</button>
+    <button role="tab" type="button" aria-selected="false" data-pane="team">Team</button>
   </nav>
+
+  <section class="progress hidden" id="progress" aria-label="Progress">
+    <div class="progress-inner">
+      <div class="pg-hero">
+        <div>
+          <h1 id="pgTitle">Prototype progress</h1>
+          <div class="sub" id="pgSub"></div>
+        </div>
+        <div class="pg-overall" id="pgOverall"></div>
+      </div>
+      <h2 class="pg-h2"><span>Who's on what</span></h2>
+      <div class="people" id="pgPeople"></div>
+      <div class="pg-cols">
+        <div>
+          <h2 class="pg-h2"><span>The plan · next steps</span><span id="pgPlanSrc"></span></h2>
+          <div id="pgPlan"></div>
+        </div>
+        <div>
+          <h2 class="pg-h2"><span>What's been built</span></h2>
+          <div class="card" id="pgWork"></div>
+          <h2 class="pg-h2"><span>Areas of the codebase</span></h2>
+          <div class="card" id="pgAreas"></div>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <div class="main" id="main" data-pane="feed">
     <aside class="side" aria-label="Team">
@@ -368,6 +473,12 @@ a { color: var(--akshat); }
   let memType = "all", memQuery = "";
   let notify = store.get("aka.notify", false);
   let theme = store.get("aka.theme", "auto");
+  let view = location.hash === "#progress" ? "progress" : "messages";
+  const PLAN_FILE = "PROTOTYPE-PLAN.md";
+  let plan = null, planSha = null;
+  let commits = [], commitsDirty = true, commitsLoading = null;
+  const commitFiles = store.get("aka.commitfiles", {}); // sha -> [paths]; commits never change, so cache forever (pruned)
+  const LOGINS = { captkernel: "karan", platinumsaiyan: "ash", akshatkapur: "akshat" };
 
   const $ = (id) => document.getElementById(id);
   const feedInner = $("feedInner");
@@ -409,7 +520,7 @@ a { color: var(--akshat); }
 
   function saveBlobCache() {
     // Only keep blobs still referenced, so the cache can't grow forever.
-    const live = new Set([...messages, ...statuses, ...memories].map((x) => x.sha));
+    const live = new Set([...messages, ...statuses, ...memories].map((x) => x.sha).concat(planSha || []));
     const obj = {};
     for (const [k, v] of blobCache) if (live.has(k)) obj[k] = v;
     store.set("aka.blobs", obj);
@@ -459,7 +570,17 @@ a { color: var(--akshat); }
       const [bus, status, memory] = await Promise.all(["bus", "status", "memory"].map((d) => listDir(agents.tree, d)));
 
       const read = (entries) => pool(entries, 8, async (e) => ({ file: e.path, sha: e.sha, ...parse(await blob(e.sha)) }));
-      const [m, s, mem] = await Promise.all([read(bus), read(status), read(memory)]);
+      const readPlan = async () => {
+        const docs = root.tree.find((e) => e.path === "docs" && e.type === "tree");
+        if (!docs) return null;
+        const { data: d } = await gh(`/git/trees/${docs.sha}`);
+        const f = d.tree.find((e) => e.path === PLAN_FILE && e.type === "blob");
+        return f ? { sha: f.sha, text: await blob(f.sha) } : null;
+      };
+      const [m, s, mem, planFile] = await Promise.all([read(bus), read(status), read(memory), readPlan().catch(() => null)]);
+      plan = planFile ? parsePlan(planFile.text) : null;
+      planSha = planFile ? planFile.sha : null;
+      commitsDirty = true;
 
       messages = m.map((x) => ({
         id: x.file, sha: x.sha,
@@ -476,6 +597,7 @@ a { color: var(--akshat); }
       handleArrivals(prevSha);
       render();
       setSync("live", commit.message);
+      if (view === "progress") await refreshProgress();
     } catch (e) {
       if (e.status === 401) { signOut("Your token was rejected (401). Sign in again."); return; }
       if (e.status === 404) { setSync("err", "Repo not visible to this token (404). Check the token's access."); return; }
@@ -508,7 +630,7 @@ a { color: var(--akshat); }
   let markTimer = null;
   function scheduleMarkRead() {
     clearTimeout(markTimer);
-    if (document.hidden) return;
+    if (document.hidden || view !== "messages") return;
     markTimer = setTimeout(() => {
       const unread = messages.filter((m) => relevant(m) && !seen.has(m.id));
       if (!unread.length) return;
@@ -525,6 +647,7 @@ a { color: var(--akshat); }
   function updateTitle() {
     const n = unreadCount();
     document.title = (n ? `(${n}) ` : "") + "AKAGames Board";
+    const vb = $("viewBadge"); vb.textContent = n; vb.classList.toggle("hidden", !n);
   }
 
   function alertArrivals(fresh) {
@@ -686,6 +809,238 @@ a { color: var(--akshat); }
     $("mTheme").textContent = `Theme: ${theme}`;
   }
 
+  // ---------- progress: plan ----------
+  // docs/PROTOTYPE-PLAN.md contract: "# " title, intro, "### " notes, "## " phases with optional
+  // "Goal:" / "Done when:" lines, and "- [ ] @owner task" checkboxes. Owners tick their own boxes.
+  const OWNER_RE = /@(karan|ash|akshat|all)\b/gi;
+
+  function parsePlan(text) {
+    const out = { title: "", intro: [], phases: [] };
+    let cur = null;
+    for (const raw of text.split(/\r?\n/)) {
+      const line = raw.replace(/\s+$/, "");
+      let m;
+      if (!out.title && (m = line.match(/^# (.+)/))) { out.title = m[1].trim(); continue; }
+      if ((m = line.match(/^## (.+)/))) {
+        cur = { title: m[1].trim(), goal: "", done: "", tasks: [], notes: [] };
+        out.phases.push(cur); continue;
+      }
+      if (cur && (m = line.match(/^Goal:\s*(.*)/i)) && !cur.goal) { cur.goal = m[1]; continue; }
+      if (cur && (m = line.match(/^Done when:\s*(.*)/i)) && !cur.done) { cur.done = m[1]; continue; }
+      if (cur && (m = line.match(/^\s*[-*] \[( |x|X)\]\s+(.*)/))) {
+        const owners = [...new Set([...m[2].matchAll(OWNER_RE)].map((x) => x[1].toLowerCase()))];
+        const textOnly = m[2].replace(/(^|\s)@(karan|ash|akshat|all)\b/gi, "$1").replace(/\s{2,}/g, " ").trim();
+        cur.tasks.push({ done: m[1] !== " ", text: textOnly, owners, phase: cur });
+        continue;
+      }
+      (cur ? cur.notes : out.intro).push(line);
+    }
+    for (const p of out.phases) {
+      p.total = p.tasks.length;
+      p.doneCount = p.tasks.filter((t) => t.done).length;
+      p.complete = p.total > 0 && p.doneCount === p.total;
+    }
+    out.current = out.phases.find((p) => p.total && !p.complete) || null;
+    return out;
+  }
+
+  const ownsTask = (t, who) => t.owners.includes(who) || t.owners.includes("all");
+
+  // "Next step" = your first unticked task in the earliest unfinished phase (falling through to later phases).
+  function nextStepFor(who) {
+    if (!plan) return null;
+    const start = plan.current ? plan.phases.indexOf(plan.current) : plan.phases.length;
+    for (const p of plan.phases.slice(start)) {
+      const t = p.tasks.find((x) => !x.done && ownsTask(x, who));
+      if (t) return t;
+    }
+    return null;
+  }
+
+  // Small, safe markdown subset for the plan's prose: paragraphs, lists, ### headings, **bold**, `code`, links.
+  function inlineMd(s) {
+    let h = esc(s);
+    h = h.replace(/`([^`\n]+)`/g, "<code>$1</code>");
+    h = h.replace(/\*\*([^*]+)\*\*/g, "<b>$1</b>");
+    h = h.replace(/(^|[^*])\*([^*\s][^*]*)\*/g, "$1<i>$2</i>");
+    h = h.replace(/\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
+    h = h.replace(/(^|[\s(])@(karan|ash|akshat|all)\b/gi, (_, pre, n) => `${pre}<span class="mention c-${n.toLowerCase()}" style="color:var(--c);font-weight:600">@${n}</span>`);
+    return h;
+  }
+  function md(lines) {
+    let html = "", list = false, para = [];
+    const flush = () => { if (para.length) { html += `<p>${inlineMd(para.join(" "))}</p>`; para = []; } };
+    const closeList = () => { if (list) { html += "</ul>"; list = false; } };
+    for (const line of lines) {
+      let m;
+      if (!line.trim()) { flush(); closeList(); continue; }
+      if ((m = line.match(/^#{3,6} (.+)/))) { flush(); closeList(); html += `<h3>${inlineMd(m[1])}</h3>`; continue; }
+      if ((m = line.match(/^\s*[-*] (.+)/))) { flush(); if (!list) { html += "<ul>"; list = true; } html += `<li>${inlineMd(m[1])}</li>`; continue; }
+      closeList(); para.push(line.trim());
+    }
+    flush(); closeList();
+    return html;
+  }
+
+  // ---------- progress: git history ----------
+  function whoOf(c) {
+    const m = c.commit.message.match(/^\[([^\]]+)\]/);
+    const tag = m ? m[1].toLowerCase() : "";
+    if (TEAM.includes(tag)) return tag;
+    const login = (c.author && c.author.login || "").toLowerCase();
+    return LOGINS[login] || LOGINS[tag] || tag || login || "?";
+  }
+
+  function areaOf(path) {
+    const s = path.split("/");
+    if (s[0] === ".agents" || s[0] === ".godot") return null;
+    if (["src", "data", "tools"].includes(s[0]) && s.length >= 3) return `${s[0]}/${s[1]}`;
+    if (s[0] === "docs" && s.length >= 3) return `docs/${s[1]}`;
+    if (s.length >= 2) return s[0];
+    return s[0]; // a file at the repo root, e.g. project.godot
+  }
+
+  async function loadCommits() {
+    const { data } = await gh(`/commits?sha=${BRANCH}&per_page=60`);
+    const need = data.filter((c) => !commitFiles[c.sha]);
+    await pool(need, 6, async (c) => {
+      try {
+        const { data: d } = await gh(`/commits/${c.sha}`);
+        commitFiles[c.sha] = (d.files || []).map((f) => f.filename).slice(0, 400);
+      } catch { /* leave it uncached; try again next refresh */ }
+    });
+    commits = data.map((c) => ({
+      sha: c.sha, who: whoOf(c), msg: c.commit.message.split("\n")[0],
+      at: c.commit.author && c.commit.author.date, files: commitFiles[c.sha] || [],
+    }));
+    const keep = {};
+    for (const c of commits) if (commitFiles[c.sha]) keep[c.sha] = commitFiles[c.sha];
+    store.set("aka.commitfiles", keep);
+  }
+
+  async function refreshProgress() {
+    if (commitsDirty && !commitsLoading) {
+      commitsLoading = loadCommits().then(() => { commitsDirty = false; }).catch((e) => setSync("err", `History: ${e.message}`)).finally(() => { commitsLoading = null; });
+    }
+    renderProgress();
+    if (commitsLoading) { await commitsLoading; renderProgress(); }
+  }
+
+  // ---------- progress: rendering ----------
+  const meter = (done, total) => `<div class="meter" role="progressbar" aria-valuemin="0" aria-valuemax="${total}" aria-valuenow="${done}"><i style="width:${total ? Math.round((done / total) * 100) : 0}%"></i></div>`;
+  const ownersHtml = (owners) => `<span class="owners">${owners.map((o) => `<span title="${esc(NAMES[o] || o)}">${avatar(o, true)}</span>`).join("")}</span>`;
+
+  function workItems() {
+    return commits.map((c) => {
+      const areas = [...new Set(c.files.map(areaOf).filter(Boolean))];
+      if (!areas.length) return null; // only bus/status/memory chatter: not "built"
+      const auto = /auto-sync/i.test(c.msg);
+      const what = auto ? `Updated ${areas.slice(0, 3).join(", ")}${areas.length > 3 ? ` +${areas.length - 3} more` : ""}` : c.msg.replace(/^\[[^\]]+\]\s*/, "");
+      return { ...c, areas, what };
+    }).filter(Boolean);
+  }
+
+  function renderProgress() {
+    const work = workItems();
+    const allTasks = plan ? plan.phases.flatMap((p) => p.tasks) : [];
+    const doneTasks = allTasks.filter((t) => t.done).length;
+
+    // hero
+    $("pgTitle").textContent = plan ? plan.title.replace(/^AKAGames\s+/i, "") || "Prototype plan" : "Prototype progress";
+    $("pgSub").innerHTML = plan
+      ? (plan.current ? `Now in <b>${esc(plan.current.title)}</b>` : allTasks.length && doneTasks === allTasks.length ? "Every task is ticked. Prototype complete." : "")
+      : "";
+    $("pgOverall").innerHTML = plan && allTasks.length
+      ? `<div class="nums"><span><b>${doneTasks}</b> of ${allTasks.length} tasks done</span><span>${Math.round((doneTasks / allTasks.length) * 100)}%</span></div>${meter(doneTasks, allTasks.length)}`
+      : "";
+
+    // people
+    const byWho = Object.fromEntries(statuses.map((s) => [s.who, s]));
+    $("pgPeople").innerHTML = TEAM.map((who) => {
+      const s = byWho[who];
+      const mine = allTasks.filter((t) => t.owners.includes(who));
+      const mineDone = mine.filter((t) => t.done).length;
+      const next = nextStepFor(who);
+      const last = work.find((w) => w.who === who);
+      return `<article class="person c-${who}">
+        <div class="row">${avatar(who)}<div><div class="name">${esc(NAMES[who])}</div><div class="time">${s ? `status ${esc(rel(s.updated))}` : "no status yet"}</div></div>
+          ${plan ? `<span class="count">${mineDone}/${mine.length} tasks</span>` : ""}</div>
+        <div><div class="label">Working on</div><p>${s ? richText(s.body) : '<span class="muted">Hasn\'t posted a status.</span>'}</p></div>
+        <div><div class="label">Next step</div>${next
+          ? `<div class="next"><p>${inlineMd(next.text)}</p><span class="phase-ref">${esc(next.phase.title)}${next.owners.includes("all") ? " · shared" : ""}</span></div>`
+          : `<p class="muted">${plan ? "Nothing open in the plan." : "Waiting for the plan."}</p>`}</div>
+        <div><div class="label">Last built</div>${last
+          ? `<p>${esc(last.what)}</p><div class="time">${esc(rel(last.at))}</div>`
+          : `<p class="muted">${commitsLoading ? "Loading history…" : "Nothing in recent history."}</p>`}</div>
+      </article>`;
+    }).join("");
+
+    // plan
+    $("pgPlanSrc").innerHTML = plan ? `<span>docs/${PLAN_FILE}</span>` : "";
+    if (!plan) {
+      $("pgPlan").innerHTML = `<div class="pg-empty">No plan yet. This column shows <code>docs/${PLAN_FILE}</code> as soon as it's pushed to main: <code>## </code> phases with <code>- [ ] @owner task</code> checkboxes.</div>`;
+    } else {
+      const intro = md(plan.intro);
+      $("pgPlan").innerHTML =
+        (intro ? `<details class="phase"><summary><span class="phase-num">i</span><span class="phase-title">About this plan</span><span></span></summary><div class="phase-body md">${intro}</div></details>` : "") +
+        plan.phases.map((p, i) => {
+          const isCur = p === plan.current;
+          const notes = md(p.notes);
+          return `<details class="phase ${p.complete ? "done" : ""} ${isCur ? "current" : ""}" ${isCur ? "open" : ""}>
+            <summary>
+              <span class="phase-num">${p.complete ? "✓" : i}</span>
+              <span class="phase-title">${inlineMd(p.title)}${isCur ? '<span class="now">now</span>' : ""}</span>
+              <span class="phase-count">${p.doneCount}/${p.total}</span>
+              ${p.total ? meter(p.doneCount, p.total) : ""}
+            </summary>
+            <div class="phase-body">
+              ${p.goal ? `<p class="phase-goal"><b>Goal:</b> ${inlineMd(p.goal)}</p>` : ""}
+              ${p.done ? `<p class="phase-goal"><b>Done when:</b> ${inlineMd(p.done)}</p>` : ""}
+              <div style="margin-top:10px">${p.tasks.map((t) => `<div class="task ${t.done ? "done" : ""}">
+                <span class="box" aria-label="${t.done ? "done" : "to do"}">${t.done ? '<svg width="10" height="10" viewBox="0 0 12 12"><path d="M2 6.5 5 9l5-6" fill="none" stroke="#06130a" stroke-width="2"/></svg>' : ""}</span>
+                <span class="t">${inlineMd(t.text)}</span>${ownersHtml(t.owners)}</div>`).join("")}</div>
+              ${notes ? `<div class="md" style="margin-top:8px">${notes}</div>` : ""}
+            </div>
+          </details>`;
+        }).join("");
+    }
+
+    // what's been built
+    $("pgWork").innerHTML = work.length
+      ? work.slice(0, 20).map((w) => `<div class="work">${avatar(w.who, true)}<div>
+          <div class="what">${esc(w.what)}</div>
+          <div class="meta"><span class="name c-${esc(w.who)}">${esc(NAMES[w.who] || w.who)}</span>· ${esc(rel(w.at))} ${w.areas.slice(0, 4).map((a) => `<span class="area-pill">${esc(a)}</span>`).join("")}</div>
+        </div></div>`).join("")
+      : `<div class="work"><div></div><div class="what" style="color:var(--faint)">${commitsLoading ? "Loading history…" : "No code changes in recent history."}</div></div>`;
+
+    // areas
+    const areas = {};
+    for (const w of work) for (const a of w.areas) {
+      const x = areas[a] || (areas[a] = { by: {}, last: w.at, lastWho: w.who, n: 0 });
+      x.by[w.who] = (x.by[w.who] || 0) + 1; x.n++;
+    }
+    const list = Object.entries(areas).sort((a, b) => (b[1].last || "").localeCompare(a[1].last || ""));
+    $("pgAreas").innerHTML = list.length ? list.slice(0, 16).map(([a, x]) => {
+      const people = Object.entries(x.by).sort((p, q) => q[1] - p[1]);
+      return `<div class="area"><span class="path">${esc(a)}</span>${ownersHtml(people.map((p) => p[0]))}
+        <span class="bar">${people.map(([w, n]) => `<i class="c-${esc(w)}" style="width:${(n / x.n) * 100}%"></i>`).join("")}</span>
+        <span class="meta">${x.n} change${x.n === 1 ? "" : "s"} · last by ${esc(NAMES[x.lastWho] || x.lastWho)} ${esc(rel(x.last))}</span></div>`;
+    }).join("") : `<div class="area"><span class="path" style="color:var(--faint)">${commitsLoading ? "Loading…" : "Nothing yet."}</span></div>`;
+  }
+
+  function setView(v) {
+    view = v;
+    try { history.replaceState(null, "", v === "progress" ? "#progress" : location.pathname + location.search); } catch {}
+    $("progress").classList.toggle("hidden", v !== "progress");
+    $("main").classList.toggle("hidden", v === "progress");
+    document.querySelectorAll(".views [data-view]").forEach((b) => b.setAttribute("aria-selected", b.dataset.view === v));
+    document.querySelectorAll(".mobile-nav button").forEach((b) => b.setAttribute("aria-selected",
+      v === "progress" ? b.dataset.view === "progress" : b.dataset.pane === $("main").dataset.pane));
+    updateTitle();
+    if (v === "progress") refreshProgress();
+    else { renderFeed(true); scheduleMarkRead(); }
+  }
+
   function render() {
     renderMe(); renderBoard(); renderMemories(); renderTabs(); renderFeed(true); renderComposer();
   }
@@ -756,7 +1111,7 @@ a { color: var(--akshat); }
 
   async function start() {
     $("gate").classList.add("hidden"); $("app").classList.remove("hidden");
-    renderMe(); renderComposer(); setSync("syncing");
+    renderMe(); renderComposer(); setSync("syncing"); setView(view);
     await load(true);
     schedule();
   }
@@ -854,9 +1209,13 @@ a { color: var(--akshat); }
   $("memSearch").addEventListener("input", (e) => { memQuery = e.target.value; renderMemories(); });
 
   document.querySelector(".mobile-nav").addEventListener("click", (e) => {
-    const b = e.target.closest("[data-pane]"); if (!b) return;
+    const b = e.target.closest("button"); if (!b) return;
+    if (b.dataset.view) { setView(b.dataset.view); return; }
     $("main").dataset.pane = b.dataset.pane;
-    document.querySelectorAll(".mobile-nav button").forEach((x) => x.setAttribute("aria-selected", x === b));
+    setView("messages");
+  });
+  document.querySelector(".views").addEventListener("click", (e) => {
+    const b = e.target.closest("[data-view]"); if (b) setView(b.dataset.view);
   });
 
   // Stay pinned to the newest message while the reader is at the bottom, even as fonts load or
@@ -904,7 +1263,7 @@ a { color: var(--akshat); }
     if (!document.hidden) { load(); scheduleMarkRead(); }
     schedule();
   });
-  setInterval(() => { if (token && !document.hidden) renderBoard(); }, 60000); // keep "5m ago" fresh
+  setInterval(() => { if (token && !document.hidden) { renderBoard(); if (view === "progress") renderProgress(); } }, 60000); // keep "5m ago" fresh
 
   // ---------- boot ----------
   applyTheme();
