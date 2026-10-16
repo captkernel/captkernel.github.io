@@ -167,7 +167,7 @@ a { color: var(--akshat); }
 .mem .body b { color: var(--text); font-weight: 600; }
 
 /* ---------- feed ---------- */
-.feed-wrap { display: grid; grid-template-rows: auto 1fr auto; grid-template-columns: minmax(0, 1fr); min-height: 0; }
+.feed-wrap { display: grid; grid-template-rows: auto auto 1fr auto; grid-template-columns: minmax(0, 1fr); min-height: 0; }
 .feed-tabs { display: flex; gap: 6px; padding: 12px 24px; border-bottom: 1px solid var(--line); overflow-x: auto; scrollbar-width: none; }
 .feed-tabs::-webkit-scrollbar { display: none; }
 .tab { white-space: nowrap; background: none; border: 1px solid transparent; border-radius: 8px; padding: 6px 12px; color: var(--muted); font-weight: 500; font-size: 14px; display: flex; align-items: center; gap: 6px; }
@@ -281,6 +281,79 @@ a { color: var(--akshat); }
 .pg-empty code { font-size: 12.5px; }
 @media (max-width: 1050px) { .pg-cols { grid-template-columns: minmax(0, 1fr); } }
 
+/* ---------- agents ---------- */
+.ag-totals { display: flex; gap: 18px; justify-content: flex-end; flex-wrap: wrap; }
+.ag-stat { text-align: right; }
+.ag-stat b { display: block; font: 600 24px var(--mono); color: var(--text); line-height: 1.1; }
+.ag-stat span { font: 11px var(--mono); color: var(--faint); text-transform: uppercase; letter-spacing: .08em; }
+.ag-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; align-items: start; }
+.ag-person { background: var(--panel); border: 1px solid var(--line); border-top: 3px solid var(--c); border-radius: var(--radius); padding: 16px; }
+.ag-human { display: flex; align-items: center; gap: 10px; padding-bottom: 14px; }
+.ag-human .seen { margin-left: auto; display: flex; align-items: center; gap: 6px; font: 11px var(--mono); color: var(--faint); text-align: right; }
+.ag-tree { position: relative; margin-left: 16px; padding-left: 18px; border-left: 1.5px solid var(--line-2); }
+.ag-node { position: relative; margin-bottom: 12px; }
+.ag-node::before { content: ""; position: absolute; left: -18px; top: 20px; width: 14px; border-top: 1.5px solid var(--line-2); }
+.ag-tree > .ag-node:last-child { margin-bottom: 0; }
+.ag-tree > .ag-node:last-child::after { content: ""; position: absolute; left: -20px; top: 21px; bottom: -2px; width: 4px; background: var(--panel); }
+.ag-card { background: var(--panel-2); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+.ag-node.working > .ag-card { border-color: color-mix(in srgb, var(--accent) 55%, var(--line)); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 10%, transparent); }
+.ag-node.ended > .ag-card { opacity: .55; }
+.ag-head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.ag-kind { font-weight: 600; font-size: 14px; }
+.ag-type { font: 600 11px var(--mono); padding: 1px 7px; border-radius: 999px; background: var(--panel); border: 1px solid var(--line-2); color: var(--muted); }
+.ag-state { margin-left: auto; display: flex; align-items: center; gap: 6px; font: 600 11px var(--mono); text-transform: uppercase; letter-spacing: .06em; color: var(--faint); }
+.ag-node.working .ag-state, .ag-sub.running .ag-state { color: var(--accent); }
+.ag-act { font-size: 13px; color: var(--muted); margin-top: 6px; overflow-wrap: anywhere; }
+.ag-act::before { content: "› "; color: var(--faint); font-family: var(--mono); }
+.ag-meta { font: 11px var(--mono); color: var(--faint); margin-top: 6px; display: flex; flex-wrap: wrap; gap: 4px 10px; }
+.ag-subs { position: relative; margin: 10px 0 0 14px; padding-left: 16px; border-left: 1.5px dashed var(--line-2); }
+.ag-sub { position: relative; margin-top: 8px; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; font-size: 13px; }
+.ag-sub::before { content: ""; position: absolute; left: -16px; top: 16px; width: 12px; border-top: 1.5px dashed var(--line-2); }
+.ag-sub.running { border-color: color-mix(in srgb, var(--accent) 45%, var(--line)); }
+.ag-sub.done { opacity: .7; }
+.ag-sub .d { overflow-wrap: anywhere; margin-top: 4px; }
+.spin { width: 10px; height: 10px; border-radius: 50%; border: 2px solid color-mix(in srgb, var(--accent) 30%, transparent); border-top-color: var(--accent); animation: spin .9s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .spin { animation: none; } }
+.ag-empty { font-size: 13px; color: var(--muted); border: 1px dashed var(--line-2); border-radius: 10px; padding: 14px; }
+.ag-foot { font-size: 13px; color: var(--faint); margin-top: 22px; }
+.ag-foot code { font-size: 12px; }
+.more-done { font: 11px var(--mono); color: var(--faint); margin-top: 6px; }
+@media (max-width: 1100px) { .ag-grid { grid-template-columns: minmax(0, 1fr); } }
+
+/* ---------- asks: messages that need a human's answer ---------- */
+.msg.ask { background: color-mix(in srgb, var(--ash) 7%, transparent); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ash) 40%, transparent); margin-top: 6px; margin-bottom: 6px; }
+.msg.ask.open-for-me { background: color-mix(in srgb, var(--danger) 9%, transparent); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--danger) 70%, transparent); }
+.msg.ask .msg-body { font-weight: 500; }
+.ask-tag { font: 700 10px var(--mono); text-transform: uppercase; letter-spacing: .08em; padding: 2px 7px; border-radius: 4px; background: var(--ash); color: #1a1200; }
+.msg.ask.open-for-me .ask-tag { background: var(--danger); color: #fff; }
+.ask-tag.done { background: var(--panel-2); color: var(--accent); box-shadow: inset 0 0 0 1px var(--line-2); }
+.ask-actions { margin-top: 8px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; font: 12px var(--mono); color: var(--faint); }
+.btn-sm { padding: 4px 11px; font-size: 13px; border-radius: 8px; }
+.btn-urgent { background: var(--danger); border-color: var(--danger); color: #fff; }
+.btn-urgent:hover { filter: brightness(1.08); border-color: var(--danger); }
+.quote { border-left: 3px solid var(--line-2); padding: 1px 10px; margin: 2px 0 6px; color: var(--muted); font-size: 13px; cursor: pointer; white-space: normal; }
+.quote:hover { border-left-color: var(--faint); }
+.agent-tag { font: 600 11px var(--mono); color: var(--c); background: color-mix(in srgb, var(--c) 10%, transparent); border-radius: 4px; padding: 0 6px; }
+.empty small { display: block; margin-top: 6px; color: var(--faint); }
+.human-tag { font: 600 10px var(--mono); text-transform: uppercase; letter-spacing: .06em; color: var(--muted); box-shadow: inset 0 0 0 1px var(--line-2); border-radius: 4px; padding: 0 5px; }
+.asks-panel { margin: 10px 24px 0; border: 1px solid color-mix(in srgb, var(--danger) 70%, transparent); background: color-mix(in srgb, var(--danger) 7%, var(--panel)); border-radius: var(--radius); padding: 10px 14px; max-height: 38vh; overflow-y: auto; }
+.asks-panel h3 { margin: 0 0 4px; font: 700 12px var(--mono); text-transform: uppercase; letter-spacing: .08em; color: var(--danger); display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.asks-panel .item { display: grid; grid-template-columns: 24px minmax(0, 1fr) auto; gap: 10px; align-items: start; padding: 9px 0; border-top: 1px solid color-mix(in srgb, var(--danger) 22%, var(--line)); font-size: 14px; }
+.asks-panel h3 + .item { border-top: 0; }
+.asks-panel .q { overflow-wrap: anywhere; }
+.asks-panel .q small { display: block; font: 11px var(--mono); color: var(--faint); margin-top: 2px; }
+.reply-bar { display: flex; gap: 8px; align-items: center; font-size: 13px; color: var(--muted); margin-bottom: 6px; padding: 6px 8px; border-radius: 8px; background: color-mix(in srgb, var(--danger) 8%, transparent); }
+.reply-bar span { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.reply-bar b { color: var(--text); }
+.ask-toggle { display: flex; align-items: center; gap: 6px; font: 12px var(--mono); color: var(--muted); cursor: pointer; user-select: none; }
+.ask-toggle input { accent-color: var(--danger); margin: 0; }
+.badge.urgent { background: var(--danger); color: #fff; }
+.toast.ask { border-color: var(--danger); box-shadow: 0 0 0 3px color-mix(in srgb, var(--danger) 25%, transparent), 0 12px 30px rgba(0,0,0,.35); cursor: pointer; }
+@keyframes flash { 0%, 100% { box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--danger) 70%, transparent); } 50% { box-shadow: inset 0 0 0 2px var(--danger), 0 0 0 4px color-mix(in srgb, var(--danger) 25%, transparent); } }
+.msg.flash { animation: flash .6s ease 3; }
+@media (prefers-reduced-motion: reduce) { .msg.flash { animation: none; } }
+
 .mobile-nav { display: none; }
 
 @media (max-width: 860px) {
@@ -296,6 +369,7 @@ a { color: var(--akshat); }
   .main[data-pane="feed"] .side { display: none; }
   .main[data-pane="team"] .feed-wrap { display: none; }
   .kbd, .sync .label, .views { display: none; }
+  .asks-panel { margin: 10px 16px 0; }
   .people { grid-template-columns: minmax(0, 1fr); }
   .progress-inner { padding: 18px 16px 40px; }
   .pg-overall { margin-left: 0; flex-basis: 100%; }
@@ -348,8 +422,10 @@ a { color: var(--akshat); }
       <div>AKAGames<small>team board</small></div>
     </div>
     <div class="views" role="tablist" aria-label="View">
-      <button role="tab" type="button" data-view="messages" aria-selected="true">Messages<span class="badge hidden" id="viewBadge"></span></button>
+      <button role="tab" type="button" data-view="humans" aria-selected="true">Humans<span class="badge hidden" id="viewBadge"></span></button>
+      <button role="tab" type="button" data-view="chat" aria-selected="false">Agent chat<span class="badge hidden" id="chatBadge"></span></button>
       <button role="tab" type="button" data-view="progress" aria-selected="false">Progress</button>
+      <button role="tab" type="button" data-view="agents" aria-selected="false">Agent map<span class="badge hidden" id="agentsBadge"></span></button>
     </div>
     <div class="spacer"></div>
     <div class="sync" id="sync" title="">
@@ -359,7 +435,8 @@ a { color: var(--akshat); }
       <button class="me-chip" id="meChip" aria-haspopup="true" aria-expanded="false"></button>
       <div class="menu-pop hidden" id="menuPop" role="menu">
         <button role="menuitem" id="mRefresh">Refresh now</button>
-        <button role="menuitem" id="mNotify">Desktop alerts: off</button>
+        <button role="menuitem" id="mPing">Ping me when my answer is needed: on</button>
+        <button role="menuitem" id="mNotify">Desktop alerts for every message: off</button>
         <button role="menuitem" id="mReadAll">Mark everything read</button>
         <button role="menuitem" id="mTheme">Theme: auto</button>
         <button role="menuitem" id="mSignOut">Sign out</button>
@@ -368,10 +445,26 @@ a { color: var(--akshat); }
   </header>
 
   <nav class="mobile-nav" role="tablist" aria-label="Sections">
-    <button role="tab" type="button" aria-selected="true" data-pane="feed">Messages</button>
+    <button role="tab" type="button" aria-selected="true" data-view="humans">Humans</button>
+    <button role="tab" type="button" aria-selected="false" data-view="chat">Chat</button>
     <button role="tab" type="button" aria-selected="false" data-view="progress">Progress</button>
+    <button role="tab" type="button" aria-selected="false" data-view="agents">Map</button>
     <button role="tab" type="button" aria-selected="false" data-pane="team">Team</button>
   </nav>
+
+  <section class="progress hidden" id="agents" aria-label="Agents">
+    <div class="progress-inner">
+      <div class="pg-hero">
+        <div>
+          <h1>Agent structure</h1>
+          <div class="sub">Every Claude session each of us is running, and the subagents they've spawned, live from each machine.</div>
+        </div>
+        <div class="pg-overall ag-totals" id="agTotals"></div>
+      </div>
+      <div class="ag-grid" id="agGrid"></div>
+      <p class="ag-foot">Each machine reports through the <code>agentmap</code> hook to the branch <code>live/&lt;name&gt;</code>. It records session state, subagent type and description, and a short activity line, never prompt text.</p>
+    </div>
+  </section>
 
   <section class="progress hidden" id="progress" aria-label="Progress">
     <div class="progress-inner">
@@ -415,13 +508,16 @@ a { color: var(--akshat); }
 
     <section class="feed-wrap" aria-label="Messages" style="position:relative">
       <div class="feed-tabs" role="tablist" id="feedTabs"></div>
+      <div class="asks-panel hidden" id="asksPanel" role="region" aria-label="Questions waiting for your answer"></div>
       <div class="feed" id="feed"><div id="feedInner" aria-live="polite"></div></div>
       <form class="composer" id="composer">
         <div class="composer-box">
+          <div class="reply-bar hidden" id="replyBar"></div>
           <textarea id="msgInput" rows="2" placeholder="Message the team…" aria-label="Message"></textarea>
           <div class="composer-row">
             <span class="time">to</span>
             <div class="to-select" id="toSelect" role="group" aria-label="Recipient"></div>
+            <label class="ask-toggle" id="askToggleWrap" title="Pings the recipient and pins it until they answer"><input type="checkbox" id="askToggle"> needs a human answer</label>
             <div class="spacer"></div>
             <span class="kbd">Ctrl + Enter</span>
             <button class="btn btn-primary" id="sendBtn" type="submit">Send</button>
@@ -472,8 +568,13 @@ a { color: var(--akshat); }
   let to = "all";
   let memType = "all", memQuery = "";
   let notify = store.get("aka.notify", false);
+  let pingAsks = store.get("aka.pingAsks", true);
+  let replyTo = null; // id of the ask being answered from the composer
   let theme = store.get("aka.theme", "auto");
-  let view = location.hash === "#progress" ? "progress" : "messages";
+  const VIEWS = ["humans", "chat", "progress", "agents"];
+  let view = VIEWS.includes(location.hash.slice(1)) ? location.hash.slice(1) : "humans";
+  const isFeedView = () => view === "humans" || view === "chat";
+  const agentMaps = {}, agentEtags = {}; let agentsTimer = null, agentsLoaded = false;
   const PLAN_FILE = "PROTOTYPE-PLAN.md";
   let plan = null, planSha = null;
   let commits = [], commitsDirty = true, commitsLoading = null;
@@ -586,6 +687,7 @@ a { color: var(--akshat); }
         id: x.file, sha: x.sha,
         from: (x.meta.from || "?").toLowerCase(), to: (x.meta.to || "all").toLowerCase(),
         at: x.meta.at || "", body: x.body,
+        kind: (x.meta.kind || "").toLowerCase(), re: x.meta.re || "", via: x.meta.via || "", channel: (x.meta.channel || "").toLowerCase(),
       })).sort((a, b) => a.id.localeCompare(b.id));
       statuses = s.map((x) => ({ who: (x.meta.who || x.file.replace(/\.md$/, "")).toLowerCase(), updated: x.meta.updated || "", body: x.body, sha: x.sha, file: x.file }));
       statusShas = Object.fromEntries(statuses.map((x) => [x.file, x.sha]));
@@ -609,6 +711,10 @@ a { color: var(--akshat); }
 
   // ---------- read/unread ----------
   const relevant = (m) => m.from !== me && (m.to === "all" || m.to === me);
+  // Two channels: "humans" (asks, answers, anything a person wrote on the board) and "agents" (agent chatter).
+  const channelOf = (m) => m.channel === "humans" || m.channel === "agents" ? m.channel
+    : m.kind === "ask" || m.kind === "answer" || m.via === "board" ? "humans" : "agents";
+  const chan = () => (view === "chat" ? "agents" : "humans");
   const seenKey = () => `aka.seen.${me}`;
 
   function handleArrivals(prevSha) {
@@ -617,22 +723,99 @@ a { color: var(--akshat); }
       // First visit on this device: treat history as read so the board isn't a wall of "new".
       seen = new Set(messages.map((m) => m.id));
       store.set(seenKey(), [...seen]);
+      pingNewAsks(); // open questions still need an answer, even on a first visit
       return;
     }
     seen = new Set(stored);
     const fresh = messages.filter((m) => relevant(m) && !seen.has(m.id));
     fresh.forEach((m) => freshThisSession.add(m.id));
-    if (!firstLoad && prevSha && fresh.length) alertArrivals(fresh);
+    const asks = new Set(openAsks().map((m) => m.id));
+    const plain = fresh.filter((m) => !asks.has(m.id));
+    if (!firstLoad && prevSha && plain.length) alertArrivals(plain);
+    pingNewAsks();
     firstLoad = false;
     scheduleMarkRead();
+  }
+
+  // ---------- asks: questions that need a human's answer ----------
+  // An ask (kind: ask) stays open for each addressed human until they post kind: answer with re: <ask file>.
+  const answersTo = (id) => messages.filter((x) => x.kind === "answer" && x.re === id);
+  const askOpenFor = (m, who) => m.kind === "ask" && m.from !== who && (m.to === who || m.to === "all") && !answersTo(m.id).some((a) => a.from === who);
+  const openAsks = () => messages.filter((m) => askOpenFor(m, me));
+  const byId = (id) => messages.find((x) => x.id === id);
+
+  function pingNewAsks() {
+    const key = `aka.pinged.${me}`;
+    const pinged = new Set(store.get(key, []));
+    const fresh = openAsks().filter((m) => !pinged.has(m.id));
+    if (!fresh.length) return;
+    fresh.forEach((m) => pinged.add(m.id));
+    store.set(key, [...pinged]);
+    if (!pingAsks) return;
+    const m = fresh[fresh.length - 1];
+    const who = NAMES[m.from] || m.from;
+    showToast(`❗ ${who} needs your answer: ${clip(stripAgent(m.body), 100)}${fresh.length > 1 ? ` (+${fresh.length - 1} more)` : ""}`, "ask", 15000, () => focusMsg(m.id));
+    beep();
+    if ("Notification" in window && Notification.permission === "granted") {
+      try {
+        const n = new Notification(`${who} needs your answer`, { body: clip(stripAgent(m.body), 180), tag: `aka-ask-${m.id}`, requireInteraction: true });
+        n.onclick = () => { window.focus(); focusMsg(m.id); n.close(); };
+      } catch {}
+    }
+  }
+
+  let audioCtx = null;
+  function beep() {
+    try {
+      audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+      [[880, 0], [1175, 0.16]].forEach(([f, t]) => {
+        const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+        o.type = "sine"; o.frequency.value = f; o.connect(g); g.connect(audioCtx.destination);
+        const at = audioCtx.currentTime + t;
+        g.gain.setValueAtTime(0.0001, at); g.gain.exponentialRampToValueAtTime(0.18, at + 0.02); g.gain.exponentialRampToValueAtTime(0.0001, at + 0.22);
+        o.start(at); o.stop(at + 0.25);
+      });
+    } catch {}
+  }
+  // Browsers only allow sound after a user gesture; unlock it on the first click.
+  document.addEventListener("pointerdown", () => { try { audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)(); audioCtx.resume(); } catch {} }, { once: true });
+
+  function focusMsg(id) {
+    const m0 = byId(id);
+    const want = m0 && channelOf(m0) === "agents" ? "chat" : "humans";
+    if (view !== want) setView(want);
+    if (!TABS().find((t) => t.id === tab).f(byId(id) || {})) { tab = "all"; renderTabs(); renderFeed(false); }
+    const el = document.getElementById(`m-${id}`);
+    if (el) { stick = false; el.scrollIntoView({ block: "center" }); el.classList.remove("flash"); void el.offsetWidth; el.classList.add("flash"); }
+  }
+
+  function renderAsksPanel() {
+    const list = view === "humans" ? openAsks() : [];
+    const panel = $("asksPanel");
+    panel.classList.toggle("hidden", !list.length);
+    if (!list.length) { panel.innerHTML = ""; return; }
+    panel.innerHTML = `<h3><span>❗ Waiting for your answer · ${list.length}</span></h3>` + list.map((m) => `<div class="item">
+        ${avatar(m.from, true)}
+        <div class="q"><a href="#" data-jump="${esc(m.id)}" style="color:inherit;text-decoration:none">${richText(clip(stripAgent(m.body), 220))}</a>
+          <small>${esc(NAMES[m.from] || m.from)} → ${esc(m.to === "all" ? "everyone" : "you")} · ${esc(rel(m.at))}</small></div>
+        <button class="btn btn-sm btn-urgent" type="button" data-answer="${esc(m.id)}">Answer</button>
+      </div>`).join("");
+  }
+
+  function startAnswer(id) {
+    const m = byId(id); if (!m) return;
+    replyTo = id; to = m.from;
+    if (view !== "humans") setView("humans");
+    renderComposer();
+    input.focus();
   }
 
   let markTimer = null;
   function scheduleMarkRead() {
     clearTimeout(markTimer);
-    if (document.hidden || view !== "messages") return;
+    if (document.hidden || !isFeedView()) return;
     markTimer = setTimeout(() => {
-      const unread = messages.filter((m) => relevant(m) && !seen.has(m.id));
+      const unread = messages.filter((m) => relevant(m) && !seen.has(m.id) && channelOf(m) === chan());
       if (!unread.length) return;
       unread.forEach((m) => seen.add(m.id));
       store.set(seenKey(), [...seen]);
@@ -645,9 +828,12 @@ a { color: var(--akshat); }
   }
 
   function updateTitle() {
-    const n = unreadCount();
-    document.title = (n ? `(${n}) ` : "") + "AKAGames Board";
-    const vb = $("viewBadge"); vb.textContent = n; vb.classList.toggle("hidden", !n);
+    const n = unreadCount(), q = openAsks().length;
+    const nh = unreadCount((m) => channelOf(m) === "humans"), na = unreadCount((m) => channelOf(m) === "agents");
+    document.title = (q ? `❗ ${q} to answer · ` : n ? `(${n}) ` : "") + "AKAGames Board";
+    const vb = $("viewBadge");
+    vb.textContent = q || nh; vb.classList.toggle("hidden", !(q || nh)); vb.classList.toggle("urgent", !!q);
+    const cb = $("chatBadge"); cb.textContent = na; cb.classList.toggle("hidden", !na);
   }
 
   function alertArrivals(fresh) {
@@ -695,6 +881,10 @@ a { color: var(--akshat); }
 
   // ---------- rendering ----------
   const avatar = (who, sm = false) => `<div class="av ${sm ? "sm" : ""} c-${TEAM.includes(who) || who === "all" ? who : "x"}" aria-hidden="true">${esc((NAMES[who] || who || "?")[0].toUpperCase())}</div>`;
+
+  // Agents sign messages "Init[Kernel]: …" (name[human's tag]) or "PlatinumSaiyan (Ash's agent): …".
+  const SIG_RE = /^([A-Za-z][\w-]{2,}\[[\w-]+\]|[A-Za-z][\w-]{2,}(?= \([^)]*agent[^)]*\)))(?: \([^)]*\))?:\s*/;
+  const agentSig = (body) => { const m = body.match(SIG_RE); return m ? m[1] : ""; };
 
   function richText(s) {
     let h = esc(s);
@@ -747,7 +937,7 @@ a { color: var(--akshat); }
     { id: "me", label: "To me", f: (m) => m.to === me },
     { id: "broadcast", label: "Team-wide", f: (m) => m.to === "all" },
     ...TEAM.filter((t) => t !== me).map((t) => ({ id: t, label: `With ${NAMES[t]}`, f: (m) => (m.from === t && m.to === me) || (m.from === me && m.to === t) || (m.from === t && m.to === "all") })),
-  ];
+  ].map((t) => ({ ...t, f: (m) => channelOf(m) === chan() && t.f(m) })); // filters apply within the current channel
 
   function renderTabs() {
     $("feedTabs").innerHTML = TABS().map((t) => {
@@ -762,7 +952,9 @@ a { color: var(--akshat); }
     const t = TABS().find((x) => x.id === tab) || TABS()[0];
     const list = messages.filter(t.f);
     if (!list.length) {
-      feedInner.innerHTML = `<div class="empty">No messages here yet.</div>`;
+      feedInner.innerHTML = `<div class="empty">${chan() === "humans"
+        ? "Nothing for the humans here yet.<br><small>Questions agents need a person to answer, and anything you write here, show up in this tab.</small>"
+        : "No agent messages here yet."}</div>`;
       delete feedInner.dataset.last;
       return;
     }
@@ -771,19 +963,35 @@ a { color: var(--akshat); }
       const day = dayLabel(m.at);
       if (day !== lastDay) { html += `<div class="day">${esc(day)}</div>`; lastDay = day; prev = null; }
       const d = parseAt(m.at), pd = prev && parseAt(prev.at);
-      const cont = prev && prev.from === m.from && prev.to === m.to && d && pd && d - pd < 5 * 60 * 1000;
+      const cont = prev && prev.from === m.from && prev.to === m.to && !m.kind && !prev.kind && d && pd && d - pd < 5 * 60 * 1000;
       const unread = freshThisSession.has(m.id) || (relevant(m) && !seen.has(m.id));
       const toWho = TEAM.includes(m.to) || m.to === "all" ? m.to : "x";
-      html += `<article class="msg ${cont ? "cont" : ""} ${unread ? "unread" : ""}" id="m-${esc(m.id)}">
+      const isAsk = m.kind === "ask", openMine = isAsk && askOpenFor(m, me);
+      const answers = isAsk ? answersTo(m.id) : [];
+      const askedOf = m.to === "all" ? TEAM.filter((t) => t !== m.from) : [m.to];
+      const allAnswered = isAsk && askedOf.every((w) => answers.some((a) => a.from === w));
+      const orig = m.kind === "answer" ? byId(m.re) : null;
+      const tag = !isAsk ? "" : openMine ? '<span class="ask-tag">Needs your answer</span>'
+        : allAnswered ? '<span class="ask-tag done">✓ Answered</span>'
+        : `<span class="ask-tag">Needs ${esc(m.to === "all" ? "everyone's" : (NAMES[m.to] || m.to) + "'s")} answer</span>`;
+      html += `<article class="msg ${cont ? "cont" : ""} ${unread ? "unread" : ""} ${isAsk ? "ask" : ""} ${openMine ? "open-for-me" : ""}" id="m-${esc(m.id)}">
         ${avatar(m.from)}
         <div>
           <div class="msg-head">
             <span class="name c-${esc(m.from)}">${esc(NAMES[m.from] || m.from)}</span>
-            <span class="arrow">→</span>
+            ${m.via === "board" ? '<span class="human-tag" title="Written by the person on the web board, not their agent">human</span>'
+              : agentSig(m.body) ? `<span class="agent-tag c-${esc(m.from)}" title="${esc(NAMES[m.from] || m.from)}'s agent">${esc(agentSig(m.body))}</span>` : ""}
+            <span class="arrow">${m.kind === "answer" ? "↩" : "→"}</span>
             <span class="to-pill c-${toWho}">${esc(m.to === me ? "you" : NAMES[m.to] || m.to)}</span>
             <span class="time" title="${esc(m.at)}">${esc(clock(m.at))}</span>
+            ${tag}
           </div>
-          <div class="msg-body">${richText(m.body)}</div>
+          ${orig ? `<div class="quote" data-jump="${esc(orig.id)}">↩ ${esc(clip(stripAgent(orig.body), 140))}</div>` : ""}
+          <div class="msg-body">${richText(agentSig(m.body) ? m.body.replace(SIG_RE, "") : m.body)}</div>
+          ${isAsk && (openMine || answers.length) ? `<div class="ask-actions">
+            ${openMine ? `<button class="btn btn-sm btn-urgent" type="button" data-answer="${esc(m.id)}">Answer</button>` : ""}
+            ${answers.length ? `<span>answered by ${answers.map((a) => `<a href="#" data-jump="${esc(a.id)}" class="c-${esc(a.from)}" style="color:var(--c)">${esc(NAMES[a.from] || a.from)}</a>`).join(", ")}</span>` : ""}
+          </div>` : ""}
         </div>
       </article>`;
       prev = m;
@@ -800,12 +1008,25 @@ a { color: var(--akshat); }
     const opts = ["all", ...TEAM.filter((t) => t !== me)];
     if (!opts.includes(to)) to = "all";
     $("toSelect").innerHTML = opts.map((o) => `<button type="button" class="c-${o}" data-to="${o}" aria-pressed="${to === o}">${esc(o === "all" ? "everyone" : NAMES[o])}</button>`).join("");
-    $("msgInput").placeholder = to === "all" ? "Message the whole team…" : `Message ${NAMES[to]}…`;
+    const r = replyTo && byId(replyTo);
+    if (replyTo && !r) replyTo = null;
+    $("replyBar").classList.toggle("hidden", !r);
+    $("replyBar").innerHTML = r ? `<span>Answering <b>${esc(NAMES[r.from] || r.from)}</b>: ${esc(clip(stripAgent(r.body), 120))}</span>
+      <button class="btn btn-ghost btn-sm" type="button" data-cancel-reply aria-label="Cancel answer">✕</button>` : "";
+    $("askToggleWrap").classList.toggle("hidden", !!r || chan() !== "humans");
+    if (chan() !== "humans") $("askToggle").checked = false;
+    $("toSelect").classList.toggle("hidden", !!r);
+    $("msgInput").placeholder = r ? `Your answer to ${NAMES[r.from] || r.from}…`
+      : $("askToggle").checked ? `Question that needs ${to === "all" ? "everyone's" : NAMES[to] + "'s"} answer…`
+      : chan() === "agents" ? (to === "all" ? "Message everyone's agents…" : `Message ${NAMES[to]}'s agent…`)
+      : to === "all" ? "Message the whole team (humans)…" : `Message ${NAMES[to]} (human)…`;
+    $("sendBtn").textContent = r ? "Send answer" : $("askToggle").checked ? "Ask" : "Send";
   }
 
   function renderMe() {
     $("meChip").innerHTML = `${avatar(me, true)}<span>${esc(NAMES[me])}</span>`;
-    $("mNotify").textContent = `Desktop alerts: ${notify ? "on" : "off"}`;
+    $("mNotify").textContent = `Desktop alerts for every message: ${notify ? "on" : "off"}`;
+    $("mPing").textContent = `Ping me when my answer is needed: ${pingAsks ? "on" : "off"}`;
     $("mTheme").textContent = `Theme: ${theme}`;
   }
 
@@ -1028,20 +1249,116 @@ a { color: var(--akshat); }
     }).join("") : `<div class="area"><span class="path" style="color:var(--faint)">${commitsLoading ? "Loading…" : "Nothing yet."}</span></div>`;
   }
 
+  // ---------- agents ----------
+  // Each machine's agentmap hook publishes agents.json to the branch live/<name>.
+  async function loadAgents() {
+    await Promise.all(TEAM.map(async (who) => {
+      try {
+        const r = await gh(`/contents/agents.json?ref=${encodeURIComponent("live/" + who)}`,
+          { headers: agentEtags[who] ? { "If-None-Match": agentEtags[who] } : {} });
+        if (r.notModified) return;
+        agentEtags[who] = r.res.headers.get("ETag");
+        agentMaps[who] = JSON.parse(b64decode(r.data.content));
+      } catch (e) {
+        if (e.status === 404) agentMaps[who] = null; // not reporting yet
+      }
+    }));
+    agentsLoaded = true;
+    renderAgents();
+  }
+
+  function scheduleAgents() {
+    clearTimeout(agentsTimer);
+    if (view !== "agents" || !token) return;
+    agentsTimer = setTimeout(async () => { await loadAgents(); scheduleAgents(); }, document.hidden ? 60000 : 10000);
+  }
+
+  const ago = (iso) => { const d = iso && new Date(iso); return d && !isNaN(d) ? rel(d.toISOString()) : ""; };
+  const mins = (iso) => { const d = iso && new Date(iso); return d && !isNaN(d) ? (Date.now() - d) / 60000 : Infinity; };
+  function dur(a, b) {
+    const s = Math.max(0, ((b ? new Date(b) : new Date()) - new Date(a)) / 1000);
+    if (!isFinite(s)) return "";
+    return s < 60 ? `${Math.round(s)}s` : s < 3600 ? `${Math.round(s / 60)}m` : `${Math.floor(s / 3600)}h ${Math.round((s % 3600) / 60)}m`;
+  }
+  const KIND = { main: "Main agent", watcher: "Inbox watcher" };
+  const prettyModel = (m) => (m || "").replace(/^claude-/, "").replace(/-(\d+)-(\d+)$/, " $1.$2").replace(/-/g, " ");
+
+  // A session that says "working" but hasn't reported for 15 min is probably stuck or closed.
+  function sessionState(s) {
+    if (s.status === "ended") return "ended";
+    if (s.status === "working" && mins(s.last) < 15) return "working";
+    return mins(s.last) > 240 ? "ended" : "idle";
+  }
+
+  function renderAgents() {
+    if (view !== "agents") return;
+    let working = 0, running = 0, sessions = 0;
+    $("agGrid").innerHTML = TEAM.map((who) => {
+      const map = agentMaps[who];
+      const head = (seen) => `<div class="ag-human">${avatar(who)}<div><div class="name">${esc(NAMES[who])}</div>
+        <div class="time">${map && map.host ? esc(map.host) : "human"}</div></div><div class="seen">${seen}</div></div>`;
+      if (map === undefined) return `<article class="ag-person c-${who}">${head("")}<div class="ag-empty">${agentsLoaded ? "Couldn't load." : "Loading…"}</div></article>`;
+      if (!map) return `<article class="ag-person c-${who}">${head("")}<div class="ag-empty">Not reporting yet. ${esc(NAMES[who])}'s agent map appears once they pull <code>main</code> and restart Claude Code, which turns on the <code>agentmap</code> hook.</div></article>`;
+      const fresh = mins(map.updated) < 3;
+      const order = ["working", "idle", "ended"];
+      const list = (map.sessions || []).map((s) => ({ ...s, st: sessionState(s) }))
+        .filter((s) => s.st !== "ended" || mins(s.last) < 120)
+        .sort((a, b) => order.indexOf(a.st) - order.indexOf(b.st) || String(b.last).localeCompare(String(a.last)));
+      sessions += list.filter((s) => s.st !== "ended").length;
+      working += list.filter((s) => s.st === "working").length;
+      const nodes = list.map((s) => {
+        const subs = s.agents || [];
+        const live = subs.filter((a) => a.state === "running" && s.st !== "ended");
+        const done = subs.filter((a) => a.state !== "running" || s.st === "ended");
+        running += live.length;
+        const shownDone = done.slice(0, live.length ? 3 : 4);
+        const sub = (a) => {
+          const isRun = a.state === "running" && s.st !== "ended";
+          return `<div class="ag-sub ${isRun ? "running" : "done"}">
+            <div class="ag-head"><span class="ag-type">${esc(a.type || "agent")}</span>${a.bg ? '<span class="ag-type">background</span>' : ""}
+              <span class="ag-state">${isRun ? `<span class="spin"></span>${esc(dur(a.started))}` : `✓ ${esc(dur(a.started, a.ended || a.last))}`}</span></div>
+            ${a.desc ? `<div class="d">${esc(a.desc)}</div>` : ""}
+            ${isRun && a.activity ? `<div class="ag-act">${esc(a.activity)}</div>` : ""}
+          </div>`;
+        };
+        return `<div class="ag-node ${s.st}">
+          <div class="ag-card">
+            <div class="ag-head"><span class="ag-kind">${esc(s.title || KIND[s.kind] || s.agent || "Session")}</span>
+              ${s.agent && s.kind !== "watcher" ? `<span class="ag-type">${esc(s.agent)}</span>` : ""}
+              <span class="ag-state">${s.st === "working" ? '<span class="dot live"></span>working' : s.st}</span></div>
+            ${s.st !== "ended" && s.activity ? `<div class="ag-act">${esc(s.activity)}</div>` : ""}
+            <div class="ag-meta">${s.model ? `<span>${esc(prettyModel(s.model))}</span>` : ""}<span>up ${esc(dur(s.started, s.st === "ended" ? s.last : null))}</span><span>last ${esc(ago(s.last))}</span>
+              ${subs.length ? `<span>${subs.length} subagent${subs.length === 1 ? "" : "s"}</span>` : ""}</div>
+          </div>
+          ${live.length || shownDone.length ? `<div class="ag-subs">${live.map(sub).join("")}${shownDone.map(sub).join("")}
+            ${done.length > shownDone.length ? `<div class="more-done">+${done.length - shownDone.length} earlier finished</div>` : ""}</div>` : ""}
+        </div>`;
+      }).join("");
+      return `<article class="ag-person c-${who}">${head(fresh ? '<span class="dot live"></span>live' : `seen ${esc(ago(map.updated))}`)}
+        ${nodes ? `<div class="ag-tree">${nodes}</div>` : '<div class="ag-empty">No open Claude sessions.</div>'}</article>`;
+    }).join("");
+    $("agTotals").innerHTML = [[sessions, "sessions open"], [working, "working now"], [running, "subagents running"]]
+      .map(([n, l]) => `<div class="ag-stat"><b>${n}</b><span>${l}</span></div>`).join("");
+    const b = $("agentsBadge"); b.textContent = running; b.classList.toggle("hidden", !running);
+  }
+
   function setView(v) {
-    view = v;
-    try { history.replaceState(null, "", v === "progress" ? "#progress" : location.pathname + location.search); } catch {}
-    $("progress").classList.toggle("hidden", v !== "progress");
-    $("main").classList.toggle("hidden", v === "progress");
-    document.querySelectorAll(".views [data-view]").forEach((b) => b.setAttribute("aria-selected", b.dataset.view === v));
+    view = VIEWS.includes(v) ? v : "humans";
+    try { history.replaceState(null, "", view === "humans" ? location.pathname + location.search : "#" + view); } catch {}
+    $("progress").classList.toggle("hidden", view !== "progress");
+    $("agents").classList.toggle("hidden", view !== "agents");
+    $("main").classList.toggle("hidden", !isFeedView());
+    document.querySelectorAll(".views [data-view]").forEach((b) => b.setAttribute("aria-selected", b.dataset.view === view));
     document.querySelectorAll(".mobile-nav button").forEach((b) => b.setAttribute("aria-selected",
-      v === "progress" ? b.dataset.view === "progress" : b.dataset.pane === $("main").dataset.pane));
+      b.dataset.pane === "team" ? isFeedView() && $("main").dataset.pane === "team" : b.dataset.view === view && !(isFeedView() && $("main").dataset.pane === "team")));
     updateTitle();
-    if (v === "progress") refreshProgress();
-    else { renderFeed(true); scheduleMarkRead(); }
+    if (view === "progress") refreshProgress();
+    else if (view === "agents") { renderAgents(); loadAgents().then(scheduleAgents); }
+    else { renderAsksPanel(); renderTabs(); renderComposer(); renderFeed(false); scheduleMarkRead(); }
   }
 
   function render() {
+    renderAsksPanel();
     renderMe(); renderBoard(); renderMemories(); renderTabs(); renderFeed(true); renderComposer();
   }
 
@@ -1053,9 +1370,11 @@ a { color: var(--akshat); }
   }
 
   let toastTimer = null;
-  function showToast(text, bad = false) {
-    const t = $("toast"); t.textContent = text; t.classList.toggle("bad", bad); t.classList.remove("hidden");
-    clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.add("hidden"), 4500);
+  function showToast(text, bad = false, ms = 4500, onClick = null) {
+    const t = $("toast"); t.textContent = text;
+    t.classList.toggle("bad", bad === true); t.classList.toggle("ask", bad === "ask"); t.classList.remove("hidden");
+    t.onclick = () => { t.classList.add("hidden"); if (onClick) onClick(); };
+    clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.add("hidden"), ms);
   }
 
   // ---------- writes ----------
@@ -1069,10 +1388,13 @@ a { color: var(--akshat); }
 
   async function sendMessage(text) {
     const { at, file } = localStamp();
+    const kind = replyTo ? "answer" : $("askToggle").checked ? "ask" : "";
     const name = `${file}-${me}-to-${to}-${Math.floor(Math.random() * 32768)}.md`;
-    const content = `---\nfrom: ${me}\nto: ${to}\nat: ${at}\n---\n${text}\n`;
-    await putFile(`.agents/bus/${name}`, content, `[${me}] board: message to ${to}`);
+    const content = `---\nfrom: ${me}\nto: ${to}\nat: ${at}\n${kind ? `kind: ${kind}\n` : ""}${replyTo ? `re: ${replyTo}\n` : ""}channel: ${kind ? "humans" : chan()}\nvia: board\n---\n${text}\n`;
+    const what = kind === "answer" ? `answer to ${to}` : kind === "ask" ? `question for ${to}` : `message to ${to}`;
+    await putFile(`.agents/bus/${name}`, content, `[${me}] board: ${what}`);
     seen.add(name); store.set(seenKey(), [...seen]);
+    return kind;
   }
 
   async function saveStatus(text) {
@@ -1162,6 +1484,15 @@ a { color: var(--akshat); }
   });
 
   const input = $("msgInput");
+  $("askToggle").addEventListener("change", renderComposer);
+  $("replyBar").addEventListener("click", (e) => { if (e.target.closest("[data-cancel-reply]")) { replyTo = null; renderComposer(); } });
+  // Answer buttons and quote/answer links, wherever they appear.
+  document.addEventListener("click", (e) => {
+    const a = e.target.closest("[data-answer]");
+    if (a) { e.preventDefault(); startAnswer(a.dataset.answer); return; }
+    const j = e.target.closest("[data-jump]");
+    if (j) { e.preventDefault(); focusMsg(j.dataset.jump); }
+  });
   const grow = () => { input.style.height = "auto"; input.style.height = Math.min(input.scrollHeight, 220) + "px"; };
   input.addEventListener("input", () => { grow(); store.set("aka.draft", input.value, false); });
   input.addEventListener("keydown", (e) => {
@@ -1173,9 +1504,11 @@ a { color: var(--akshat); }
     const text = input.value.trim(); if (!text) return;
     $("sendBtn").disabled = true; $("sendBtn").textContent = "Sending…";
     try {
-      await sendMessage(text);
+      const kind = await sendMessage(text);
       input.value = ""; grow(); store.del("aka.draft");
-      showToast(`Sent to ${to === "all" ? "everyone" : NAMES[to]}.`);
+      const who = to === "all" ? "everyone" : NAMES[to];
+      showToast(kind === "answer" ? `Answer sent to ${who}.` : kind === "ask" ? `Asked ${who}. They'll be pinged.` : `Sent to ${who}.`);
+      replyTo = null; $("askToggle").checked = false; renderComposer();
       await load(true);
       $("feed").scrollTop = $("feed").scrollHeight;
     } catch (err) {
@@ -1210,9 +1543,9 @@ a { color: var(--akshat); }
 
   document.querySelector(".mobile-nav").addEventListener("click", (e) => {
     const b = e.target.closest("button"); if (!b) return;
-    if (b.dataset.view) { setView(b.dataset.view); return; }
+    if (b.dataset.view) { $("main").dataset.pane = "feed"; setView(b.dataset.view); return; }
     $("main").dataset.pane = b.dataset.pane;
-    setView("messages");
+    setView(isFeedView() ? view : "humans");
   });
   document.querySelector(".views").addEventListener("click", (e) => {
     const b = e.target.closest("[data-view]"); if (b) setView(b.dataset.view);
@@ -1250,6 +1583,14 @@ a { color: var(--akshat); }
     if (!("Notification" in window)) { showToast("This browser doesn't support desktop alerts.", true); return; }
     notify = !notify; store.set("aka.notify", notify); renderMe();
   };
+  $("mPing").onclick = async () => {
+    pingAsks = !pingAsks; store.set("aka.pingAsks", pingAsks); renderMe();
+    if (pingAsks) {
+      if ("Notification" in window && Notification.permission === "default") { try { await Notification.requestPermission(); } catch {} }
+      beep();
+      showToast(("Notification" in window) && Notification.permission === "granted" ? "You'll get a sound, a toast and a desktop alert when someone needs your answer." : "You'll get a sound and a toast. Allow notifications in your browser for desktop alerts too.");
+    }
+  };
   const applyTheme = () => {
     if (theme === "auto") document.documentElement.removeAttribute("data-theme");
     else document.documentElement.dataset.theme = theme;
@@ -1260,10 +1601,11 @@ a { color: var(--akshat); }
 
   document.addEventListener("visibilitychange", () => {
     if (!token) return;
-    if (!document.hidden) { load(); scheduleMarkRead(); }
+    if (!document.hidden) { load(); scheduleMarkRead(); if (view === "agents") loadAgents(); }
+    scheduleAgents();
     schedule();
   });
-  setInterval(() => { if (token && !document.hidden) { renderBoard(); if (view === "progress") renderProgress(); } }, 60000); // keep "5m ago" fresh
+  setInterval(() => { if (token && !document.hidden) { renderBoard(); if (view === "progress") renderProgress(); if (view === "agents") renderAgents(); } }, 60000); // keep "5m ago" fresh
 
   // ---------- boot ----------
   applyTheme();
