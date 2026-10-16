@@ -1,0 +1,916 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src https://api.github.com; img-src data:; base-uri 'none'; form-action 'none'">
+<title>AKAGames Board</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230e1116'/%3E%3Cpath d='M8 22 16 8l8 14' fill='none' stroke='%233fb950' stroke-width='3' stroke-linejoin='round'/%3E%3Ccircle cx='16' cy='19' r='2.2' fill='%23e3b341'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0b0e13;
+  --panel: #11151c;
+  --panel-2: #161b24;
+  --line: #232a36;
+  --line-2: #2e3746;
+  --text: #e6e9ef;
+  --muted: #8b95a7;
+  --faint: #5c6677;
+  --accent: #3fb950;
+  --danger: #f85149;
+  --karan: #3fb950;
+  --ash: #e3b341;
+  --akshat: #79a8ff;
+  --all: #c58cff;
+  --radius: 12px;
+  --sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --bg: #f5f6f8; --panel: #ffffff; --panel-2: #f0f2f5; --line: #e1e5eb; --line-2: #cfd5de;
+    --text: #151a22; --muted: #5b6575; --faint: #8b94a3;
+    --karan: #1a7f37; --ash: #9a6700; --akshat: #2f63d6; --all: #8250df; --accent: #1a7f37;
+    color-scheme: light;
+  }
+}
+:root[data-theme="light"] {
+  --bg: #f5f6f8; --panel: #ffffff; --panel-2: #f0f2f5; --line: #e1e5eb; --line-2: #cfd5de;
+  --text: #151a22; --muted: #5b6575; --faint: #8b94a3;
+  --karan: #1a7f37; --ash: #9a6700; --akshat: #2f63d6; --all: #8250df; --accent: #1a7f37;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; }
+body {
+  background: var(--bg); color: var(--text); font: 15px/1.5 var(--sans);
+  -webkit-font-smoothing: antialiased;
+}
+button, input, textarea, select { font: inherit; color: inherit; }
+button { cursor: pointer; }
+code, .mono { font-family: var(--mono); }
+a { color: var(--akshat); }
+.hidden { display: none !important; }
+
+/* ---------- sign-in ---------- */
+.gate { min-height: 100%; display: grid; place-items: center; padding: 32px 16px; }
+.gate-card {
+  width: 100%; max-width: 460px; background: var(--panel); border: 1px solid var(--line);
+  border-radius: 16px; padding: 28px;
+}
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 700; letter-spacing: .02em; }
+.brand-mark {
+  width: 30px; height: 30px; border-radius: 8px; background: var(--panel-2); border: 1px solid var(--line-2);
+  display: grid; place-items: center; flex: none;
+}
+.brand small { display: block; font: 500 12px var(--mono); color: var(--muted); letter-spacing: 0; }
+.gate h1 { font-size: 22px; margin: 22px 0 6px; }
+.gate p { color: var(--muted); margin: 0 0 18px; }
+.field-label { display: block; font: 600 12px var(--mono); text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin: 18px 0 8px; }
+.who-pick { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.who-pick button {
+  background: var(--panel-2); border: 1px solid var(--line); border-radius: 10px; padding: 12px 8px;
+  display: flex; flex-direction: column; align-items: center; gap: 6px; font-weight: 600;
+}
+.who-pick button[aria-pressed="true"] { border-color: var(--c); box-shadow: inset 0 0 0 1px var(--c); }
+.text-input {
+  width: 100%; background: var(--bg); border: 1px solid var(--line-2); border-radius: 10px;
+  padding: 11px 12px; font-family: var(--mono); font-size: 13px;
+}
+.text-input:focus, textarea:focus, select:focus { outline: 2px solid color-mix(in srgb, var(--accent) 55%, transparent); outline-offset: 1px; }
+.check { display: flex; gap: 8px; align-items: center; color: var(--muted); font-size: 14px; margin-top: 12px; }
+.hint { font-size: 13px; color: var(--muted); background: var(--panel-2); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; margin-top: 18px; }
+.hint ul { margin: 6px 0 0; padding-left: 18px; }
+.hint li { margin: 3px 0; }
+.btn {
+  border: 1px solid var(--line-2); background: var(--panel-2); border-radius: 10px; padding: 9px 14px; font-weight: 600;
+}
+.btn:hover { border-color: var(--faint); }
+.btn-primary { background: var(--accent); border-color: var(--accent); color: #06130a; }
+.btn-primary:hover { filter: brightness(1.08); border-color: var(--accent); }
+.btn-primary:disabled { opacity: .5; cursor: default; }
+.btn-ghost { background: transparent; border-color: transparent; color: var(--muted); }
+.btn-ghost:hover { color: var(--text); border-color: var(--line); }
+.err { color: var(--danger); font-size: 14px; margin-top: 12px; min-height: 1em; }
+
+/* ---------- avatars ---------- */
+.av {
+  --c: var(--faint);
+  width: 34px; height: 34px; border-radius: 50%; flex: none; display: grid; place-items: center;
+  font: 700 14px var(--mono); color: var(--c);
+  background: color-mix(in srgb, var(--c) 16%, transparent); border: 1px solid color-mix(in srgb, var(--c) 45%, transparent);
+}
+.av.sm { width: 24px; height: 24px; font-size: 11px; }
+.c-karan { --c: var(--karan); } .c-ash { --c: var(--ash); } .c-akshat { --c: var(--akshat); } .c-all { --c: var(--all); }
+.name { color: var(--c); font-weight: 600; }
+
+/* ---------- app shell ---------- */
+.app { display: grid; grid-template-rows: auto 1fr; height: 100%; height: 100dvh; }
+.topbar {
+  display: flex; align-items: center; gap: 12px; padding: 10px 20px; border-bottom: 1px solid var(--line);
+  background: color-mix(in srgb, var(--bg) 85%, transparent); backdrop-filter: blur(8px);
+}
+.topbar .spacer { flex: 1; }
+.sync { display: flex; align-items: center; gap: 8px; font: 12px var(--mono); color: var(--muted); }
+.dot { width: 8px; height: 8px; border-radius: 50%; background: var(--faint); }
+.dot.live { background: var(--accent); box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 60%, transparent); animation: pulse 2.4s infinite; }
+.dot.err { background: var(--danger); }
+@keyframes pulse { 0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 50%, transparent); } 70% { box-shadow: 0 0 0 7px transparent; } 100% { box-shadow: 0 0 0 0 transparent; } }
+@media (prefers-reduced-motion: reduce) { .dot.live { animation: none; } }
+.me-chip { display: flex; align-items: center; gap: 8px; padding: 4px 6px 4px 4px; border-radius: 999px; border: 1px solid var(--line); background: var(--panel); }
+.me-chip span { font-weight: 600; font-size: 14px; padding-right: 4px; }
+.menu { position: relative; }
+.menu-pop {
+  position: absolute; right: 0; top: calc(100% + 6px); background: var(--panel); border: 1px solid var(--line-2);
+  border-radius: 10px; padding: 6px; min-width: 200px; z-index: 20; box-shadow: 0 12px 30px rgba(0,0,0,.35);
+}
+.menu-pop button { display: block; width: 100%; text-align: left; background: none; border: 0; padding: 8px 10px; border-radius: 6px; font-size: 14px; }
+.menu-pop button:hover { background: var(--panel-2); }
+
+.main { display: grid; grid-template-columns: 320px minmax(0, 1fr); min-height: 0; }
+.side { border-right: 1px solid var(--line); overflow-y: auto; padding: 18px 16px 28px; display: flex; flex-direction: column; gap: 26px; }
+.section-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.section-head h2 { font: 600 12px var(--mono); text-transform: uppercase; letter-spacing: .1em; color: var(--muted); margin: 0; }
+.count { font: 12px var(--mono); color: var(--faint); }
+
+.status-card { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px 14px; margin-bottom: 8px; }
+.status-card .row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.status-card .when { margin-left: auto; font: 12px var(--mono); color: var(--faint); }
+.status-card p { margin: 0; font-size: 14px; color: var(--text); overflow-wrap: anywhere; }
+.status-edit textarea { width: 100%; min-height: 84px; resize: vertical; background: var(--bg); border: 1px solid var(--line-2); border-radius: 8px; padding: 8px 10px; font-size: 14px; }
+.status-edit .acts { display: flex; gap: 8px; justify-content: flex-end; margin-top: 8px; }
+.link-btn { background: none; border: 0; color: var(--muted); font: 12px var(--mono); padding: 0; text-decoration: underline; text-underline-offset: 3px; }
+.link-btn:hover { color: var(--text); }
+
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+.chip {
+  border: 1px solid var(--line); background: var(--panel); border-radius: 999px; padding: 4px 10px;
+  font: 12px var(--mono); color: var(--muted);
+}
+.chip[aria-pressed="true"] { color: var(--text); border-color: var(--faint); background: var(--panel-2); }
+.chip .n { color: var(--faint); margin-left: 4px; }
+.search { width: 100%; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 7px 10px; font-size: 14px; margin-bottom: 10px; }
+.mem { border-top: 1px solid var(--line); padding: 10px 2px; }
+.mem summary { list-style: none; cursor: pointer; display: grid; gap: 4px; }
+.mem summary::-webkit-details-marker { display: none; }
+.mem .slug { font: 500 13px var(--mono); color: var(--text); overflow-wrap: anywhere; }
+.mem .meta { display: flex; gap: 8px; align-items: center; font: 11px var(--mono); color: var(--faint); }
+.tag { border-radius: 4px; padding: 1px 6px; font: 600 10px var(--mono); text-transform: uppercase; letter-spacing: .06em; background: var(--panel-2); color: var(--muted); border: 1px solid var(--line); }
+.tag.new { color: var(--accent); border-color: color-mix(in srgb, var(--accent) 50%, transparent); }
+.mem .body { font-size: 14px; color: var(--muted); margin-top: 8px; overflow-wrap: anywhere; }
+.mem .body b { color: var(--text); font-weight: 600; }
+
+/* ---------- feed ---------- */
+.feed-wrap { display: grid; grid-template-rows: auto 1fr auto; grid-template-columns: minmax(0, 1fr); min-height: 0; }
+.feed-tabs { display: flex; gap: 6px; padding: 12px 24px; border-bottom: 1px solid var(--line); overflow-x: auto; scrollbar-width: none; }
+.feed-tabs::-webkit-scrollbar { display: none; }
+.tab { white-space: nowrap; background: none; border: 1px solid transparent; border-radius: 8px; padding: 6px 12px; color: var(--muted); font-weight: 500; font-size: 14px; display: flex; align-items: center; gap: 6px; }
+.tab:hover { color: var(--text); }
+.tab[aria-selected="true"] { color: var(--text); background: var(--panel); border-color: var(--line); }
+.badge { background: var(--accent); color: #06130a; font: 700 11px var(--mono); border-radius: 999px; padding: 0 6px; min-width: 18px; text-align: center; }
+.feed { overflow-y: auto; overflow-x: hidden; padding: 8px 24px 24px; }
+.day { position: sticky; top: -8px; z-index: 2; display: flex; align-items: center; gap: 12px; margin: 14px 0 6px; padding: 10px 0 6px; background: var(--bg); font: 600 12px var(--mono); color: var(--faint); text-transform: uppercase; letter-spacing: .08em; }
+.day::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+.msg { display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 12px; padding: 12px 14px; margin: 0 -14px; border-radius: var(--radius); position: relative; }
+.msg:hover { background: color-mix(in srgb, var(--panel) 70%, transparent); }
+.msg.unread { background: color-mix(in srgb, var(--accent) 7%, transparent); }
+.msg.unread::before { content: ""; position: absolute; left: 0; top: 14px; bottom: 14px; width: 3px; border-radius: 3px; background: var(--accent); }
+.msg.cont { padding-top: 2px; }
+.msg.cont .av { visibility: hidden; height: 0; }
+.msg.cont .msg-head { display: none; }
+.msg-head { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; margin-bottom: 2px; }
+.arrow { color: var(--faint); font-size: 13px; }
+.to-pill { font: 600 11px var(--mono); padding: 1px 7px; border-radius: 999px; color: var(--c); background: color-mix(in srgb, var(--c) 14%, transparent); }
+.time { font: 12px var(--mono); color: var(--faint); }
+.msg-body { overflow-wrap: anywhere; white-space: pre-wrap; }
+.msg-body code { font-size: 13px; background: var(--panel-2); border: 1px solid var(--line); border-radius: 5px; padding: 0 5px; }
+.msg-body .mention { color: var(--c); font-weight: 600; }
+.msg-body .agent { color: var(--faint); font: 12px var(--mono); }
+.empty { text-align: center; color: var(--muted); padding: 60px 16px; }
+.jump { position: absolute; left: 50%; transform: translateX(-50%); bottom: 150px; z-index: 5; box-shadow: 0 8px 24px rgba(0,0,0,.35); }
+
+.composer { border-top: 1px solid var(--line); padding: 12px 24px 16px; padding-bottom: max(16px, env(safe-area-inset-bottom)); background: var(--bg); }
+.composer-box { background: var(--panel); border: 1px solid var(--line-2); border-radius: var(--radius); padding: 10px 12px; }
+.composer-box:focus-within { border-color: var(--faint); }
+.composer textarea { width: 100%; background: none; border: 0; resize: none; outline: none; min-height: 44px; max-height: 220px; font-size: 15px; }
+.composer-row { display: flex; align-items: center; gap: 10px; margin-top: 6px; flex-wrap: wrap; }
+.to-select { display: flex; gap: 4px; }
+.to-select button { border: 1px solid var(--line); background: none; border-radius: 999px; padding: 3px 10px; font: 600 12px var(--mono); color: var(--muted); }
+.to-select button[aria-pressed="true"] { color: var(--c); border-color: color-mix(in srgb, var(--c) 60%, transparent); background: color-mix(in srgb, var(--c) 12%, transparent); }
+.composer-row .spacer { flex: 1; }
+.kbd { font: 11px var(--mono); color: var(--faint); }
+.toast {
+  position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%); background: var(--panel); border: 1px solid var(--line-2);
+  border-radius: 10px; padding: 10px 14px; font-size: 14px; z-index: 50; box-shadow: 0 12px 30px rgba(0,0,0,.35); max-width: calc(100% - 32px);
+}
+.toast.bad { border-color: var(--danger); }
+
+.mobile-nav { display: none; }
+
+@media (max-width: 860px) {
+  .topbar { padding: 10px 16px; }
+  .main { grid-template-columns: minmax(0, 1fr); }
+  .side { border-right: 0; padding: 16px; }
+  .feed-tabs, .feed, .composer { padding-left: 16px; padding-right: 16px; }
+  .msg { margin: 0 -8px; padding: 10px 8px; }
+  .app { grid-template-rows: auto auto 1fr; }
+  .mobile-nav { display: flex; border-bottom: 1px solid var(--line); }
+  .mobile-nav button { flex: 1; background: none; border: 0; border-bottom: 2px solid transparent; padding: 10px 0; color: var(--muted); font-weight: 600; font-size: 14px; }
+  .mobile-nav button[aria-selected="true"] { color: var(--text); border-bottom-color: var(--accent); }
+  .main[data-pane="feed"] .side { display: none; }
+  .main[data-pane="team"] .feed-wrap { display: none; }
+  .kbd, .sync .label { display: none; }
+  .jump { bottom: 140px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============ SIGN-IN ============ -->
+<div class="gate hidden" id="gate">
+  <form class="gate-card" id="gateForm" autocomplete="off">
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 32 32"><path d="M6 25 16 7l10 18" fill="none" stroke="var(--accent)" stroke-width="3.4" stroke-linejoin="round"/><circle cx="16" cy="20" r="2.6" fill="var(--ash)"/></svg>
+      </div>
+      <div>AKAGames<small>team board</small></div>
+    </div>
+    <h1>Sign in to the team board</h1>
+    <p>Messages, status and team memory from the private <code>captkernel/AKAGames</code> repo. Your token stays in your browser and is only sent to GitHub.</p>
+
+    <span class="field-label" id="whoLabel">Who are you?</span>
+    <div class="who-pick" role="group" aria-labelledby="whoLabel" id="whoPick"></div>
+
+    <label class="field-label" for="tokenInput">GitHub token</label>
+    <input class="text-input" id="tokenInput" type="password" placeholder="ghp_… or github_pat_…" spellcheck="false" autocapitalize="off">
+    <label class="check"><input type="checkbox" id="rememberInput" checked> Remember me on this device</label>
+
+    <div class="hint">
+      <b>Which token?</b>
+      <ul>
+        <li><b>Ash / Akshat</b> (collaborators): a <a href="https://github.com/settings/tokens/new?scopes=repo&description=AKAGames%20board" target="_blank" rel="noopener">classic token with the <code>repo</code> scope</a>. Fine-grained tokens can't reach a repo owned by another person.</li>
+        <li><b>Karan</b> (owner): either a classic one like the above, or a fine-grained token limited to <code>AKAGames</code> with <i>Contents: Read and write</i>.</li>
+      </ul>
+    </div>
+
+    <div class="err" id="gateErr" role="alert"></div>
+    <button class="btn btn-primary" id="gateBtn" type="submit" style="width:100%;margin-top:8px;padding:11px">Open the board</button>
+  </form>
+</div>
+
+<!-- ============ APP ============ -->
+<div class="app hidden" id="app">
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 32 32"><path d="M6 25 16 7l10 18" fill="none" stroke="var(--accent)" stroke-width="3.4" stroke-linejoin="round"/><circle cx="16" cy="20" r="2.6" fill="var(--ash)"/></svg>
+      </div>
+      <div>AKAGames<small>team board</small></div>
+    </div>
+    <div class="spacer"></div>
+    <div class="sync" id="sync" title="">
+      <span class="dot" id="syncDot"></span><span class="label" id="syncLabel">connecting…</span>
+    </div>
+    <div class="menu">
+      <button class="me-chip" id="meChip" aria-haspopup="true" aria-expanded="false"></button>
+      <div class="menu-pop hidden" id="menuPop" role="menu">
+        <button role="menuitem" id="mRefresh">Refresh now</button>
+        <button role="menuitem" id="mNotify">Desktop alerts: off</button>
+        <button role="menuitem" id="mReadAll">Mark everything read</button>
+        <button role="menuitem" id="mTheme">Theme: auto</button>
+        <button role="menuitem" id="mSignOut">Sign out</button>
+      </div>
+    </div>
+  </header>
+
+  <nav class="mobile-nav" role="tablist" aria-label="Sections">
+    <button role="tab" aria-selected="true" data-pane="feed">Messages</button>
+    <button role="tab" aria-selected="false" data-pane="team">Status &amp; memory</button>
+  </nav>
+
+  <div class="main" id="main" data-pane="feed">
+    <aside class="side" aria-label="Team">
+      <section>
+        <div class="section-head"><h2>Status board</h2><span class="count" id="boardCount"></span></div>
+        <div id="board"></div>
+      </section>
+      <section>
+        <div class="section-head"><h2>Team memory</h2><span class="count" id="memCount"></span></div>
+        <input class="search" id="memSearch" type="search" placeholder="Search memories…" aria-label="Search memories">
+        <div class="chips" id="memTypes"></div>
+        <div id="memList"></div>
+      </section>
+    </aside>
+
+    <section class="feed-wrap" aria-label="Messages" style="position:relative">
+      <div class="feed-tabs" role="tablist" id="feedTabs"></div>
+      <div class="feed" id="feed"><div id="feedInner" aria-live="polite"></div></div>
+      <form class="composer" id="composer">
+        <div class="composer-box">
+          <textarea id="msgInput" rows="2" placeholder="Message the team…" aria-label="Message"></textarea>
+          <div class="composer-row">
+            <span class="time">to</span>
+            <div class="to-select" id="toSelect" role="group" aria-label="Recipient"></div>
+            <div class="spacer"></div>
+            <span class="kbd">Ctrl + Enter</span>
+            <button class="btn btn-primary" id="sendBtn" type="submit">Send</button>
+          </div>
+        </div>
+      </form>
+      <button class="btn jump hidden" id="jumpBtn" type="button">↓ New messages</button>
+    </section>
+  </div>
+</div>
+
+<div class="toast hidden" id="toast" role="status"></div>
+
+<script>
+(() => {
+  "use strict";
+
+  const OWNER = "captkernel", REPO = "AKAGames", BRANCH = "main";
+  const TEAM = ["karan", "ash", "akshat"];
+  const NAMES = { karan: "Karan", ash: "Ash", akshat: "Akshat", all: "Everyone" };
+  const POLL_VISIBLE = 15000, POLL_HIDDEN = 60000;
+  const API = `https://api.github.com/repos/${OWNER}/${REPO}`;
+
+  // ---------- storage (every access guarded: private windows can throw) ----------
+  const store = {
+    get(k, d = null) {
+      for (const s of [sessionStorage, localStorage]) {
+        try { const v = s.getItem(k); if (v != null) return JSON.parse(v); } catch {}
+      }
+      return d;
+    },
+    set(k, v, persist = true) {
+      try { (persist ? localStorage : sessionStorage).setItem(k, JSON.stringify(v)); } catch {}
+    },
+    del(k) { for (const s of [sessionStorage, localStorage]) { try { s.removeItem(k); } catch {} } },
+  };
+
+  // ---------- state ----------
+  let token = store.get("aka.token");
+  let me = store.get("aka.me");
+  let lastSha = null, etag = null, pollTimer = null, polling = false;
+  const blobCache = new Map(Object.entries(store.get("aka.blobs", {})));
+  let messages = [], statuses = [], memories = [], statusShas = {};
+  let seen = new Set();
+  let freshThisSession = new Set();
+  let firstLoad = true;
+  let tab = store.get("aka.tab", "all");
+  let to = "all";
+  let memType = "all", memQuery = "";
+  let notify = store.get("aka.notify", false);
+  let theme = store.get("aka.theme", "auto");
+
+  const $ = (id) => document.getElementById(id);
+  const feedInner = $("feedInner");
+  let stick = true;
+  const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+  // ---------- encoding ----------
+  const b64decode = (b) => new TextDecoder().decode(Uint8Array.from(atob(b.replace(/\s/g, "")), (c) => c.charCodeAt(0)));
+  const b64encode = (s) => { const bytes = new TextEncoder().encode(s); let bin = ""; for (const x of bytes) bin += String.fromCharCode(x); return btoa(bin); };
+
+  // ---------- GitHub API ----------
+  async function gh(path, opts = {}) {
+    const res = await fetch(path.startsWith("http") ? path : API + path, {
+      ...opts,
+      cache: "no-store",
+      headers: {
+        Accept: "application/vnd.github+json",
+        Authorization: `Bearer ${token}`,
+        "X-GitHub-Api-Version": "2022-11-28",
+        ...(opts.headers || {}),
+      },
+    });
+    if (res.status === 304) return { notModified: true, res };
+    if (!res.ok) {
+      let msg = `${res.status}`;
+      try { const j = await res.json(); if (j.message) msg += ` ${j.message}`; } catch {}
+      const e = new Error(msg); e.status = res.status; throw e;
+    }
+    return { data: await res.json(), res };
+  }
+
+  async function blob(sha) {
+    if (blobCache.has(sha)) return blobCache.get(sha);
+    const { data } = await gh(`/git/blobs/${sha}`);
+    const text = b64decode(data.content);
+    blobCache.set(sha, text);
+    return text;
+  }
+
+  function saveBlobCache() {
+    // Only keep blobs still referenced, so the cache can't grow forever.
+    const live = new Set([...messages, ...statuses, ...memories].map((x) => x.sha));
+    const obj = {};
+    for (const [k, v] of blobCache) if (live.has(k)) obj[k] = v;
+    store.set("aka.blobs", obj);
+  }
+
+  async function pool(items, n, fn) {
+    const out = new Array(items.length); let i = 0;
+    await Promise.all(Array.from({ length: Math.min(n, items.length) }, async () => {
+      while (i < items.length) { const k = i++; out[k] = await fn(items[k]); }
+    }));
+    return out;
+  }
+
+  function parse(text) {
+    const m = text.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$/);
+    if (!m) return { meta: {}, body: text.trim() };
+    const meta = {};
+    for (const line of m[1].split(/\r?\n/)) {
+      const i = line.indexOf(":"); if (i > 0) meta[line.slice(0, i).trim()] = line.slice(i + 1).trim();
+    }
+    return { meta, body: m[2].trim() };
+  }
+
+  async function listDir(rootTree, name) {
+    const entry = rootTree.find((e) => e.path === name && e.type === "tree");
+    if (!entry) return [];
+    const { data } = await gh(`/git/trees/${entry.sha}`);
+    return data.tree.filter((e) => e.type === "blob" && e.path.endsWith(".md"));
+  }
+
+  async function load(force = false) {
+    if (polling) return; polling = true;
+    try {
+      const { data: ref, notModified, res } = await gh(`/git/ref/heads/${BRANCH}`, {
+        headers: !force && etag ? { "If-None-Match": etag } : {},
+      });
+      if (notModified) { setSync("live"); return; }
+      etag = res.headers.get("ETag");
+      const sha = ref.object.sha;
+      if (sha === lastSha && !force) { setSync("live"); return; }
+
+      const { data: commit } = await gh(`/git/commits/${sha}`);
+      const { data: root } = await gh(`/git/trees/${commit.tree.sha}`);
+      const agentsDir = root.tree.find((e) => e.path === ".agents" && e.type === "tree");
+      if (!agentsDir) throw new Error("No .agents folder on main");
+      const { data: agents } = await gh(`/git/trees/${agentsDir.sha}`);
+      const [bus, status, memory] = await Promise.all(["bus", "status", "memory"].map((d) => listDir(agents.tree, d)));
+
+      const read = (entries) => pool(entries, 8, async (e) => ({ file: e.path, sha: e.sha, ...parse(await blob(e.sha)) }));
+      const [m, s, mem] = await Promise.all([read(bus), read(status), read(memory)]);
+
+      messages = m.map((x) => ({
+        id: x.file, sha: x.sha,
+        from: (x.meta.from || "?").toLowerCase(), to: (x.meta.to || "all").toLowerCase(),
+        at: x.meta.at || "", body: x.body,
+      })).sort((a, b) => a.id.localeCompare(b.id));
+      statuses = s.map((x) => ({ who: (x.meta.who || x.file.replace(/\.md$/, "")).toLowerCase(), updated: x.meta.updated || "", body: x.body, sha: x.sha, file: x.file }));
+      statusShas = Object.fromEntries(statuses.map((x) => [x.file, x.sha]));
+      memories = mem.map((x) => ({ slug: x.meta.name || x.file.replace(/\.md$/, ""), type: x.meta.type || "note", authors: x.meta.authors || "", updated: x.meta.updated || "", description: x.meta.description || "", body: x.body, sha: x.sha }))
+        .sort((a, b) => (b.updated || "").localeCompare(a.updated || "") || a.slug.localeCompare(b.slug));
+
+      const prevSha = lastSha; lastSha = sha;
+      saveBlobCache();
+      handleArrivals(prevSha);
+      render();
+      setSync("live", commit.message);
+    } catch (e) {
+      if (e.status === 401) { signOut("Your token was rejected (401). Sign in again."); return; }
+      if (e.status === 404) { setSync("err", "Repo not visible to this token (404). Check the token's access."); return; }
+      setSync("err", e.message || "Network error");
+    } finally {
+      polling = false;
+    }
+  }
+
+  // ---------- read/unread ----------
+  const relevant = (m) => m.from !== me && (m.to === "all" || m.to === me);
+  const seenKey = () => `aka.seen.${me}`;
+
+  function handleArrivals(prevSha) {
+    const stored = store.get(seenKey(), null);
+    if (stored === null) {
+      // First visit on this device: treat history as read so the board isn't a wall of "new".
+      seen = new Set(messages.map((m) => m.id));
+      store.set(seenKey(), [...seen]);
+      return;
+    }
+    seen = new Set(stored);
+    const fresh = messages.filter((m) => relevant(m) && !seen.has(m.id));
+    fresh.forEach((m) => freshThisSession.add(m.id));
+    if (!firstLoad && prevSha && fresh.length) alertArrivals(fresh);
+    firstLoad = false;
+    scheduleMarkRead();
+  }
+
+  let markTimer = null;
+  function scheduleMarkRead() {
+    clearTimeout(markTimer);
+    if (document.hidden) return;
+    markTimer = setTimeout(() => {
+      const unread = messages.filter((m) => relevant(m) && !seen.has(m.id));
+      if (!unread.length) return;
+      unread.forEach((m) => seen.add(m.id));
+      store.set(seenKey(), [...seen]);
+      updateTitle(); renderTabs();
+    }, 4000);
+  }
+
+  function unreadCount(filter = () => true) {
+    return messages.filter((m) => relevant(m) && !seen.has(m.id) && filter(m)).length;
+  }
+
+  function updateTitle() {
+    const n = unreadCount();
+    document.title = (n ? `(${n}) ` : "") + "AKAGames Board";
+  }
+
+  function alertArrivals(fresh) {
+    const last = fresh[fresh.length - 1];
+    showToast(`${NAMES[last.from] || last.from} → ${NAMES[last.to] || last.to}: ${clip(stripAgent(last.body), 90)}`);
+    if (notify && document.hidden && "Notification" in window && Notification.permission === "granted") {
+      try {
+        const n = new Notification(fresh.length > 1 ? `${fresh.length} new team messages` : `${NAMES[last.from] || last.from} → ${NAMES[last.to] || last.to}`, {
+          body: clip(stripAgent(last.body), 180), tag: "aka-board",
+        });
+        n.onclick = () => { window.focus(); n.close(); };
+      } catch {}
+    }
+  }
+
+  const stripAgent = (s) => s.replace(/^\w+'s agent[^:]*:\s*/i, "");
+  const clip = (s, n) => (s.length > n ? s.slice(0, n - 1) + "…" : s);
+
+  // ---------- time ----------
+  function parseAt(at) { const d = new Date(at); return isNaN(d) ? null : d; }
+  function rel(at) {
+    const d = parseAt(at); if (!d) return at || "";
+    const s = (Date.now() - d) / 1000;
+    if (s < 45) return "just now";
+    if (s < 3600) return `${Math.round(s / 60)}m ago`;
+    if (s < 86400) return `${Math.round(s / 3600)}h ago`;
+    if (s < 86400 * 7) return `${Math.round(s / 86400)}d ago`;
+    return d.toLocaleDateString(undefined, { day: "numeric", month: "short" });
+  }
+  const clock = (at) => { const d = parseAt(at); return d ? d.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" }) : ""; };
+  function dayLabel(at) {
+    const d = parseAt(at); if (!d) return "Undated";
+    const today = new Date(); const y = new Date(); y.setDate(today.getDate() - 1);
+    if (d.toDateString() === today.toDateString()) return "Today";
+    if (d.toDateString() === y.toDateString()) return "Yesterday";
+    return d.toLocaleDateString(undefined, { weekday: "short", day: "numeric", month: "short" });
+  }
+  function localStamp(d = new Date()) {
+    const p = (n) => String(n).padStart(2, "0");
+    return {
+      at: `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())}`,
+      file: `${d.getFullYear()}${p(d.getMonth() + 1)}${p(d.getDate())}-${p(d.getHours())}${p(d.getMinutes())}${p(d.getSeconds())}`,
+    };
+  }
+
+  // ---------- rendering ----------
+  const avatar = (who, sm = false) => `<div class="av ${sm ? "sm" : ""} c-${TEAM.includes(who) || who === "all" ? who : "x"}" aria-hidden="true">${esc((NAMES[who] || who || "?")[0].toUpperCase())}</div>`;
+
+  function richText(s) {
+    let h = esc(s);
+    h = h.replace(/^(\w+&#39;s agent(?:, [^:]{0,60})?:)/i, '<span class="agent">$1</span>');
+    h = h.replace(/`([^`\n]+)`/g, "<code>$1</code>");
+    h = h.replace(/(https?:\/\/[^\s<]+[^\s<.,;:!?)\]])/g, '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>');
+    h = h.replace(/(^|[\s(])@(karan|ash|akshat|all)\b/gi, (_, pre, n) => `${pre}<span class="mention c-${n.toLowerCase()}">@${n}</span>`);
+    return h;
+  }
+
+  function renderBoard() {
+    const byWho = Object.fromEntries(statuses.map((s) => [s.who, s]));
+    const order = [me, ...TEAM.filter((t) => t !== me), ...statuses.map((s) => s.who).filter((w) => !TEAM.includes(w))];
+    $("boardCount").textContent = `${statuses.length}/${TEAM.length} posted`;
+    $("board").innerHTML = order.map((who) => {
+      const s = byWho[who];
+      const mine = who === me;
+      return `<div class="status-card c-${who} ${mine ? "mine" : ""}" data-who="${esc(who)}">
+        <div class="row">${avatar(who, true)}<span class="name">${esc(NAMES[who] || who)}</span>${mine ? '<span class="tag">you</span>' : ""}
+          <span class="when" title="${esc(s ? s.updated : "")}">${s ? esc(rel(s.updated)) : ""}</span></div>
+        <p>${s ? richText(s.body) : '<span style="color:var(--faint)">No status yet.</span>'}</p>
+        ${mine ? `<div style="margin-top:10px"><button class="link-btn" data-edit-status type="button">Update my status</button></div>` : ""}
+      </div>`;
+    }).join("");
+  }
+
+  function renderMemories() {
+    const types = {};
+    memories.forEach((m) => (types[m.type] = (types[m.type] || 0) + 1));
+    $("memCount").textContent = memories.length ? `${memories.length}` : "";
+    $("memTypes").innerHTML = [["all", memories.length], ...Object.entries(types).sort()].map(([t, n]) =>
+      `<button class="chip" type="button" data-memtype="${esc(t)}" aria-pressed="${memType === t}">${esc(t)}<span class="n">${n}</span></button>`).join("");
+    const q = memQuery.toLowerCase();
+    const list = memories.filter((m) => (memType === "all" || m.type === memType) &&
+      (!q || `${m.slug} ${m.body} ${m.authors}`.toLowerCase().includes(q)));
+    const today = localStamp().at.slice(0, 10);
+    $("memList").innerHTML = list.length ? list.map((m) => {
+      const body = esc(m.body)
+        .replace(/\b(Why:|How to apply:)/g, "<br><b>$1</b>")
+        .replace(/`([^`\n]+)`/g, "<code>$1</code>");
+      return `<details class="mem"><summary>
+          <span class="slug">${esc(m.slug)}</span>
+          <span class="meta"><span class="tag ${m.updated === today ? "new" : ""}">${esc(m.type)}</span>${esc(m.authors)}${m.updated ? " · " + esc(m.updated) : ""}</span>
+        </summary><div class="body">${body}</div></details>`;
+    }).join("") : `<div style="color:var(--faint);font-size:14px;padding:8px 2px">Nothing matches.</div>`;
+  }
+
+  const TABS = () => [
+    { id: "all", label: "Everything", f: () => true },
+    { id: "me", label: "To me", f: (m) => m.to === me },
+    { id: "broadcast", label: "Team-wide", f: (m) => m.to === "all" },
+    ...TEAM.filter((t) => t !== me).map((t) => ({ id: t, label: `With ${NAMES[t]}`, f: (m) => (m.from === t && m.to === me) || (m.from === me && m.to === t) || (m.from === t && m.to === "all") })),
+  ];
+
+  function renderTabs() {
+    $("feedTabs").innerHTML = TABS().map((t) => {
+      const n = unreadCount(t.f);
+      return `<button class="tab" role="tab" type="button" data-tab="${t.id}" aria-selected="${tab === t.id}">${esc(t.label)}${n ? `<span class="badge">${n}</span>` : ""}</button>`;
+    }).join("");
+    updateTitle();
+  }
+
+  function renderFeed(keepPosition) {
+    const feed = $("feed");
+    const t = TABS().find((x) => x.id === tab) || TABS()[0];
+    const list = messages.filter(t.f);
+    if (!list.length) {
+      feedInner.innerHTML = `<div class="empty">No messages here yet.</div>`;
+      delete feedInner.dataset.last;
+      return;
+    }
+    let html = "", lastDay = null, prev = null;
+    for (const m of list) {
+      const day = dayLabel(m.at);
+      if (day !== lastDay) { html += `<div class="day">${esc(day)}</div>`; lastDay = day; prev = null; }
+      const d = parseAt(m.at), pd = prev && parseAt(prev.at);
+      const cont = prev && prev.from === m.from && prev.to === m.to && d && pd && d - pd < 5 * 60 * 1000;
+      const unread = freshThisSession.has(m.id) || (relevant(m) && !seen.has(m.id));
+      const toWho = TEAM.includes(m.to) || m.to === "all" ? m.to : "x";
+      html += `<article class="msg ${cont ? "cont" : ""} ${unread ? "unread" : ""}" id="m-${esc(m.id)}">
+        ${avatar(m.from)}
+        <div>
+          <div class="msg-head">
+            <span class="name c-${esc(m.from)}">${esc(NAMES[m.from] || m.from)}</span>
+            <span class="arrow">→</span>
+            <span class="to-pill c-${toWho}">${esc(m.to === me ? "you" : NAMES[m.to] || m.to)}</span>
+            <span class="time" title="${esc(m.at)}">${esc(clock(m.at))}</span>
+          </div>
+          <div class="msg-body">${richText(m.body)}</div>
+        </div>
+      </article>`;
+      prev = m;
+    }
+    const prevLast = feedInner.dataset.last, newLast = list[list.length - 1].id;
+    feedInner.innerHTML = html;
+    feedInner.dataset.last = newLast;
+    if (!prevLast || !keepPosition) stick = true;
+    if (stick) feed.scrollTop = feed.scrollHeight;
+    else if (prevLast !== newLast) $("jumpBtn").classList.remove("hidden");
+  }
+
+  function renderComposer() {
+    const opts = ["all", ...TEAM.filter((t) => t !== me)];
+    if (!opts.includes(to)) to = "all";
+    $("toSelect").innerHTML = opts.map((o) => `<button type="button" class="c-${o}" data-to="${o}" aria-pressed="${to === o}">${esc(o === "all" ? "everyone" : NAMES[o])}</button>`).join("");
+    $("msgInput").placeholder = to === "all" ? "Message the whole team…" : `Message ${NAMES[to]}…`;
+  }
+
+  function renderMe() {
+    $("meChip").innerHTML = `${avatar(me, true)}<span>${esc(NAMES[me])}</span>`;
+    $("mNotify").textContent = `Desktop alerts: ${notify ? "on" : "off"}`;
+    $("mTheme").textContent = `Theme: ${theme}`;
+  }
+
+  function render() {
+    renderMe(); renderBoard(); renderMemories(); renderTabs(); renderFeed(true); renderComposer();
+  }
+
+  function setSync(state, detail = "") {
+    $("syncDot").className = "dot " + (state === "live" ? "live" : state === "err" ? "err" : "");
+    const t = new Date().toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" });
+    $("syncLabel").textContent = state === "live" ? `live · synced ${t}` : state === "err" ? "sync failed" : "syncing…";
+    $("sync").title = state === "err" ? detail : detail ? `Latest commit: ${detail}` : "";
+  }
+
+  let toastTimer = null;
+  function showToast(text, bad = false) {
+    const t = $("toast"); t.textContent = text; t.classList.toggle("bad", bad); t.classList.remove("hidden");
+    clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.add("hidden"), 4500);
+  }
+
+  // ---------- writes ----------
+  async function putFile(path, content, message, sha) {
+    return gh(`/contents/${path.split("/").map(encodeURIComponent).join("/")}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message, content: b64encode(content), branch: BRANCH, ...(sha ? { sha } : {}) }),
+    });
+  }
+
+  async function sendMessage(text) {
+    const { at, file } = localStamp();
+    const name = `${file}-${me}-to-${to}-${Math.floor(Math.random() * 32768)}.md`;
+    const content = `---\nfrom: ${me}\nto: ${to}\nat: ${at}\n---\n${text}\n`;
+    await putFile(`.agents/bus/${name}`, content, `[${me}] board: message to ${to}`);
+    seen.add(name); store.set(seenKey(), [...seen]);
+  }
+
+  async function saveStatus(text) {
+    const { at } = localStamp();
+    const file = `${me}.md`;
+    const content = `---\nwho: ${me}\nupdated: ${at}\n---\n${text}\n`;
+    try {
+      await putFile(`.agents/status/${file}`, content, `[${me}] board: status update`, statusShas[file]);
+    } catch (e) {
+      if (e.status !== 409 && e.status !== 422) throw e;
+      // Someone (probably your agent) changed it since we loaded: fetch the current sha and retry once.
+      const { data } = await gh(`/contents/.agents/status/${encodeURIComponent(file)}?ref=${BRANCH}`);
+      await putFile(`.agents/status/${file}`, content, `[${me}] board: status update`, data.sha);
+    }
+  }
+
+  // ---------- polling ----------
+  function schedule() {
+    clearTimeout(pollTimer);
+    pollTimer = setTimeout(async () => { await load(); schedule(); }, document.hidden ? POLL_HIDDEN : POLL_VISIBLE);
+  }
+
+  // ---------- sign-in ----------
+  let pickedWho = me;
+  function showGate(err = "") {
+    $("app").classList.add("hidden"); $("gate").classList.remove("hidden");
+    $("whoPick").innerHTML = TEAM.map((t) => `<button type="button" class="c-${t}" data-who="${t}" aria-pressed="${pickedWho === t}">${avatar(t)}${NAMES[t]}</button>`).join("");
+    $("gateErr").textContent = err;
+  }
+
+  function signOut(err = "") {
+    clearTimeout(pollTimer);
+    store.del("aka.token"); token = null; lastSha = null; etag = null;
+    showGate(err);
+  }
+
+  async function start() {
+    $("gate").classList.add("hidden"); $("app").classList.remove("hidden");
+    renderMe(); renderComposer(); setSync("syncing");
+    await load(true);
+    schedule();
+  }
+
+  $("whoPick").addEventListener("click", (e) => {
+    const b = e.target.closest("[data-who]"); if (!b) return;
+    pickedWho = b.dataset.who; showGate($("gateErr").textContent);
+  });
+
+  $("gateForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const tk = $("tokenInput").value.trim();
+    if (!pickedWho) { $("gateErr").textContent = "Pick who you are first."; return; }
+    if (!tk) { $("gateErr").textContent = "Paste your GitHub token."; return; }
+    $("gateBtn").disabled = true; $("gateErr").textContent = "";
+    token = tk;
+    try {
+      const { data } = await gh("");
+      if (!data.permissions || !data.permissions.push) throw Object.assign(new Error("This token can read the repo but can't write to it, so you won't be able to post."), { soft: true });
+    } catch (err) {
+      $("gateBtn").disabled = false;
+      if (err.soft) { $("gateErr").textContent = err.message; }
+      else {
+        token = null;
+        $("gateErr").textContent = err.status === 401 ? "GitHub rejected that token." :
+          err.status === 404 ? "This token can't see captkernel/AKAGames. Collaborators need a classic token with the repo scope." :
+          `Couldn't reach GitHub (${err.message}).`;
+        return;
+      }
+    }
+    const persist = $("rememberInput").checked;
+    me = pickedWho;
+    store.set("aka.token", token, persist); store.set("aka.me", me, persist);
+    $("tokenInput").value = ""; $("gateBtn").disabled = false;
+    start();
+  });
+
+  // ---------- app events ----------
+  $("feedTabs").addEventListener("click", (e) => {
+    const b = e.target.closest("[data-tab]"); if (!b) return;
+    tab = b.dataset.tab; store.set("aka.tab", tab);
+    renderTabs(); renderFeed(false);
+  });
+
+  $("toSelect").addEventListener("click", (e) => {
+    const b = e.target.closest("[data-to]"); if (!b) return;
+    to = b.dataset.to; renderComposer(); $("msgInput").focus();
+  });
+
+  const input = $("msgInput");
+  const grow = () => { input.style.height = "auto"; input.style.height = Math.min(input.scrollHeight, 220) + "px"; };
+  input.addEventListener("input", () => { grow(); store.set("aka.draft", input.value, false); });
+  input.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) { e.preventDefault(); $("composer").requestSubmit(); }
+  });
+
+  $("composer").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const text = input.value.trim(); if (!text) return;
+    $("sendBtn").disabled = true; $("sendBtn").textContent = "Sending…";
+    try {
+      await sendMessage(text);
+      input.value = ""; grow(); store.del("aka.draft");
+      showToast(`Sent to ${to === "all" ? "everyone" : NAMES[to]}.`);
+      await load(true);
+      $("feed").scrollTop = $("feed").scrollHeight;
+    } catch (err) {
+      showToast(`Couldn't send: ${err.message}`, true);
+    } finally {
+      $("sendBtn").disabled = false; $("sendBtn").textContent = "Send";
+    }
+  });
+
+  $("board").addEventListener("click", (e) => {
+    if (!e.target.closest("[data-edit-status]")) return;
+    const card = e.target.closest(".status-card");
+    const current = (statuses.find((s) => s.who === me) || {}).body || "";
+    card.querySelector("p").outerHTML = `<div class="status-edit"><textarea aria-label="Your status">${esc(current)}</textarea>
+      <div class="acts"><button class="btn btn-ghost" type="button" data-cancel>Cancel</button><button class="btn btn-primary" type="button" data-save>Save</button></div></div>`;
+    e.target.closest("div").remove();
+    const ta = card.querySelector("textarea"); ta.focus(); ta.setSelectionRange(ta.value.length, ta.value.length);
+    card.querySelector("[data-cancel]").onclick = renderBoard;
+    card.querySelector("[data-save]").onclick = async (ev) => {
+      const text = ta.value.trim(); if (!text) return;
+      ev.target.disabled = true; ev.target.textContent = "Saving…";
+      try { await saveStatus(text); showToast("Status updated."); await load(true); }
+      catch (err) { showToast(`Couldn't save: ${err.message}`, true); ev.target.disabled = false; ev.target.textContent = "Save"; }
+    };
+  });
+
+  $("memTypes").addEventListener("click", (e) => {
+    const b = e.target.closest("[data-memtype]"); if (!b) return;
+    memType = b.dataset.memtype; renderMemories();
+  });
+  $("memSearch").addEventListener("input", (e) => { memQuery = e.target.value; renderMemories(); });
+
+  document.querySelector(".mobile-nav").addEventListener("click", (e) => {
+    const b = e.target.closest("[data-pane]"); if (!b) return;
+    $("main").dataset.pane = b.dataset.pane;
+    document.querySelectorAll(".mobile-nav button").forEach((x) => x.setAttribute("aria-selected", x === b));
+  });
+
+  // Stay pinned to the newest message while the reader is at the bottom, even as fonts load or
+  // content reflows; once they scroll up to read history, leave their position alone.
+  $("feed").addEventListener("scroll", () => {
+    const f = $("feed"); stick = f.scrollHeight - f.scrollTop - f.clientHeight < 120;
+    if (stick) $("jumpBtn").classList.add("hidden");
+  });
+  if ("ResizeObserver" in window) new ResizeObserver(() => { if (stick) $("feed").scrollTop = $("feed").scrollHeight; }).observe(feedInner);
+  $("jumpBtn").addEventListener("click", () => { $("feed").scrollTo({ top: $("feed").scrollHeight, behavior: "smooth" }); $("jumpBtn").classList.add("hidden"); });
+
+  // menu
+  const pop = $("menuPop");
+  $("meChip").addEventListener("click", (e) => {
+    e.stopPropagation(); const open = pop.classList.toggle("hidden") === false;
+    $("meChip").setAttribute("aria-expanded", open);
+  });
+  document.addEventListener("click", (e) => { if (!pop.contains(e.target)) { pop.classList.add("hidden"); $("meChip").setAttribute("aria-expanded", false); } });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") pop.classList.add("hidden"); });
+  $("mRefresh").onclick = () => { pop.classList.add("hidden"); setSync("syncing"); load(true); };
+  $("mReadAll").onclick = () => {
+    pop.classList.add("hidden");
+    messages.forEach((m) => seen.add(m.id)); freshThisSession.clear();
+    store.set(seenKey(), [...seen]); renderTabs(); renderFeed(true);
+  };
+  $("mSignOut").onclick = () => { pop.classList.add("hidden"); store.del("aka.me"); signOut(); };
+  $("mNotify").onclick = async () => {
+    if (!notify && "Notification" in window && Notification.permission !== "granted") {
+      try { await Notification.requestPermission(); } catch {}
+      if (Notification.permission !== "granted") { showToast("Your browser blocked notifications for this site.", true); return; }
+    }
+    if (!("Notification" in window)) { showToast("This browser doesn't support desktop alerts.", true); return; }
+    notify = !notify; store.set("aka.notify", notify); renderMe();
+  };
+  const applyTheme = () => {
+    if (theme === "auto") document.documentElement.removeAttribute("data-theme");
+    else document.documentElement.dataset.theme = theme;
+  };
+  $("mTheme").onclick = () => {
+    theme = { auto: "dark", dark: "light", light: "auto" }[theme]; store.set("aka.theme", theme); applyTheme(); renderMe();
+  };
+
+  document.addEventListener("visibilitychange", () => {
+    if (!token) return;
+    if (!document.hidden) { load(); scheduleMarkRead(); }
+    schedule();
+  });
+  setInterval(() => { if (token && !document.hidden) renderBoard(); }, 60000); // keep "5m ago" fresh
+
+  // ---------- boot ----------
+  applyTheme();
+  const draft = store.get("aka.draft"); if (draft) { input.value = draft; }
+  if (token && me) start(); else showGate();
+})();
+</script>
+</body>
+</html>
