@@ -47,6 +47,8 @@
   --p-karan: #49c6b0;
   --p-ash: #f0a43a;
   --p-akshat: #a98cf0;
+  --p-hahn: #5aa9f0;
+  --p-ttt: #f07a9a;
   --p-all: #9aa0aa;
   --sans: "Atkinson Hyperlegible Next", system-ui, -apple-system, "Segoe UI", sans-serif;
   --mono: "Atkinson Hyperlegible Mono", ui-monospace, Consolas, monospace;
@@ -77,6 +79,8 @@
   --p-karan: #1f8a78;
   --p-ash: #a8650c;
   --p-akshat: #6b4fc4;
+  --p-hahn: #1f63a8;
+  --p-ttt: #b8325a;
   --p-all: #5f6773;
   color-scheme: light;
 }
@@ -87,7 +91,7 @@
     --amber-ink: #8f5600; --hold-ink: #c4301f; --go-ink: #1e7a46;
     --btn: #12151a; --btn-ink: #ffb000; --btn-hover: #2a2f37; --focus: #b06c00;
     --shadow: 0 1px 2px rgb(18 21 26 / .06), 0 10px 28px -16px rgb(18 21 26 / .28);
-    --p-karan: #1f8a78; --p-ash: #a8650c; --p-akshat: #6b4fc4; --p-all: #5f6773;
+    --p-karan: #1f8a78; --p-ash: #a8650c; --p-akshat: #6b4fc4; --p-hahn: #1f63a8; --p-ttt: #b8325a; --p-all: #5f6773;
     color-scheme: light;
   }
 }
@@ -142,7 +146,7 @@ textarea.field { resize: vertical; min-height: 64px; }
 .av { display: inline-grid; place-items: center; flex: none; width: 32px; height: 32px; border-radius: 50%; font-weight: 800; font-size: 14px; color: #0d0f12; background: var(--p-all); }
 .av.sm { width: 24px; height: 24px; font-size: 12px; }
 .av.lg { width: 44px; height: 44px; font-size: 18px; }
-.av.karan { background: var(--p-karan); } .av.ash { background: var(--p-ash); } .av.akshat { background: var(--p-akshat); }
+.av.karan { background: var(--p-karan); } .av.ash { background: var(--p-ash); } .av.akshat { background: var(--p-akshat); } .av.hahn { background: var(--p-hahn); } .av.ttt { background: var(--p-ttt); }
 .time { color: var(--ink-3); font-size: 13px; font-variant-numeric: tabular-nums; white-space: nowrap; }
 .eta { display: inline-flex; align-items: center; gap: 5px; font-size: 13px; font-weight: 600; color: var(--amber-ink); }
 .eta.late { color: var(--amber-ink); }
@@ -180,7 +184,7 @@ textarea.field { resize: vertical; min-height: 64px; }
 .gate .field { background: var(--board-2); border-color: var(--board-line); color: var(--board-ink); }
 .gate .field::placeholder { color: #8a909a; }
 .gate .btn-primary { background: var(--led); border-color: var(--led); color: #14110a; height: 46px; font-size: 16px; }
-.who-pick { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.who-pick { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 8px; }
 .who-pick button { display: grid; justify-items: center; gap: 8px; padding: 14px 8px; border: 1px solid var(--board-line); border-radius: var(--r); background: var(--board-2); font-weight: 700; color: var(--board-ink); }
 .who-pick button:hover { border-color: var(--board-ink-2); }
 .who-pick button[aria-pressed="true"] { border-color: var(--led); box-shadow: inset 0 0 0 1px var(--led); }
@@ -434,7 +438,7 @@ tr.is-hold .code { color: var(--hold); }
 .kv { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 8px 12px; margin: 0; font-size: 14px; }
 .kv dt { color: var(--ink-3); font-weight: 600; }
 .kv dd { margin: 0; color: var(--ink-2); overflow-wrap: anywhere; }
-@media (min-width: 1000px) { .now-strip { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (min-width: 1000px) { .now-strip { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); } }
 .phases { list-style: none; margin: 0 0 16px; padding: 0; display: grid; gap: 8px; }
 .phases button { display: grid; gap: 4px; width: 100%; height: 100%; text-align: left; padding: 12px 14px; border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); }
 .phases button:hover { border-color: var(--line-2); }
@@ -448,7 +452,7 @@ tr.is-hold .code { color: var(--hold); }
 .phase-detail .goal { margin: 0 0 8px; color: var(--ink-2); max-width: 80ch; }
 .phase-detail .goal b { color: var(--ink); }
 .lanes { display: grid; gap: 18px; margin-top: 14px; }
-@media (min-width: 900px) { .lanes { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; } }
+@media (min-width: 900px) { .lanes { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 24px; } }
 .lane-h { display: flex; align-items: center; gap: 8px; padding-bottom: 8px; border-bottom: 1px solid var(--line); margin-bottom: 6px; }
 .lane-h .num { margin-left: auto; color: var(--ink-3); font-size: 13px; }
 .task { display: grid; grid-template-columns: 18px minmax(0, 1fr); gap: 10px; padding: 7px 0; font-size: 14px; }
@@ -617,8 +621,8 @@ tr.is-hold .code { color: var(--hold); }
       <details>
         <summary>Which token do I need?</summary>
         <ul>
-          <li><b>Ash and Akshat</b> (collaborators): a <a href="https://github.com/settings/tokens/new?scopes=repo&description=AKAGames%20board" target="_blank" rel="noopener">classic token with the <code>repo</code> scope</a>. Fine-grained tokens can't reach a repo owned by another person.</li>
-          <li><b>Karan</b> (owner): a classic token like the above, or a fine-grained token limited to <code>AKAGames</code> with Contents: Read and write.</li>
+          <li><b>Teammates</b> (Ash, Akshat, Hahn, TTT): a <a href="https://github.com/settings/tokens/new?scopes=repo&amp;description=AKAGames%20board" target="_blank" rel="noopener">classic token</a>. Tick <b>only</b> <code>repo</code>, leave every other box empty, and set Expiration to 90 days. GitHub has no narrower option for a collaborator on someone else's private repo (fine-grained tokens can't reach it). Revoke it in Settings → Developer settings if it leaks.</li>
+          <li><b>Karan</b> (owner): a fine-grained token, <i>Only select repositories → AKAGames</i>, <i>Contents: Read and write</i>. Nothing else.</li>
         </ul>
       </details>
     </form>
@@ -674,11 +678,11 @@ tr.is-hold .code { color: var(--hold); }
   "use strict";
 
   const OWNER = "captkernel", REPO = "AKAGames", BRANCH = "main";
-  const TEAM = ["karan", "ash", "akshat"];
-  const NAMES = { karan: "Karan", ash: "Ash", akshat: "Akshat", all: "Everyone" };
+  const TEAM = ["karan", "ash", "akshat", "hahn", "ttt"];
+  const NAMES = { karan: "Karan", ash: "Ash", akshat: "Akshat", hahn: "Hahn", ttt: "TTT", all: "Everyone" };
   const POLL_VISIBLE = 15000, POLL_HIDDEN = 60000;
   const API = `https://api.github.com/repos/${OWNER}/${REPO}`;
-  const LOGINS = { captkernel: "karan", platinumsaiyan: "ash", akshatkapur: "akshat" };
+  const LOGINS = { captkernel: "karan", platinumsaiyan: "ash", akshatkapur: "akshat", joehahn21: "hahn", tittty4: "ttt" };
   const PLAN_FILE = "PROTOTYPE-PLAN.md";
 
   // ---------- storage (every access guarded: private windows can throw) ----------
@@ -1037,7 +1041,7 @@ tr.is-hold .code { color: var(--hold); }
   const PATH_RE = new RegExp(`(^|[\\s(\\[{"'“‘])((?:\\.{1,2}\\/|~\\/)?(?:[\\w@.-]+\\/)+[\\w@.*-]*|[\\w-][\\w.-]*\\.(?:${PATH_EXT}))(?=$|[\\s,;:)\\]}"'”’!?]|\\.(?:$|\\s))`, "g");
   const PATH_ROOTS = /^(?:\.{0,2}\/)?(?:src|docs|data|tools|tests|scripts|assets|addons|\.agents|\.claude|\.github)\//;
   const looksLikePath = (p) => /[A-Za-z]/.test(p) && (EXT_RE.test(p) || PATH_ROOTS.test(p) || (p.length > 3 && p.endsWith("/")));
-  const words = (t) => esc(t).replace(/(^|[\s(])@(karan|ash|akshat|all)\b/gi, (_, pre, n) => `${pre}<span class="mention">@${n}</span>`);
+  const words = (t) => esc(t).replace(/(^|[\s(])@(karan|ash|akshat|hahn|ttt|all)\b/gi, (_, pre, n) => `${pre}<span class="mention">@${n}</span>`);
   function plain(t) {
     const parts = []; let m; PATH_RE.lastIndex = 0;
     while ((m = PATH_RE.exec(t))) { const a = m.index + m[1].length; if (looksLikePath(m[2])) parts.push([a, a + m[2].length]); }
@@ -1242,7 +1246,7 @@ tr.is-hold .code { color: var(--hold); }
     return out;
   }
   // ---------- BOARD (the departures board) ----------
-  const CODE = { karan: "KRN", ash: "ASH", akshat: "AKS" };
+  const CODE = { karan: "KRN", ash: "ASH", akshat: "AKS", hahn: "HHN", ttt: "TTT" };
   const lastStatus = new Map();
   const answerOpen = new Set();
   const up = (s) => String(s).toUpperCase();
@@ -1567,7 +1571,7 @@ tr.is-hold .code { color: var(--hold); }
   // ---------- PROGRESS ----------
   // docs/PROTOTYPE-PLAN.md contract: "# " title, intro, "### " notes, "## " phases with optional
   // "Goal:" / "Done when:" lines, and "- [ ] @owner task" checkboxes.
-  const OWNER_RE = /@(karan|ash|akshat|all)\b/gi;
+  const OWNER_RE = /@(karan|ash|akshat|hahn|ttt|all)\b/gi;
   function parsePlan(text) {
     const out = { title: "", intro: [], phases: [] };
     let cur = null;
@@ -1579,7 +1583,7 @@ tr.is-hold .code { color: var(--hold); }
       if (cur && (m = line.match(/^Done when:\s*(.*)/i)) && !cur.done) { cur.done = m[1]; continue; }
       if (cur && (m = line.match(/^\s*[-*] \[( |x|X)\]\s+(.*)/))) {
         const owners = [...new Set([...m[2].matchAll(OWNER_RE)].map((x) => x[1].toLowerCase()))];
-        const textOnly = m[2].replace(/(^|\s)@(karan|ash|akshat|all)\b/gi, "$1").replace(/\s{2,}/g, " ").trim();
+        const textOnly = m[2].replace(/(^|\s)@(karan|ash|akshat|hahn|ttt|all)\b/gi, "$1").replace(/\s{2,}/g, " ").trim();
         cur.tasks.push({ done: m[1] !== " ", text: textOnly, owners, phase: cur }); continue;
       }
       (cur ? cur.notes : out.intro).push(line);
@@ -1605,7 +1609,7 @@ tr.is-hold .code { color: var(--hold); }
     h = h.replace(/\*\*([^*]+)\*\*/g, "<b>$1</b>");
     h = h.replace(/(^|[^*])\*([^*\s][^*]*)\*/g, "$1<i>$2</i>");
     h = h.replace(/\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
-    h = h.replace(/(^|[\s(])@(karan|ash|akshat|all)\b/gi, (_, pre, n) => `${pre}<span class="mention">@${n}</span>`);
+    h = h.replace(/(^|[\s(])@(karan|ash|akshat|hahn|ttt|all)\b/gi, (_, pre, n) => `${pre}<span class="mention">@${n}</span>`);
     return h;
   }
   function md(lines) {
@@ -1760,7 +1764,7 @@ tr.is-hold .code { color: var(--hold); }
       </section>`).join("") : `<p class="quiet">${q ? `Nothing matches "${esc(memQuery.trim())}".` : "No memories yet."}</p>`;
     const index = types.map((t) => `<a href="#mg-${esc(t)}" data-memjump="${esc(t)}"><span>${esc(typeLabel(t))}</span><span class="num">${groups[t].length}</span></a>`).join("");
     if (!keepFocus || !$("memSearch")) {
-      v.innerHTML = `<header class="page-h"><div><h1>Team memory</h1><div class="sub">What the three of us and our agents have learned, one fact per note. <span id="memCount"></span></div></div></header>
+      v.innerHTML = `<header class="page-h"><div><h1>Team memory</h1><div class="sub">What the team and our agents have learned, one fact per note. <span id="memCount"></span></div></div></header>
         <div class="mem-layout"><div>
           <div class="mem-search"><svg width="18" height="18" viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="4.75" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="m10.5 10.5 3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
             <input class="field" id="memSearch" type="search" placeholder="Search decisions, gotchas, commands" aria-label="Search team memory" value="${esc(memQuery)}"></div>
@@ -1944,7 +1948,7 @@ tr.is-hold .code { color: var(--hold); }
       else {
         token = null;
         $("gateErr").textContent = err.status === 401 ? "GitHub rejected that token." :
-          err.status === 404 ? "This token can't see captkernel/AKAGames. Collaborators need a classic token with the repo scope." : `Couldn't reach GitHub (${err.message}).`;
+          err.status === 404 ? "This token can't see captkernel/AKAGames. Teammates need a classic token with only the repo box ticked." : `Couldn't reach GitHub (${err.message}).`;
         return;
       }
     }
