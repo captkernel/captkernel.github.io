@@ -23,6 +23,9 @@
   --faint: #5c6677;
   --accent: #3fb950;
   --danger: #f85149;
+  --warn: #f0883e;
+  --on-accent: #06130a;
+  --col: 860px;
   --karan: #3fb950;
   --ash: #e3b341;
   --akshat: #79a8ff;
@@ -35,27 +38,29 @@
 @media (prefers-color-scheme: light) {
   :root:not([data-theme="dark"]) {
     --bg: #f5f6f8; --panel: #ffffff; --panel-2: #f0f2f5; --line: #e1e5eb; --line-2: #cfd5de;
-    --text: #151a22; --muted: #5b6575; --faint: #8b94a3;
-    --karan: #1a7f37; --ash: #9a6700; --akshat: #2f63d6; --all: #8250df; --accent: #1a7f37;
+    --text: #151a22; --muted: #556070; --faint: #687280; --on-accent: #ffffff;
+    --karan: #1a7f37; --ash: #9a6700; --akshat: #2f63d6; --all: #8250df; --accent: #1a7f37; --warn: #bc4c00; --danger: #cf222e;
     color-scheme: light;
   }
 }
 :root[data-theme="light"] {
   --bg: #f5f6f8; --panel: #ffffff; --panel-2: #f0f2f5; --line: #e1e5eb; --line-2: #cfd5de;
-  --text: #151a22; --muted: #5b6575; --faint: #8b94a3;
-  --karan: #1a7f37; --ash: #9a6700; --akshat: #2f63d6; --all: #8250df; --accent: #1a7f37;
+  --text: #151a22; --muted: #556070; --faint: #687280; --on-accent: #ffffff;
+  --karan: #1a7f37; --ash: #9a6700; --akshat: #2f63d6; --all: #8250df; --accent: #1a7f37; --warn: #bc4c00; --danger: #cf222e;
   color-scheme: light;
 }
 * { box-sizing: border-box; }
 html, body { margin: 0; height: 100%; }
 body {
-  background: var(--bg); color: var(--text); font: 15px/1.5 var(--sans);
+  background: var(--bg); color: var(--text); font: 15px/1.55 var(--sans);
   -webkit-font-smoothing: antialiased;
 }
 button, input, textarea, select { font: inherit; color: inherit; }
 button { cursor: pointer; }
 code, .mono { font-family: var(--mono); }
-a { color: var(--akshat); }
+a { color: var(--akshat); text-underline-offset: 2px; }
+::selection { background: color-mix(in srgb, var(--accent) 30%, transparent); }
+:focus-visible { outline: 2px solid color-mix(in srgb, var(--accent) 70%, transparent); outline-offset: 2px; border-radius: 4px; }
 .hidden { display: none !important; }
 
 /* ---------- sign-in ---------- */
@@ -72,7 +77,7 @@ a { color: var(--akshat); }
 .brand small { display: block; font: 500 12px var(--mono); color: var(--muted); letter-spacing: 0; }
 .gate h1 { font-size: 22px; margin: 22px 0 6px; }
 .gate p { color: var(--muted); margin: 0 0 18px; }
-.field-label { display: block; font: 600 12px var(--mono); text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin: 18px 0 8px; }
+.field-label { display: block; font: 600 13px var(--sans); color: var(--text); margin: 18px 0 8px; }
 .who-pick { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
 .who-pick button {
   background: var(--panel-2); border: 1px solid var(--line); border-radius: 10px; padding: 12px 8px;
@@ -92,7 +97,7 @@ a { color: var(--akshat); }
   border: 1px solid var(--line-2); background: var(--panel-2); border-radius: 10px; padding: 9px 14px; font-weight: 600;
 }
 .btn:hover { border-color: var(--faint); }
-.btn-primary { background: var(--accent); border-color: var(--accent); color: #06130a; }
+.btn-primary { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
 .btn-primary:hover { filter: brightness(1.08); border-color: var(--accent); }
 .btn-primary:disabled { opacity: .5; cursor: default; }
 .btn-ghost { background: transparent; border-color: transparent; color: var(--muted); }
@@ -133,69 +138,96 @@ a { color: var(--akshat); }
 .menu-pop button { display: block; width: 100%; text-align: left; background: none; border: 0; padding: 8px 10px; border-radius: 6px; font-size: 14px; }
 .menu-pop button:hover { background: var(--panel-2); }
 
-.main { display: grid; grid-template-columns: 320px minmax(0, 1fr); min-height: 0; }
-.side { border-right: 1px solid var(--line); overflow-y: auto; padding: 18px 16px 28px; display: flex; flex-direction: column; gap: 26px; }
+.main { display: grid; grid-template-columns: 340px minmax(0, 1fr); min-height: 0; }
+.side { border-right: 1px solid var(--line); overflow-y: auto; padding: 20px 18px 32px; display: flex; flex-direction: column; gap: 32px; background: color-mix(in srgb, var(--panel) 40%, var(--bg)); }
 .section-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
-.section-head h2 { font: 600 12px var(--mono); text-transform: uppercase; letter-spacing: .1em; color: var(--muted); margin: 0; }
+.section-head h2 { font: 600 15px var(--sans); color: var(--text); margin: 0; }
 .count { font: 12px var(--mono); color: var(--faint); }
 
 .status-card { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px 14px; margin-bottom: 8px; }
 .status-card .row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
-.status-card .when { margin-left: auto; font: 12px var(--mono); color: var(--faint); }
-.status-card p { margin: 0; font-size: 14px; color: var(--text); overflow-wrap: anywhere; }
-.status-edit textarea { width: 100%; min-height: 84px; resize: vertical; background: var(--bg); border: 1px solid var(--line-2); border-radius: 8px; padding: 8px 10px; font-size: 14px; }
+.status-card .when { margin-left: auto; font-size: 12.5px; color: var(--muted); white-space: nowrap; }
+.status-card .status-body { font-size: 14px; line-height: 1.55; }
+.status-card .status-foot { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 10px; }
+.status-card .status-foot .link-btn { margin-left: auto; }
+.eta { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: var(--text); font-variant-numeric: tabular-nums; }
+.eta svg { flex: none; color: var(--muted); }
+.eta .sub { font-weight: 400; color: var(--muted); }
+.eta.late, .eta.late svg { color: var(--warn); }
+.status-edit .eta-field { display: flex; align-items: center; gap: 10px; margin-top: 10px; font-size: 13px; color: var(--muted); flex-wrap: wrap; }
+.status-edit .eta-field label { font-weight: 600; color: var(--text); }
+.status-edit .eta-field input { width: 84px; background: var(--bg); border: 1px solid var(--line-2); border-radius: 8px; padding: 6px 8px; font-size: 14px; font-variant-numeric: tabular-nums; }
+.status-edit textarea { width: 100%; line-height: 1.5; min-height: 84px; resize: vertical; background: var(--bg); border: 1px solid var(--line-2); border-radius: 8px; padding: 8px 10px; font-size: 14px; }
 .status-edit .acts { display: flex; gap: 8px; justify-content: flex-end; margin-top: 8px; }
-.link-btn { background: none; border: 0; color: var(--muted); font: 12px var(--mono); padding: 0; text-decoration: underline; text-underline-offset: 3px; }
+.link-btn { background: none; border: 0; color: var(--muted); font: 500 13px var(--sans); padding: 0; text-decoration: underline; text-underline-offset: 3px; }
 .link-btn:hover { color: var(--text); }
 
-.chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
-.chip {
-  border: 1px solid var(--line); background: var(--panel); border-radius: 999px; padding: 4px 10px;
-  font: 12px var(--mono); color: var(--muted);
-}
-.chip[aria-pressed="true"] { color: var(--text); border-color: var(--faint); background: var(--panel-2); }
-.chip .n { color: var(--faint); margin-left: 4px; }
-.search { width: 100%; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 7px 10px; font-size: 14px; margin-bottom: 10px; }
-.mem { border-top: 1px solid var(--line); padding: 10px 2px; }
-.mem summary { list-style: none; cursor: pointer; display: grid; gap: 4px; }
-.mem summary::-webkit-details-marker { display: none; }
-.mem .slug { font: 500 13px var(--mono); color: var(--text); overflow-wrap: anywhere; }
-.mem .meta { display: flex; gap: 8px; align-items: center; font: 11px var(--mono); color: var(--faint); }
-.tag { border-radius: 4px; padding: 1px 6px; font: 600 10px var(--mono); text-transform: uppercase; letter-spacing: .06em; background: var(--panel-2); color: var(--muted); border: 1px solid var(--line); }
-.tag.new { color: var(--accent); border-color: color-mix(in srgb, var(--accent) 50%, transparent); }
-.mem .body { font-size: 14px; color: var(--muted); margin-top: 8px; overflow-wrap: anywhere; }
+.search { width: 100%; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; font-size: 14px; margin-bottom: 8px; }
+.mem-group { border-top: 1px solid var(--line); }
+.mem-group > summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: 8px; padding: 10px 2px; font-weight: 600; font-size: 14px; }
+.mem-group > summary::-webkit-details-marker, .mem summary::-webkit-details-marker { display: none; }
+.mem-group > summary .count { margin-left: auto; }
+.chev { flex: none; color: var(--faint); transition: transform .15s ease; }
+details[open] > summary .chev { transform: rotate(90deg); }
+.mem { padding: 7px 2px 7px 22px; }
+.mem summary { list-style: none; cursor: pointer; display: grid; gap: 2px; }
+.mem .mem-title { font-size: 14px; line-height: 1.4; color: var(--text); overflow-wrap: anywhere; }
+.mem summary:hover .mem-title { text-decoration: underline; text-decoration-color: var(--faint); text-underline-offset: 3px; }
+.mem .meta { font-size: 12px; color: var(--faint); overflow-wrap: anywhere; }
+.mem .new { color: var(--accent); font-weight: 600; }
+.mem .body { font-size: 13.5px; color: var(--muted); margin: 8px 0 4px; }
 .mem .body b { color: var(--text); font-weight: 600; }
+.mem-empty { color: var(--faint); font-size: 14px; padding: 8px 2px; }
+.tag { border-radius: 999px; padding: 1px 8px; font: 500 12px var(--sans); background: var(--panel-2); color: var(--muted); border: 1px solid var(--line); }
+.count { font-size: 12.5px; color: var(--faint); font-variant-numeric: tabular-nums; }
+
+/* ---------- formatted text (message bodies, statuses, memory) ---------- */
+.fmt { overflow-wrap: anywhere; }
+.fmt > :first-child { margin-top: 0; }
+.fmt > :last-child { margin-bottom: 0; }
+.fmt p { margin: 0 0 .6em; }
+.fmt ul, .fmt ol { margin: .3em 0 .6em; padding-left: 1.4em; }
+.fmt li { margin: .3em 0; padding-left: .15em; }
+.fmt li::marker { color: var(--faint); font-variant-numeric: tabular-nums; }
+.fmt h4 { font-size: 1em; margin: .8em 0 .3em; }
+.fmt b { font-weight: 600; color: var(--text); }
+.fmt code { font-family: var(--mono); font-size: .86em; background: var(--panel-2); border: 1px solid var(--line); border-radius: 5px; padding: .05em .35em; overflow-wrap: anywhere; }
+.fmt code.path { background: none; border-color: transparent; padding: 0; color: color-mix(in srgb, var(--text) 80%, var(--akshat)); }
+.fmt .mention { color: var(--c); font-weight: 600; }
+.clamp { max-height: calc(var(--lines, 3) * 1.6em + .1em); overflow: hidden; }
+.clamp.is-clamped { -webkit-mask-image: linear-gradient(#000 calc(100% - 1.5em), transparent); mask-image: linear-gradient(#000 calc(100% - 1.5em), transparent); }
+.more { display: none; background: none; border: 0; padding: 2px 0; margin-top: 2px; font: 600 13px var(--sans); color: var(--akshat); }
+.more:hover { text-decoration: underline; text-underline-offset: 3px; }
+.more.show { display: inline-block; }
 
 /* ---------- feed ---------- */
 .feed-wrap { display: grid; grid-template-rows: auto auto 1fr auto; grid-template-columns: minmax(0, 1fr); min-height: 0; }
-.feed-tabs { display: flex; gap: 6px; padding: 12px 24px; border-bottom: 1px solid var(--line); overflow-x: auto; scrollbar-width: none; }
+.feed-tabs { display: flex; gap: 4px; padding: 10px max(24px, calc((100% - var(--col)) / 2)); border-bottom: 1px solid var(--line); overflow-x: auto; scrollbar-width: none; }
 .feed-tabs::-webkit-scrollbar { display: none; }
 .tab { white-space: nowrap; background: none; border: 1px solid transparent; border-radius: 8px; padding: 6px 12px; color: var(--muted); font-weight: 500; font-size: 14px; display: flex; align-items: center; gap: 6px; }
 .tab:hover { color: var(--text); }
 .tab[aria-selected="true"] { color: var(--text); background: var(--panel); border-color: var(--line); }
-.badge { background: var(--accent); color: #06130a; font: 700 11px var(--mono); border-radius: 999px; padding: 0 6px; min-width: 18px; text-align: center; }
-.feed { overflow-y: auto; overflow-x: hidden; padding: 8px 24px 24px; }
-.day { position: sticky; top: -8px; z-index: 2; display: flex; align-items: center; gap: 12px; margin: 14px 0 6px; padding: 10px 0 6px; background: var(--bg); font: 600 12px var(--mono); color: var(--faint); text-transform: uppercase; letter-spacing: .08em; }
+.badge { background: var(--accent); color: var(--on-accent); font: 700 11px var(--mono); border-radius: 999px; padding: 0 6px; min-width: 18px; text-align: center; }
+.feed { overflow-y: auto; overflow-x: hidden; padding: 0 max(24px, calc((100% - var(--col)) / 2)) 28px; }
+.day { position: sticky; top: 0; z-index: 2; display: flex; align-items: center; gap: 12px; margin: 10px -14px 4px; padding: 14px 14px 8px; background: var(--bg); font: 600 13px var(--sans); color: var(--muted); }
 .day::after { content: ""; flex: 1; height: 1px; background: var(--line); }
-.msg { display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 12px; padding: 12px 14px; margin: 0 -14px; border-radius: var(--radius); position: relative; }
+.msg { display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 12px; padding: 14px 14px; margin: 0 -14px; border-radius: var(--radius); position: relative; }
 .msg:hover { background: color-mix(in srgb, var(--panel) 70%, transparent); }
 .msg.unread { background: color-mix(in srgb, var(--accent) 7%, transparent); }
-.msg.unread::before { content: ""; position: absolute; left: 0; top: 14px; bottom: 14px; width: 3px; border-radius: 3px; background: var(--accent); }
-.msg.cont { padding-top: 2px; }
+.msg.cont { padding-top: 0; }
 .msg.cont .av { visibility: hidden; height: 0; }
 .msg.cont .msg-head { display: none; }
-.msg-head { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; margin-bottom: 2px; }
-.arrow { color: var(--faint); font-size: 13px; }
-.to-pill { font: 600 11px var(--mono); padding: 1px 7px; border-radius: 999px; color: var(--c); background: color-mix(in srgb, var(--c) 14%, transparent); }
-.time { font: 12px var(--mono); color: var(--faint); }
-.msg-body { overflow-wrap: anywhere; white-space: pre-wrap; }
-.msg-body code { font-size: 13px; background: var(--panel-2); border: 1px solid var(--line); border-radius: 5px; padding: 0 5px; }
-.msg-body .mention { color: var(--c); font-weight: 600; }
-.msg-body .agent { color: var(--faint); font: 12px var(--mono); }
+.msg-head { display: flex; align-items: baseline; gap: 4px 8px; flex-wrap: wrap; margin-bottom: 4px; font-size: 13.5px; color: var(--muted); }
+.msg-head .name { font-size: 15px; }
+.msg-head .via { color: var(--faint); }
+.to { color: var(--muted); }
+.to b { font-weight: 600; color: var(--c, var(--text)); }
+.time { font-size: 12.5px; color: var(--faint); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.msg-body { line-height: 1.6; max-width: 72ch; }
 .empty { text-align: center; color: var(--muted); padding: 60px 16px; }
 .jump { position: absolute; left: 50%; transform: translateX(-50%); bottom: 150px; z-index: 5; box-shadow: 0 8px 24px rgba(0,0,0,.35); }
 
-.composer { border-top: 1px solid var(--line); padding: 12px 24px 16px; padding-bottom: max(16px, env(safe-area-inset-bottom)); background: var(--bg); }
+.composer { border-top: 1px solid var(--line); padding: 12px max(24px, calc((100% - var(--col)) / 2)) 16px; padding-bottom: max(16px, env(safe-area-inset-bottom)); background: var(--bg); }
 .composer-box { background: var(--panel); border: 1px solid var(--line-2); border-radius: var(--radius); padding: 10px 12px; }
 .composer-box:focus-within { border-color: var(--faint); }
 .composer textarea { width: 100%; background: none; border: 0; resize: none; outline: none; min-height: 44px; max-height: 220px; font-size: 15px; }
@@ -226,17 +258,20 @@ a { color: var(--akshat); }
 .meter { height: 8px; border-radius: 99px; background: var(--panel-2); border: 1px solid var(--line); overflow: hidden; }
 .meter > i { display: block; height: 100%; background: var(--accent); border-radius: 99px; transition: width .5s ease; }
 .pg-overall { margin-left: auto; flex: 0 1 320px; min-width: 220px; }
-.pg-overall .nums { display: flex; justify-content: space-between; font: 12px var(--mono); color: var(--muted); margin-bottom: 6px; }
+.pg-overall .nums { display: flex; justify-content: space-between; font: 13px var(--sans); font-variant-numeric: tabular-nums; color: var(--muted); margin-bottom: 6px; }
 .pg-overall .nums b { color: var(--text); font-weight: 600; }
-.pg-h2 { font: 600 12px var(--mono); text-transform: uppercase; letter-spacing: .1em; color: var(--muted); margin: 0 0 12px; display: flex; justify-content: space-between; }
+.pg-h2 { font: 600 16px var(--sans); color: var(--text); margin: 0 0 12px; display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.pg-h2 span + span { font: 400 12.5px var(--mono); color: var(--faint); }
 .people { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-bottom: 30px; }
-.person { background: var(--panel); border: 1px solid var(--line); border-top: 3px solid var(--c); border-radius: var(--radius); padding: 16px; display: flex; flex-direction: column; gap: 14px; }
+.person { background: var(--panel); border: 1px solid var(--line); box-shadow: inset 0 3px 0 var(--c); border-radius: var(--radius); padding: 16px; display: flex; flex-direction: column; gap: 14px; }
 .person .row { display: flex; align-items: center; gap: 10px; }
 .person .row .count { margin-left: auto; }
-.person .label { font: 600 11px var(--mono); text-transform: uppercase; letter-spacing: .08em; color: var(--faint); margin-bottom: 4px; }
+.person .row .time { display: block; }
+.person .label { font: 600 13px var(--sans); color: var(--muted); margin-bottom: 4px; display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.person .label .eta { margin-left: auto; }
 .person p { margin: 0; font-size: 14px; overflow-wrap: anywhere; }
 .person .next { background: color-mix(in srgb, var(--c) 9%, transparent); border: 1px solid color-mix(in srgb, var(--c) 30%, transparent); border-radius: 8px; padding: 9px 11px; }
-.person .next .phase-ref { font: 11px var(--mono); color: var(--faint); display: block; margin-top: 3px; }
+.person .next .phase-ref { font: 12px var(--sans); color: var(--faint); display: block; margin-top: 3px; }
 .person .muted { color: var(--faint); }
 .pg-cols { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 28px; align-items: start; }
 .phase { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); margin-bottom: 10px; }
@@ -247,7 +282,7 @@ a { color: var(--akshat); }
 .phase.current { border-color: color-mix(in srgb, var(--accent) 45%, var(--line)); }
 .phase.current .phase-num { border-color: var(--accent); color: var(--accent); }
 .phase-title { font-weight: 600; overflow-wrap: anywhere; }
-.phase-title .now { font: 600 10px var(--mono); text-transform: uppercase; letter-spacing: .08em; color: var(--accent); margin-left: 8px; }
+.phase-title .now { font: 600 12px var(--sans); color: var(--accent); margin-left: 8px; }
 .phase-count { font: 12px var(--mono); color: var(--muted); }
 .phase summary .meter { grid-column: 2 / 4; height: 5px; }
 .phase-body { padding: 0 16px 14px 56px; }
@@ -269,14 +304,14 @@ a { color: var(--akshat); }
 .work { display: grid; grid-template-columns: 24px minmax(0, 1fr); gap: 10px; padding: 11px 0; border-top: 1px solid var(--line); }
 .work:first-child { border-top: 0; }
 .work .what { font-size: 14px; overflow-wrap: anywhere; }
-.work .meta { font: 12px var(--mono); color: var(--faint); margin-top: 3px; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.work .meta { font: 12.5px var(--sans); color: var(--faint); margin-top: 3px; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
 .area-pill { font: 11px var(--mono); padding: 0 6px; border-radius: 4px; background: var(--panel-2); border: 1px solid var(--line); color: var(--muted); }
 .area { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 6px 10px; padding: 11px 0; border-top: 1px solid var(--line); align-items: center; }
 .area:first-child { border-top: 0; }
 .area .path { font: 500 13px var(--mono); overflow-wrap: anywhere; }
 .area .bar { grid-column: 1 / -1; display: flex; height: 4px; border-radius: 99px; overflow: hidden; background: var(--panel-2); }
 .area .bar i { display: block; height: 100%; background: var(--c); }
-.area .meta { grid-column: 1 / -1; font: 11px var(--mono); color: var(--faint); }
+.area .meta { grid-column: 1 / -1; font: 12px var(--sans); color: var(--faint); }
 .pg-empty { border: 1px dashed var(--line-2); border-radius: var(--radius); padding: 22px; color: var(--muted); font-size: 14px; margin-bottom: 26px; }
 .pg-empty code { font-size: 12.5px; }
 @media (max-width: 1050px) { .pg-cols { grid-template-columns: minmax(0, 1fr); } }
@@ -285,9 +320,9 @@ a { color: var(--akshat); }
 .ag-totals { display: flex; gap: 18px; justify-content: flex-end; flex-wrap: wrap; }
 .ag-stat { text-align: right; }
 .ag-stat b { display: block; font: 600 24px var(--mono); color: var(--text); line-height: 1.1; }
-.ag-stat span { font: 11px var(--mono); color: var(--faint); text-transform: uppercase; letter-spacing: .08em; }
+.ag-stat span { font-size: 12.5px; color: var(--faint); }
 .ag-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; align-items: start; }
-.ag-person { background: var(--panel); border: 1px solid var(--line); border-top: 3px solid var(--c); border-radius: var(--radius); padding: 16px; }
+.ag-person { background: var(--panel); border: 1px solid var(--line); box-shadow: inset 0 3px 0 var(--c); border-radius: var(--radius); padding: 16px; }
 .ag-human { display: flex; align-items: center; gap: 10px; padding-bottom: 14px; }
 .ag-human .seen { margin-left: auto; display: flex; align-items: center; gap: 6px; font: 11px var(--mono); color: var(--faint); text-align: right; }
 .ag-tree { position: relative; margin-left: 16px; padding-left: 18px; border-left: 1.5px solid var(--line-2); }
@@ -301,7 +336,7 @@ a { color: var(--akshat); }
 .ag-head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .ag-kind { font-weight: 600; font-size: 14px; }
 .ag-type { font: 600 11px var(--mono); padding: 1px 7px; border-radius: 999px; background: var(--panel); border: 1px solid var(--line-2); color: var(--muted); }
-.ag-state { margin-left: auto; display: flex; align-items: center; gap: 6px; font: 600 11px var(--mono); text-transform: uppercase; letter-spacing: .06em; color: var(--faint); }
+.ag-state { margin-left: auto; display: flex; align-items: center; gap: 6px; font: 600 12px var(--sans); color: var(--faint); }
 .ag-node.working .ag-state, .ag-sub.running .ag-state { color: var(--accent); }
 .ag-act { font-size: 13px; color: var(--muted); margin-top: 6px; overflow-wrap: anywhere; }
 .ag-act::before { content: "› "; color: var(--faint); font-family: var(--mono); }
@@ -322,37 +357,43 @@ a { color: var(--akshat); }
 @media (max-width: 1100px) { .ag-grid { grid-template-columns: minmax(0, 1fr); } }
 
 /* ---------- asks: messages that need a human's answer ---------- */
-.msg.ask { background: color-mix(in srgb, var(--ash) 7%, transparent); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ash) 40%, transparent); margin-top: 6px; margin-bottom: 6px; }
-.msg.ask.open-for-me { background: color-mix(in srgb, var(--danger) 9%, transparent); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--danger) 70%, transparent); }
-.msg.ask .msg-body { font-weight: 500; }
-.ask-tag { font: 700 10px var(--mono); text-transform: uppercase; letter-spacing: .08em; padding: 2px 7px; border-radius: 4px; background: var(--ash); color: #1a1200; }
+.msg.ask { background: color-mix(in srgb, var(--ash) 6%, transparent); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ash) 28%, transparent); margin-top: 8px; margin-bottom: 8px; }
+.msg.ask.answered { background: transparent; box-shadow: inset 0 0 0 1px var(--line); }
+.msg.ask.open-for-me { background: color-mix(in srgb, var(--danger) 7%, transparent); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--danger) 45%, transparent); }
+.ask-tag { display: inline-flex; align-items: center; gap: 4px; font: 600 12px var(--sans); padding: 1px 8px; border-radius: 999px; background: color-mix(in srgb, var(--ash) 18%, transparent); color: var(--text); }
 .msg.ask.open-for-me .ask-tag { background: var(--danger); color: #fff; }
-.ask-tag.done { background: var(--panel-2); color: var(--accent); box-shadow: inset 0 0 0 1px var(--line-2); }
-.ask-actions { margin-top: 8px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; font: 12px var(--mono); color: var(--faint); }
-.btn-sm { padding: 4px 11px; font-size: 13px; border-radius: 8px; }
+.ask-tag.done { background: var(--panel-2); color: var(--muted); }
+.ask-tag.done svg { color: var(--accent); }
+.ask-actions { margin-top: 10px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; font-size: 13px; color: var(--muted); }
+.btn-sm { padding: 5px 12px; font-size: 13px; border-radius: 8px; }
 .btn-urgent { background: var(--danger); border-color: var(--danger); color: #fff; }
 .btn-urgent:hover { filter: brightness(1.08); border-color: var(--danger); }
-.quote { border-left: 3px solid var(--line-2); padding: 1px 10px; margin: 2px 0 6px; color: var(--muted); font-size: 13px; cursor: pointer; white-space: normal; }
-.quote:hover { border-left-color: var(--faint); }
-.agent-tag { font: 600 11px var(--mono); color: var(--c); background: color-mix(in srgb, var(--c) 10%, transparent); border-radius: 4px; padding: 0 6px; }
+.quote { display: flex; gap: 6px; align-items: baseline; padding: 4px 10px; margin: 2px 0 8px; color: var(--muted); font-size: 13px; cursor: pointer; background: var(--panel-2); border-radius: 8px; max-width: 72ch; }
+.quote span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.quote:hover { color: var(--text); }
+.replies { margin-top: 12px; padding-left: 14px; border-left: 1px solid var(--line-2); display: grid; gap: 12px; }
+.reply { display: grid; grid-template-columns: 24px minmax(0, 1fr); gap: 10px; border-radius: 8px; }
+.reply.unread .name::after { content: "new"; margin-left: 6px; font: 600 11px var(--sans); color: var(--accent); }
+.reply .msg-head { margin-bottom: 2px; }
+.reply .msg-head .name { font-size: 14px; }
+.reply .msg-body { font-size: 14.5px; }
 .empty small { display: block; margin-top: 6px; color: var(--faint); }
-.human-tag { font: 600 10px var(--mono); text-transform: uppercase; letter-spacing: .06em; color: var(--muted); box-shadow: inset 0 0 0 1px var(--line-2); border-radius: 4px; padding: 0 5px; }
-.asks-panel { margin: 10px 24px 0; border: 1px solid color-mix(in srgb, var(--danger) 70%, transparent); background: color-mix(in srgb, var(--danger) 7%, var(--panel)); border-radius: var(--radius); padding: 10px 14px; max-height: 38vh; overflow-y: auto; }
-.asks-panel h3 { margin: 0 0 4px; font: 700 12px var(--mono); text-transform: uppercase; letter-spacing: .08em; color: var(--danger); display: flex; justify-content: space-between; align-items: center; gap: 10px; }
-.asks-panel .item { display: grid; grid-template-columns: 24px minmax(0, 1fr) auto; gap: 10px; align-items: start; padding: 9px 0; border-top: 1px solid color-mix(in srgb, var(--danger) 22%, var(--line)); font-size: 14px; }
-.asks-panel h3 + .item { border-top: 0; }
-.asks-panel .q { overflow-wrap: anywhere; }
-.asks-panel .q small { display: block; font: 11px var(--mono); color: var(--faint); margin-top: 2px; }
+.asks-panel { margin: 12px max(24px, calc((100% - var(--col)) / 2)) 0; border: 1px solid color-mix(in srgb, var(--danger) 40%, var(--line)); background: color-mix(in srgb, var(--danger) 5%, var(--panel)); border-radius: var(--radius); padding: 14px 16px 6px; max-height: 46vh; overflow-y: auto; }
+.asks-panel h2 { margin: 0 0 4px; font: 600 15px var(--sans); color: var(--text); display: flex; align-items: center; gap: 8px; }
+.asks-panel h2 .badge { background: var(--danger); color: #fff; }
+.asks-panel .item { display: grid; grid-template-columns: 24px minmax(0, 1fr) auto; gap: 10px 12px; align-items: start; padding: 12px 0; border-top: 1px solid color-mix(in srgb, var(--danger) 18%, var(--line)); font-size: 14.5px; }
+.asks-panel h2 + .item { border-top: 0; }
+.asks-panel .msg-body { line-height: 1.55; }
 .reply-bar { display: flex; gap: 8px; align-items: center; font-size: 13px; color: var(--muted); margin-bottom: 6px; padding: 6px 8px; border-radius: 8px; background: color-mix(in srgb, var(--danger) 8%, transparent); }
 .reply-bar span { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .reply-bar b { color: var(--text); }
-.ask-toggle { display: flex; align-items: center; gap: 6px; font: 12px var(--mono); color: var(--muted); cursor: pointer; user-select: none; }
+.ask-toggle { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--muted); cursor: pointer; user-select: none; }
 .ask-toggle input { accent-color: var(--danger); margin: 0; }
 .badge.urgent { background: var(--danger); color: #fff; }
 .toast.ask { border-color: var(--danger); box-shadow: 0 0 0 3px color-mix(in srgb, var(--danger) 25%, transparent), 0 12px 30px rgba(0,0,0,.35); cursor: pointer; }
-@keyframes flash { 0%, 100% { box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--danger) 70%, transparent); } 50% { box-shadow: inset 0 0 0 2px var(--danger), 0 0 0 4px color-mix(in srgb, var(--danger) 25%, transparent); } }
-.msg.flash { animation: flash .6s ease 3; }
-@media (prefers-reduced-motion: reduce) { .msg.flash { animation: none; } }
+@keyframes flash { 0%, 100% { background-color: transparent; } 50% { background-color: color-mix(in srgb, var(--akshat) 16%, transparent); } }
+.msg.flash, .reply.flash { animation: flash .7s ease 2; }
+@media (prefers-reduced-motion: reduce) { .msg.flash, .reply.flash { animation: none; } .chev { transition: none; } }
 
 .mobile-nav { display: none; }
 
@@ -369,7 +410,10 @@ a { color: var(--akshat); }
   .main[data-pane="feed"] .side { display: none; }
   .main[data-pane="team"] .feed-wrap { display: none; }
   .kbd, .sync .label, .views { display: none; }
-  .asks-panel { margin: 10px 16px 0; }
+  .asks-panel { margin: 10px 16px 0; max-height: 36vh; }
+  .feed-tabs, .feed, .composer { padding-left: 16px; padding-right: 16px; }
+  .asks-panel .item { grid-template-columns: 24px minmax(0, 1fr); }
+  .asks-panel .item > .btn { grid-column: 2; justify-self: start; }
   .people { grid-template-columns: minmax(0, 1fr); }
   .progress-inner { padding: 18px 16px 40px; }
   .pg-overall { margin-left: 0; flex-basis: 100%; }
@@ -479,7 +523,7 @@ a { color: var(--akshat); }
       <div class="people" id="pgPeople"></div>
       <div class="pg-cols">
         <div>
-          <h2 class="pg-h2"><span>The plan · next steps</span><span id="pgPlanSrc"></span></h2>
+          <h2 class="pg-h2"><span>The plan</span><span id="pgPlanSrc"></span></h2>
           <div id="pgPlan"></div>
         </div>
         <div>
@@ -495,13 +539,12 @@ a { color: var(--akshat); }
   <div class="main" id="main" data-pane="feed">
     <aside class="side" aria-label="Team">
       <section>
-        <div class="section-head"><h2>Status board</h2><span class="count" id="boardCount"></span></div>
+        <div class="section-head"><h2>Who's on what</h2><span class="count" id="boardCount"></span></div>
         <div id="board"></div>
       </section>
       <section>
         <div class="section-head"><h2>Team memory</h2><span class="count" id="memCount"></span></div>
-        <input class="search" id="memSearch" type="search" placeholder="Search memories…" aria-label="Search memories">
-        <div class="chips" id="memTypes"></div>
+        <input class="search" id="memSearch" type="search" placeholder="Search team memory" aria-label="Search team memory">
         <div id="memList"></div>
       </section>
     </aside>
@@ -524,7 +567,7 @@ a { color: var(--akshat); }
           </div>
         </div>
       </form>
-      <button class="btn jump hidden" id="jumpBtn" type="button">↓ New messages</button>
+      <button class="btn jump hidden" id="jumpBtn" type="button">New messages below</button>
     </section>
   </div>
 </div>
@@ -566,7 +609,11 @@ a { color: var(--akshat); }
   let firstLoad = true;
   let tab = store.get("aka.tab", "all");
   let to = "all";
-  let memType = "all", memQuery = "";
+  let memQuery = "";
+  const memOpen = new Set(store.get("aka.memOpen", ["project"])); // memory groups the reader has expanded
+  const memItemsOpen = new Set();
+  const expanded = new Set(); // long bodies the reader chose to read in full
+  let editingStatus = false;
   let notify = store.get("aka.notify", false);
   let pingAsks = store.get("aka.pingAsks", true);
   let replyTo = null; // id of the ask being answered from the composer
@@ -689,7 +736,7 @@ a { color: var(--akshat); }
         at: x.meta.at || "", body: x.body,
         kind: (x.meta.kind || "").toLowerCase(), re: x.meta.re || "", via: x.meta.via || "", channel: (x.meta.channel || "").toLowerCase(),
       })).sort((a, b) => a.id.localeCompare(b.id));
-      statuses = s.map((x) => ({ who: (x.meta.who || x.file.replace(/\.md$/, "")).toLowerCase(), updated: x.meta.updated || "", body: x.body, sha: x.sha, file: x.file }));
+      statuses = s.map((x) => ({ who: (x.meta.who || x.file.replace(/\.md$/, "")).toLowerCase(), updated: x.meta.updated || "", eta: x.meta.eta || "", body: x.body, sha: x.sha, file: x.file }));
       statusShas = Object.fromEntries(statuses.map((x) => [x.file, x.sha]));
       memories = mem.map((x) => ({ slug: x.meta.name || x.file.replace(/\.md$/, ""), type: x.meta.type || "note", authors: x.meta.authors || "", updated: x.meta.updated || "", description: x.meta.description || "", body: x.body, sha: x.sha }))
         .sort((a, b) => (b.updated || "").localeCompare(a.updated || "") || a.slug.localeCompare(b.slug));
@@ -740,7 +787,8 @@ a { color: var(--akshat); }
   // ---------- asks: questions that need a human's answer ----------
   // An ask (kind: ask) stays open for each addressed human until they post kind: answer with re: <ask file>.
   const answersTo = (id) => messages.filter((x) => x.kind === "answer" && x.re === id);
-  const askOpenFor = (m, who) => m.kind === "ask" && m.from !== who && (m.to === who || m.to === "all") && !answersTo(m.id).some((a) => a.from === who);
+  // "to: <who>" includes asks from your own agent (from: karan, to: karan); "to: all" means everyone but the asker.
+  const askOpenFor = (m, who) => m.kind === "ask" && (m.to === who || (m.to === "all" && m.from !== who)) && !answersTo(m.id).some((a) => a.from === who);
   const openAsks = () => messages.filter((m) => askOpenFor(m, me));
   const byId = (id) => messages.find((x) => x.id === id);
 
@@ -754,11 +802,11 @@ a { color: var(--akshat); }
     if (!pingAsks) return;
     const m = fresh[fresh.length - 1];
     const who = NAMES[m.from] || m.from;
-    showToast(`❗ ${who} needs your answer: ${clip(stripAgent(m.body), 100)}${fresh.length > 1 ? ` (+${fresh.length - 1} more)` : ""}`, "ask", 15000, () => focusMsg(m.id));
+    showToast(`❗ ${who} needs your answer: ${clip(bodyOf(m), 100)}${fresh.length > 1 ? ` (+${fresh.length - 1} more)` : ""}`, "ask", 15000, () => focusMsg(m.id));
     beep();
     if ("Notification" in window && Notification.permission === "granted") {
       try {
-        const n = new Notification(`${who} needs your answer`, { body: clip(stripAgent(m.body), 180), tag: `aka-ask-${m.id}`, requireInteraction: true });
+        const n = new Notification(`${who} needs your answer`, { body: clip(bodyOf(m), 180), tag: `aka-ask-${m.id}`, requireInteraction: true });
         n.onclick = () => { window.focus(); focusMsg(m.id); n.close(); };
       } catch {}
     }
@@ -784,7 +832,7 @@ a { color: var(--akshat); }
     const m0 = byId(id);
     const want = m0 && channelOf(m0) === "agents" ? "chat" : "humans";
     if (view !== want) setView(want);
-    if (!TABS().find((t) => t.id === tab).f(byId(id) || {})) { tab = "all"; renderTabs(); renderFeed(false); }
+    if (!curTab().f(byId(id) || {}) && !document.getElementById(`m-${id}`)) { tab = "all"; renderTabs(); renderFeed(false); }
     const el = document.getElementById(`m-${id}`);
     if (el) { stick = false; el.scrollIntoView({ block: "center" }); el.classList.remove("flash"); void el.offsetWidth; el.classList.add("flash"); }
   }
@@ -794,12 +842,15 @@ a { color: var(--akshat); }
     const panel = $("asksPanel");
     panel.classList.toggle("hidden", !list.length);
     if (!list.length) { panel.innerHTML = ""; return; }
-    panel.innerHTML = `<h3><span>❗ Waiting for your answer · ${list.length}</span></h3>` + list.map((m) => `<div class="item">
+    panel.innerHTML = `<h2>Needs your answer <span class="badge">${list.length}</span></h2>` + list.map((m) => `<div class="item">
         ${avatar(m.from, true)}
-        <div class="q"><a href="#" data-jump="${esc(m.id)}" style="color:inherit;text-decoration:none">${richText(clip(stripAgent(m.body), 220))}</a>
-          <small>${esc(NAMES[m.from] || m.from)} → ${esc(m.to === "all" ? "everyone" : "you")} · ${esc(rel(m.at))}</small></div>
+        <div>
+          <div class="msg-head"><span class="name c-${esc(m.from)}">${esc(m.from === me ? "Your agent" : NAMES[m.from] || m.from)}</span>${sigHtml(m)}<span class="sep" aria-hidden="true">·</span>${timeEl(m.at)}</div>
+          ${clampBox("n:" + m.id, formatBody(bodyOf(m)), 4)}
+        </div>
         <button class="btn btn-sm btn-urgent" type="button" data-answer="${esc(m.id)}">Answer</button>
       </div>`).join("");
+    measureClamps(panel);
   }
 
   function startAnswer(id) {
@@ -838,11 +889,11 @@ a { color: var(--akshat); }
 
   function alertArrivals(fresh) {
     const last = fresh[fresh.length - 1];
-    showToast(`${NAMES[last.from] || last.from} → ${NAMES[last.to] || last.to}: ${clip(stripAgent(last.body), 90)}`);
+    showToast(`${NAMES[last.from] || last.from} → ${NAMES[last.to] || last.to}: ${clip(bodyOf(last), 90)}`);
     if (notify && document.hidden && "Notification" in window && Notification.permission === "granted") {
       try {
         const n = new Notification(fresh.length > 1 ? `${fresh.length} new team messages` : `${NAMES[last.from] || last.from} → ${NAMES[last.to] || last.to}`, {
-          body: clip(stripAgent(last.body), 180), tag: "aka-board",
+          body: clip(bodyOf(last), 180), tag: "aka-board",
         });
         n.onclick = () => { window.focus(); n.close(); };
       } catch {}
@@ -853,17 +904,55 @@ a { color: var(--akshat); }
   const clip = (s, n) => (s.length > n ? s.slice(0, n - 1) + "…" : s);
 
   // ---------- time ----------
-  function parseAt(at) { const d = new Date(at); return isNaN(d) ? null : d; }
+  function parseAt(at) { if (!at) return null; const d = at instanceof Date ? at : new Date(at); return isNaN(d) ? null : d; }
   function rel(at) {
     const d = parseAt(at); if (!d) return at || "";
     const s = (Date.now() - d) / 1000;
     if (s < 45) return "just now";
-    if (s < 3600) return `${Math.round(s / 60)}m ago`;
-    if (s < 86400) return `${Math.round(s / 3600)}h ago`;
-    if (s < 86400 * 7) return `${Math.round(s / 86400)}d ago`;
+    if (s < 3600) return `${Math.max(1, Math.round(s / 60))} min ago`;
+    if (s < 86400) return `${Math.round(s / 3600)} h ago`;
+    if (s < 86400 * 2) return "yesterday";
+    if (s < 86400 * 7) return `${Math.round(s / 86400)} days ago`;
     return d.toLocaleDateString(undefined, { day: "numeric", month: "short" });
   }
-  const clock = (at) => { const d = parseAt(at); return d ? d.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" }) : ""; };
+  const clock = (at) => { const d = parseAt(at); return d ? d.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit", hour12: false }) : ""; };
+  const exact = (at) => { const d = parseAt(at); return d ? d.toLocaleString(undefined, { weekday: "short", day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit", hour12: false }) : String(at || ""); };
+  // Feed times read relative for the last day ("12 min ago"); older ones show the clock under their day heading.
+  const feedTime = (at) => { const d = parseAt(at); return d && Date.now() - d < 86400000 ? rel(at) : clock(at); };
+  function timeEl(at, mode = "rel", prefix = "") {
+    const d = parseAt(at), txt = mode === "feed" ? feedTime(at) : rel(at);
+    return `<time class="time" ${d ? `datetime="${esc(d.toISOString())}"` : ""} data-at="${esc(at)}" data-mode="${mode}" data-prefix="${esc(prefix)}" title="${esc(exact(at))}">${esc(prefix + txt)}</time>`;
+  }
+  function refreshTimes(root = document) {
+    root.querySelectorAll("time[data-at]").forEach((t) => {
+      const txt = (t.dataset.prefix || "") + (t.dataset.mode === "feed" ? feedTime(t.dataset.at) : rel(t.dataset.at));
+      if (t.textContent !== txt) t.textContent = txt;
+    });
+  }
+  function span(mins) {
+    mins = Math.max(1, Math.round(mins));
+    if (mins < 60) return `${mins} min`;
+    const h = Math.floor(mins / 60), m = mins % 60;
+    if (h < 24) return m ? `${h} h ${m} min` : `${h} h`;
+    const d = Math.round(h / 24); return `${d} day${d === 1 ? "" : "s"}`;
+  }
+  const CLOCK_ICON = '<svg width="13" height="13" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.25" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 4.6V8l2.3 1.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>';
+  const CHECK_ICON = '<svg width="12" height="12" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.5 12 13 4.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  const CHEV = '<svg class="chev" width="12" height="12" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  const X_ICON = '<svg width="12" height="12" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>';
+  // Status ETA (front matter "eta:", ISO-8601 with offset): "ETA ~19:30 (in 40 min)" or "Overdue by 15 min".
+  function etaHtml(s) {
+    const d = s && parseAt(s.eta); if (!d) return "";
+    const diff = (d - Date.now()) / 60000;
+    return diff >= 0
+      ? `<span class="eta" title="Expected done ${esc(exact(d))}">${CLOCK_ICON}ETA ~${esc(clock(d))} <span class="sub">(in ${esc(span(diff))})</span></span>`
+      : `<span class="eta late" title="ETA was ${esc(exact(d))}">${CLOCK_ICON}Overdue by ${esc(span(-diff))}</span>`;
+  }
+  const p2 = (n) => String(n).padStart(2, "0");
+  function isoWithOffset(d) {
+    const off = -d.getTimezoneOffset(), a = Math.abs(off);
+    return `${d.getFullYear()}-${p2(d.getMonth() + 1)}-${p2(d.getDate())}T${p2(d.getHours())}:${p2(d.getMinutes())}:${p2(d.getSeconds())}${off >= 0 ? "+" : "-"}${p2(Math.floor(a / 60))}:${p2(a % 60)}`;
+  }
   function dayLabel(at) {
     const d = parseAt(at); if (!d) return "Undated";
     const today = new Date(); const y = new Date(); y.setDate(today.getDate() - 1);
@@ -886,112 +975,224 @@ a { color: var(--akshat); }
   const SIG_RE = /^([A-Za-z][\w-]{2,}\[[\w-]+\]|[A-Za-z][\w-]{2,}(?= \([^)]*agent[^)]*\)))(?: \([^)]*\))?:\s*/;
   const agentSig = (body) => { const m = body.match(SIG_RE); return m ? m[1] : ""; };
 
-  function richText(s) {
-    let h = esc(s);
-    h = h.replace(/^(\w+&#39;s agent(?:, [^:]{0,60})?:)/i, '<span class="agent">$1</span>');
-    h = h.replace(/`([^`\n]+)`/g, "<code>$1</code>");
-    h = h.replace(/(https?:\/\/[^\s<]+[^\s<.,;:!?)\]])/g, '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>');
-    h = h.replace(/(^|[\s(])@(karan|ash|akshat|all)\b/gi, (_, pre, n) => `${pre}<span class="mention c-${n.toLowerCase()}">@${n}</span>`);
-    return h;
+  // ---------- readable text ----------
+  // Bodies are plain text, often one dense agent paragraph. Render a safe markdown subset and add structure:
+  // "(1) … (2) …" runs become numbered lists, file paths go monospace, very long paragraphs split into chunks.
+  const PATH_EXT = "md|gd|gdshader|json|tscn|tres|py|sh|ps1|bat|cmd|js|mjs|ts|html|css|godot|txt|ya?ml|cs|png|jpe?g|webp|glb|gltf|csv|toml|cfg|tiff?";
+  const EXT_RE = new RegExp(`\\.(?:${PATH_EXT})$`, "i");
+  const PATH_RE = new RegExp(`(^|[\\s(\\[{"'“‘])((?:\\.{1,2}\\/|~\\/)?(?:[\\w@.-]+\\/)+[\\w@.*-]*|[\\w-][\\w.-]*\\.(?:${PATH_EXT}))(?=$|[\\s,;:)\\]}"'”’!?]|\\.(?:$|\\s))`, "g");
+  const PATH_ROOTS = /^(?:\.{0,2}\/)?(?:src|docs|data|tools|tests|scripts|assets|addons|\.agents|\.claude|\.github)\//;
+  const looksLikePath = (p) => /[A-Za-z]/.test(p) && (EXT_RE.test(p) || PATH_ROOTS.test(p) || (p.length > 3 && p.endsWith("/")));
+  const words = (t) => esc(t).replace(/(^|[\s(])@(karan|ash|akshat|all)\b/gi, (_, pre, n) => `${pre}<span class="mention c-${n.toLowerCase()}">@${n}</span>`);
+  function plain(t) {
+    const parts = []; let m;
+    PATH_RE.lastIndex = 0;
+    while ((m = PATH_RE.exec(t))) {
+      const a = m.index + m[1].length;
+      if (looksLikePath(m[2])) parts.push([a, a + m[2].length]);
+    }
+    let out = "", last = 0;
+    for (const [a, b] of parts) { out += words(t.slice(last, a)) + `<code class="path">${esc(t.slice(a, b))}</code>`; last = b; }
+    return out + words(t.slice(last));
   }
+  function inline(raw) {
+    const TOK = /(`[^`\n]+`)|\[([^\]\n]+)\]\((https?:\/\/[^)\s]+)\)|(https?:\/\/[^\s<>"']+[^\s<>"'.,;:!?)\]])|\*\*([^*\n]+)\*\*/g;
+    let out = "", last = 0, m;
+    while ((m = TOK.exec(raw))) {
+      out += plain(raw.slice(last, m.index));
+      if (m[1]) out += `<code>${esc(m[1].slice(1, -1))}</code>`;
+      else if (m[2]) out += `<a href="${esc(m[3])}" target="_blank" rel="noopener noreferrer">${esc(m[2])}</a>`;
+      else if (m[4]) out += `<a href="${esc(m[4])}" target="_blank" rel="noopener noreferrer">${esc(m[4].replace(/^https?:\/\//, ""))}</a>`;
+      else if (m[5]) out += `<b>${inline(m[5])}</b>`;
+      last = TOK.lastIndex;
+    }
+    return out + plain(raw.slice(last));
+  }
+  // "(1) a (2) b" or "1) a 2) b" inside a paragraph, numbered from 1 in order: split into intro + items.
+  function inlineList(text) {
+    for (const re of [/\((\d{1,2})\)\s+/g, /(^|\s)(\d{1,2})\)\s+/g]) {
+      const marks = []; let m, want = 1;
+      while ((m = re.exec(text))) {
+        const two = m.length > 2, n = +(two ? m[2] : m[1]), at = m.index + (two ? m[1].length : 0);
+        if (n === want) { marks.push([at, re.lastIndex]); want++; }
+      }
+      if (marks.length >= 2) {
+        return { intro: text.slice(0, marks[0][0]).trim(),
+          items: marks.map(([, b], i) => text.slice(b, i + 1 < marks.length ? marks[i + 1][0] : text.length).trim()) };
+      }
+    }
+    return null;
+  }
+  function chunk(text) {
+    if (text.length < 360) return [text];
+    const sentences = text.replace(/(\S+)([.!?])\s+(?=["'“(]?[A-Z0-9])/g,
+      (all, w, p) => /^(?:e\.g|i\.e|vs|etc|approx|ca|no|st|mr|dr|[a-z])$/i.test(w) ? all : `${w}${p}\u0001`).split("\u0001");
+    const out = []; let cur = "";
+    for (const x of sentences) { cur = cur ? `${cur} ${x}` : x; if (cur.length >= 220) { out.push(cur); cur = ""; } }
+    if (cur) { if (out.length && cur.length < 80) out[out.length - 1] += ` ${cur}`; else out.push(cur); }
+    return out;
+  }
+  function formatBody(raw) {
+    const lines = String(raw || "").replace(/\r/g, "").split("\n");
+    let html = "", para = [], list = null;
+    const li = (t) => {
+      const lead = t.match(/^([A-Z][A-Z0-9 /&'-]{2,}[A-Z0-9])([.:])\s+/); // "LAYOUT. …" reads as a label
+      return `<li>${lead ? `<b>${esc(lead[1])}</b>${lead[2]} ${inline(t.slice(lead[0].length))}` : inline(t)}</li>`;
+    };
+    const closeList = () => { if (list) { html += `<${list.tag}>${list.items.map(li).join("")}</${list.tag}>`; list = null; } };
+    const paras = (t) => chunk(t).map((c) => `<p>${inline(c)}</p>`).join("");
+    const flush = () => {
+      if (!para.length) return;
+      const text = para.join(" "); para = [];
+      const il = inlineList(text);
+      if (il) { if (il.intro) html += paras(il.intro); html += `<ol>${il.items.map(li).join("")}</ol>`; }
+      else html += paras(text);
+    };
+    for (const line of lines) {
+      let m;
+      if (!line.trim()) { flush(); closeList(); continue; }
+      if ((m = line.match(/^\s*#{1,6}\s+(.+)/))) { flush(); closeList(); html += `<h4>${inline(m[1])}</h4>`; continue; }
+      if ((m = line.match(/^\s*[-*•]\s+(.+)/)) || (m = line.match(/^\s*\d{1,2}[.)]\s+(.+)/))) {
+        flush();
+        const tag = /^\s*\d/.test(line) ? "ol" : "ul";
+        if (list && list.tag !== tag) closeList();
+        if (!list) list = { tag, items: [] };
+        list.items.push(m[1]); continue;
+      }
+      if (list && /^\s{2,}\S/.test(line)) { list.items[list.items.length - 1] += ` ${line.trim()}`; continue; }
+      closeList(); para.push(line.trim());
+    }
+    flush(); closeList();
+    return html;
+  }
+  // Long text collapses to a few lines with a "Show more" toggle; measureClamps() decides after layout.
+  function clampBox(id, html, lines = 3, cls = "msg-body") {
+    const open = expanded.has(id);
+    return `<div class="${cls} fmt ${open ? "" : "clamp"}" data-clamp="${esc(id)}" style="--lines:${lines}">${html}</div><button class="more ${open ? "show" : ""}" type="button" data-more="${esc(id)}" aria-expanded="${open}">${open ? "Show less" : "Show more"}</button>`;
+  }
+  function measureClamps(root = document) {
+    root.querySelectorAll(".clamp[data-clamp]").forEach((el) => {
+      if (!el.clientHeight) return; // hidden right now; measured again when it's shown
+      const over = el.scrollHeight > el.clientHeight + 4;
+      el.classList.toggle("is-clamped", over);
+      const btn = el.nextElementSibling; if (btn && btn.matches(".more")) btn.classList.toggle("show", over);
+    });
+  }
+  const bodyOf = (m) => stripAgent(agentSig(m.body) ? m.body.replace(SIG_RE, "") : m.body);
+  const sigHtml = (m) => m.via === "board" ? '<span class="via" title="Written by the person on the web board, not their agent">on the board</span>'
+    : agentSig(m.body) ? `<span class="via" title="${esc(NAMES[m.from] || m.from)}'s agent">via ${esc(agentSig(m.body))}</span>` : "";
+  const isUnread = (m) => freshThisSession.has(m.id) || (relevant(m) && !seen.has(m.id));
 
   function renderBoard() {
+    if (editingStatus) return; // don't wipe a status that's being typed
     const byWho = Object.fromEntries(statuses.map((s) => [s.who, s]));
     const order = [me, ...TEAM.filter((t) => t !== me), ...statuses.map((s) => s.who).filter((w) => !TEAM.includes(w))];
-    $("boardCount").textContent = `${statuses.length}/${TEAM.length} posted`;
+    $("boardCount").textContent = `${statuses.length} of ${TEAM.length} posted`;
     $("board").innerHTML = order.map((who) => {
       const s = byWho[who];
       const mine = who === me;
-      return `<div class="status-card c-${who} ${mine ? "mine" : ""}" data-who="${esc(who)}">
+      const eta = etaHtml(s);
+      return `<div class="status-card c-${who}" data-who="${esc(who)}">
         <div class="row">${avatar(who, true)}<span class="name">${esc(NAMES[who] || who)}</span>${mine ? '<span class="tag">you</span>' : ""}
-          <span class="when" title="${esc(s ? s.updated : "")}">${s ? esc(rel(s.updated)) : ""}</span></div>
-        <p>${s ? richText(s.body) : '<span style="color:var(--faint)">No status yet.</span>'}</p>
-        ${mine ? `<div style="margin-top:10px"><button class="link-btn" data-edit-status type="button">Update my status</button></div>` : ""}
+          ${s ? `<span class="when">${timeEl(s.updated, "rel", "updated ")}</span>` : ""}</div>
+        ${s ? clampBox("s:" + who, formatBody(s.body), 4, "status-body") : '<p class="status-body" style="color:var(--faint);margin:0">No status yet.</p>'}
+        ${eta || mine ? `<div class="status-foot">${eta}${mine ? '<button class="link-btn" data-edit-status type="button">Update my status</button>' : ""}</div>` : ""}
       </div>`;
     }).join("");
+    measureClamps($("board"));
   }
 
+  const TYPE_ORDER = ["project", "feedback", "reference", "user"];
+  const TYPE_LABEL = { project: "Project decisions", feedback: "Feedback", reference: "Reference", user: "People" };
+  function memTitle(m) {
+    const first = (m.body.replace(/([.!?])\s+(?=[A-Z])/, "$1\u0001").split("\u0001")[0] || m.description || m.slug).replace(/\s+/g, " ").trim();
+    if (first.length <= 120) return first;
+    return first.slice(0, 120).replace(/\s+\S*$/, "") + "…";
+  }
   function renderMemories() {
-    const types = {};
-    memories.forEach((m) => (types[m.type] = (types[m.type] || 0) + 1));
     $("memCount").textContent = memories.length ? `${memories.length}` : "";
-    $("memTypes").innerHTML = [["all", memories.length], ...Object.entries(types).sort()].map(([t, n]) =>
-      `<button class="chip" type="button" data-memtype="${esc(t)}" aria-pressed="${memType === t}">${esc(t)}<span class="n">${n}</span></button>`).join("");
-    const q = memQuery.toLowerCase();
-    const list = memories.filter((m) => (memType === "all" || m.type === memType) &&
-      (!q || `${m.slug} ${m.body} ${m.authors}`.toLowerCase().includes(q)));
+    const q = memQuery.trim().toLowerCase();
+    const list = memories.filter((m) => !q || `${m.slug} ${m.description} ${m.body} ${m.authors}`.toLowerCase().includes(q));
+    if (!list.length) { $("memList").innerHTML = `<div class="mem-empty">${q ? `Nothing matches “${esc(memQuery.trim())}”.` : "No memories yet."}</div>`; return; }
+    const groups = {};
+    list.forEach((m) => (groups[m.type] = groups[m.type] || []).push(m));
+    const rank = (t) => (TYPE_ORDER.indexOf(t) + 1) || 99;
+    const types = Object.keys(groups).sort((a, b) => rank(a) - rank(b) || a.localeCompare(b));
     const today = localStamp().at.slice(0, 10);
-    $("memList").innerHTML = list.length ? list.map((m) => {
-      const body = esc(m.body)
-        .replace(/\b(Why:|How to apply:)/g, "<br><b>$1</b>")
-        .replace(/`([^`\n]+)`/g, "<code>$1</code>");
-      return `<details class="mem"><summary>
-          <span class="slug">${esc(m.slug)}</span>
-          <span class="meta"><span class="tag ${m.updated === today ? "new" : ""}">${esc(m.type)}</span>${esc(m.authors)}${m.updated ? " · " + esc(m.updated) : ""}</span>
-        </summary><div class="body">${body}</div></details>`;
-    }).join("") : `<div style="color:var(--faint);font-size:14px;padding:8px 2px">Nothing matches.</div>`;
+    $("memList").innerHTML = types.map((t) => `<details class="mem-group" data-type="${esc(t)}" ${q || memOpen.has(t) ? "open" : ""}>
+        <summary>${CHEV}<span>${esc(TYPE_LABEL[t] || t[0].toUpperCase() + t.slice(1))}</span><span class="count">${groups[t].length}</span></summary>
+        ${groups[t].map((m) => `<details class="mem" data-slug="${esc(m.slug)}" ${memItemsOpen.has(m.slug) ? "open" : ""}><summary>
+            <span class="mem-title">${esc(memTitle(m))}</span>
+            <span class="meta">${m.updated === today ? '<span class="new">today</span>' : esc(m.updated)}${m.authors ? ` by ${esc(m.authors)}` : ""}</span>
+          </summary><div class="body fmt">${formatBody(m.body.replace(/\s*\b(Why:|How to apply:)\s*/g, "\n\n**$1** "))}</div></details>`).join("")}
+      </details>`).join("");
   }
 
   const TABS = () => [
     { id: "all", label: "Everything", f: () => true },
     { id: "me", label: "To me", f: (m) => m.to === me },
+    ...(chan() === "humans" ? [{ id: "asks", label: "Asks", f: (m) => m.kind === "ask" }] : []),
     { id: "broadcast", label: "Team-wide", f: (m) => m.to === "all" },
     ...TEAM.filter((t) => t !== me).map((t) => ({ id: t, label: `With ${NAMES[t]}`, f: (m) => (m.from === t && m.to === me) || (m.from === me && m.to === t) || (m.from === t && m.to === "all") })),
   ].map((t) => ({ ...t, f: (m) => channelOf(m) === chan() && t.f(m) })); // filters apply within the current channel
+  const curTab = () => TABS().find((x) => x.id === tab) || TABS()[0];
 
   function renderTabs() {
+    const cur = curTab().id;
     $("feedTabs").innerHTML = TABS().map((t) => {
       const n = unreadCount(t.f);
-      return `<button class="tab" role="tab" type="button" data-tab="${t.id}" aria-selected="${tab === t.id}">${esc(t.label)}${n ? `<span class="badge">${n}</span>` : ""}</button>`;
+      return `<button class="tab" role="tab" type="button" data-tab="${t.id}" aria-selected="${cur === t.id}">${esc(t.label)}${n ? `<span class="badge">${n}</span>` : ""}</button>`;
     }).join("");
     updateTitle();
   }
 
+  const headHtml = (m) => {
+    const toWho = TEAM.includes(m.to) || m.to === "all" ? m.to : "x";
+    const toTxt = m.to === me ? "you" : m.to === "all" ? "everyone" : NAMES[m.to] || m.to;
+    return `<span class="name c-${esc(m.from)}">${esc(NAMES[m.from] || m.from)}</span>${sigHtml(m)}<span class="to c-${toWho}">${m.kind === "answer" ? "replied to" : "to"} <b>${esc(toTxt)}</b></span><span class="sep" aria-hidden="true">·</span>${timeEl(m.at, "feed")}`;
+  };
+  const replyHtml = (a) => `<div class="reply ${isUnread(a) ? "unread" : ""}" id="m-${esc(a.id)}">${avatar(a.from, true)}<div>
+      <div class="msg-head"><span class="name c-${esc(a.from)}">${esc(NAMES[a.from] || a.from)}</span>${sigHtml(a)}<span class="sep" aria-hidden="true">·</span>${timeEl(a.at, "feed")}</div>
+      ${clampBox("f:" + a.id, formatBody(bodyOf(a)), 3)}</div></div>`;
+
   function renderFeed(keepPosition) {
     const feed = $("feed");
-    const t = TABS().find((x) => x.id === tab) || TABS()[0];
+    const t = curTab();
     const list = messages.filter(t.f);
     if (!list.length) {
-      feedInner.innerHTML = `<div class="empty">${chan() === "humans"
-        ? "Nothing for the humans here yet.<br><small>Questions agents need a person to answer, and anything you write here, show up in this tab.</small>"
+      feedInner.innerHTML = `<div class="empty">${t.id === "asks" ? "No questions for the humans yet."
+        : chan() === "humans" ? "Nothing for the humans here yet.<br><small>Questions agents need a person to answer, and anything you write here, show up in this tab.</small>"
         : "No agent messages here yet."}</div>`;
       delete feedInner.dataset.last;
       return;
     }
+    // Answers sit under the ask they reply to (a thread) instead of as separate messages further down.
+    const inList = new Set(list.map((m) => m.id));
+    const nested = (m) => m.kind === "answer" && m.re && inList.has(m.re) && (byId(m.re) || {}).kind === "ask";
     let html = "", lastDay = null, prev = null;
     for (const m of list) {
+      if (nested(m)) continue;
       const day = dayLabel(m.at);
       if (day !== lastDay) { html += `<div class="day">${esc(day)}</div>`; lastDay = day; prev = null; }
       const d = parseAt(m.at), pd = prev && parseAt(prev.at);
       const cont = prev && prev.from === m.from && prev.to === m.to && !m.kind && !prev.kind && d && pd && d - pd < 5 * 60 * 1000;
-      const unread = freshThisSession.has(m.id) || (relevant(m) && !seen.has(m.id));
-      const toWho = TEAM.includes(m.to) || m.to === "all" ? m.to : "x";
       const isAsk = m.kind === "ask", openMine = isAsk && askOpenFor(m, me);
       const answers = isAsk ? answersTo(m.id) : [];
-      const askedOf = m.to === "all" ? TEAM.filter((t) => t !== m.from) : [m.to];
-      const allAnswered = isAsk && askedOf.every((w) => answers.some((a) => a.from === w));
+      const askedOf = m.to === "all" ? TEAM.filter((x) => x !== m.from) : [m.to];
+      const waiting = askedOf.filter((w) => !answers.some((a) => a.from === w));
+      const allAnswered = isAsk && !waiting.length;
       const orig = m.kind === "answer" ? byId(m.re) : null;
       const tag = !isAsk ? "" : openMine ? '<span class="ask-tag">Needs your answer</span>'
-        : allAnswered ? '<span class="ask-tag done">✓ Answered</span>'
-        : `<span class="ask-tag">Needs ${esc(m.to === "all" ? "everyone's" : (NAMES[m.to] || m.to) + "'s")} answer</span>`;
-      html += `<article class="msg ${cont ? "cont" : ""} ${unread ? "unread" : ""} ${isAsk ? "ask" : ""} ${openMine ? "open-for-me" : ""}" id="m-${esc(m.id)}">
+        : allAnswered ? `<span class="ask-tag done">${CHECK_ICON}Answered</span>`
+        : `<span class="ask-tag">Waiting on ${esc(waiting.map((w) => (w === me ? "you" : NAMES[w] || w)).join(" and "))}</span>`;
+      html += `<article class="msg ${cont ? "cont" : ""} ${isUnread(m) ? "unread" : ""} ${isAsk ? "ask" : ""} ${allAnswered ? "answered" : ""} ${openMine ? "open-for-me" : ""}" id="m-${esc(m.id)}">
         ${avatar(m.from)}
         <div>
-          <div class="msg-head">
-            <span class="name c-${esc(m.from)}">${esc(NAMES[m.from] || m.from)}</span>
-            ${m.via === "board" ? '<span class="human-tag" title="Written by the person on the web board, not their agent">human</span>'
-              : agentSig(m.body) ? `<span class="agent-tag c-${esc(m.from)}" title="${esc(NAMES[m.from] || m.from)}'s agent">${esc(agentSig(m.body))}</span>` : ""}
-            <span class="arrow">${m.kind === "answer" ? "↩" : "→"}</span>
-            <span class="to-pill c-${toWho}">${esc(m.to === me ? "you" : NAMES[m.to] || m.to)}</span>
-            <span class="time" title="${esc(m.at)}">${esc(clock(m.at))}</span>
-            ${tag}
-          </div>
-          ${orig ? `<div class="quote" data-jump="${esc(orig.id)}">↩ ${esc(clip(stripAgent(orig.body), 140))}</div>` : ""}
-          <div class="msg-body">${richText(agentSig(m.body) ? m.body.replace(SIG_RE, "") : m.body)}</div>
-          ${isAsk && (openMine || answers.length) ? `<div class="ask-actions">
-            ${openMine ? `<button class="btn btn-sm btn-urgent" type="button" data-answer="${esc(m.id)}">Answer</button>` : ""}
-            ${answers.length ? `<span>answered by ${answers.map((a) => `<a href="#" data-jump="${esc(a.id)}" class="c-${esc(a.from)}" style="color:var(--c)">${esc(NAMES[a.from] || a.from)}</a>`).join(", ")}</span>` : ""}
-          </div>` : ""}
+          <div class="msg-head">${headHtml(m)}${tag}</div>
+          ${orig ? `<div class="quote" data-jump="${esc(orig.id)}">Replying to ${esc(NAMES[orig.from] || orig.from)}:<span>${esc(clip(bodyOf(orig), 160))}</span></div>` : ""}
+          ${clampBox("f:" + m.id, formatBody(bodyOf(m)), isAsk && !allAnswered ? 6 : 3)}
+          ${openMine ? `<div class="ask-actions"><button class="btn btn-sm btn-urgent" type="button" data-answer="${esc(m.id)}">Answer</button></div>` : ""}
+          ${answers.length ? `<div class="replies">${answers.map(replyHtml).join("")}</div>` : ""}
         </div>
       </article>`;
       prev = m;
@@ -999,6 +1200,7 @@ a { color: var(--akshat); }
     const prevLast = feedInner.dataset.last, newLast = list[list.length - 1].id;
     feedInner.innerHTML = html;
     feedInner.dataset.last = newLast;
+    measureClamps(feedInner);
     if (!prevLast || !keepPosition) stick = true;
     if (stick) feed.scrollTop = feed.scrollHeight;
     else if (prevLast !== newLast) $("jumpBtn").classList.remove("hidden");
@@ -1006,13 +1208,13 @@ a { color: var(--akshat); }
 
   function renderComposer() {
     const opts = ["all", ...TEAM.filter((t) => t !== me)];
-    if (!opts.includes(to)) to = "all";
+    if (!opts.includes(to) && !(replyTo && byId(replyTo))) to = "all"; // an answer goes back to whoever asked, even your own agent
     $("toSelect").innerHTML = opts.map((o) => `<button type="button" class="c-${o}" data-to="${o}" aria-pressed="${to === o}">${esc(o === "all" ? "everyone" : NAMES[o])}</button>`).join("");
     const r = replyTo && byId(replyTo);
     if (replyTo && !r) replyTo = null;
     $("replyBar").classList.toggle("hidden", !r);
-    $("replyBar").innerHTML = r ? `<span>Answering <b>${esc(NAMES[r.from] || r.from)}</b>: ${esc(clip(stripAgent(r.body), 120))}</span>
-      <button class="btn btn-ghost btn-sm" type="button" data-cancel-reply aria-label="Cancel answer">✕</button>` : "";
+    $("replyBar").innerHTML = r ? `<span>Answering <b>${esc(NAMES[r.from] || r.from)}</b>: ${esc(clip(bodyOf(r), 120))}</span>
+      <button class="btn btn-ghost btn-sm" type="button" data-cancel-reply aria-label="Cancel answer">${X_ICON}</button>` : "";
     $("askToggleWrap").classList.toggle("hidden", !!r || chan() !== "humans");
     if (chan() !== "humans") $("askToggle").checked = false;
     $("toSelect").classList.toggle("hidden", !!r);
@@ -1184,9 +1386,9 @@ a { color: var(--akshat); }
       const next = nextStepFor(who);
       const last = work.find((w) => w.who === who);
       return `<article class="person c-${who}">
-        <div class="row">${avatar(who)}<div><div class="name">${esc(NAMES[who])}</div><div class="time">${s ? `status ${esc(rel(s.updated))}` : "no status yet"}</div></div>
+        <div class="row">${avatar(who)}<div><div class="name">${esc(NAMES[who])}</div><div class="time">${s ? timeEl(s.updated, "rel", "updated ") : "no status yet"}</div></div>
           ${plan ? `<span class="count">${mineDone}/${mine.length} tasks</span>` : ""}</div>
-        <div><div class="label">Working on</div><p>${s ? richText(s.body) : '<span class="muted">Hasn\'t posted a status.</span>'}</p></div>
+        <div><div class="label">Working on${etaHtml(s)}</div>${s ? `<div class="fmt" style="font-size:14px">${formatBody(s.body)}</div>` : '<p class="muted">Hasn\'t posted a status.</p>'}</div>
         <div><div class="label">Next step</div>${next
           ? `<div class="next"><p>${inlineMd(next.text)}</p><span class="phase-ref">${esc(next.phase.title)}${next.owners.includes("all") ? " · shared" : ""}</span></div>`
           : `<p class="muted">${plan ? "Nothing open in the plan." : "Waiting for the plan."}</p>`}</div>
@@ -1355,6 +1557,7 @@ a { color: var(--akshat); }
     if (view === "progress") refreshProgress();
     else if (view === "agents") { renderAgents(); loadAgents().then(scheduleAgents); }
     else { renderAsksPanel(); renderTabs(); renderComposer(); renderFeed(false); scheduleMarkRead(); }
+    requestAnimationFrame(() => measureClamps());
   }
 
   function render() {
@@ -1397,10 +1600,12 @@ a { color: var(--akshat); }
     return kind;
   }
 
-  async function saveStatus(text) {
+  async function saveStatus(text, etaMin = 0) {
     const { at } = localStamp();
     const file = `${me}.md`;
-    const content = `---\nwho: ${me}\nupdated: ${at}\n---\n${text}\n`;
+    // Same field agent.sh status --eta writes: ISO-8601 local time with offset.
+    const eta = etaMin ? `eta: ${isoWithOffset(new Date(Date.now() + etaMin * 60000))}\n` : "";
+    const content = `---\nwho: ${me}\nupdated: ${at}\n${eta}---\n${text}\n`;
     try {
       await putFile(`.agents/status/${file}`, content, `[${me}] board: status update`, statusShas[file]);
     } catch (e) {
@@ -1488,6 +1693,13 @@ a { color: var(--akshat); }
   $("replyBar").addEventListener("click", (e) => { if (e.target.closest("[data-cancel-reply]")) { replyTo = null; renderComposer(); } });
   // Answer buttons and quote/answer links, wherever they appear.
   document.addEventListener("click", (e) => {
+    const mo = e.target.closest("[data-more]");
+    if (mo) {
+      const id = mo.dataset.more, box = mo.previousElementSibling;
+      if (expanded.has(id)) { expanded.delete(id); box.classList.add("clamp"); mo.textContent = "Show more"; mo.setAttribute("aria-expanded", "false"); measureClamps(box.parentElement); }
+      else { expanded.add(id); box.classList.remove("clamp", "is-clamped"); mo.textContent = "Show less"; mo.setAttribute("aria-expanded", "true"); }
+      return;
+    }
     const a = e.target.closest("[data-answer]");
     if (a) { e.preventDefault(); startAnswer(a.dataset.answer); return; }
     const j = e.target.closest("[data-jump]");
@@ -1521,24 +1733,31 @@ a { color: var(--akshat); }
   $("board").addEventListener("click", (e) => {
     if (!e.target.closest("[data-edit-status]")) return;
     const card = e.target.closest(".status-card");
-    const current = (statuses.find((s) => s.who === me) || {}).body || "";
-    card.querySelector("p").outerHTML = `<div class="status-edit"><textarea aria-label="Your status">${esc(current)}</textarea>
-      <div class="acts"><button class="btn btn-ghost" type="button" data-cancel>Cancel</button><button class="btn btn-primary" type="button" data-save>Save</button></div></div>`;
-    e.target.closest("div").remove();
-    const ta = card.querySelector("textarea"); ta.focus(); ta.setSelectionRange(ta.value.length, ta.value.length);
-    card.querySelector("[data-cancel]").onclick = renderBoard;
+    const cur = statuses.find((s) => s.who === me) || {};
+    const etaD = parseAt(cur.eta), left = etaD ? Math.round((etaD - Date.now()) / 60000) : 0;
+    editingStatus = true;
+    card.querySelectorAll(".status-body, .more, .status-foot").forEach((x) => x.remove());
+    card.insertAdjacentHTML("beforeend", `<div class="status-edit"><textarea aria-label="Your status">${esc(cur.body || "")}</textarea>
+      <div class="eta-field"><label for="etaInput">ETA (minutes)</label><input id="etaInput" type="number" min="1" max="1440" step="5" inputmode="numeric" value="${left > 0 ? left : ""}"><span>optional</span></div>
+      <div class="acts"><button class="btn btn-ghost" type="button" data-cancel>Cancel</button><button class="btn btn-primary" type="button" data-save>Save</button></div></div>`);
+    const ta = card.querySelector("textarea"), etaIn = card.querySelector("#etaInput");
+    ta.focus(); ta.setSelectionRange(ta.value.length, ta.value.length);
+    card.querySelector("[data-cancel]").onclick = () => { editingStatus = false; renderBoard(); };
     card.querySelector("[data-save]").onclick = async (ev) => {
-      const text = ta.value.trim(); if (!text) return;
+      const text = ta.value.trim(); if (!text) { ta.focus(); return; }
+      const etaMin = etaIn.value.trim() ? Math.round(Number(etaIn.value)) : 0;
+      if (etaIn.value.trim() && !(etaMin >= 1 && etaMin <= 1440)) { showToast("ETA needs to be between 1 and 1440 minutes, or empty.", true); etaIn.focus(); return; }
       ev.target.disabled = true; ev.target.textContent = "Saving…";
-      try { await saveStatus(text); showToast("Status updated."); await load(true); }
+      try { await saveStatus(text, etaMin); editingStatus = false; showToast("Status updated."); await load(true); renderBoard(); }
       catch (err) { showToast(`Couldn't save: ${err.message}`, true); ev.target.disabled = false; ev.target.textContent = "Save"; }
     };
   });
 
-  $("memTypes").addEventListener("click", (e) => {
-    const b = e.target.closest("[data-memtype]"); if (!b) return;
-    memType = b.dataset.memtype; renderMemories();
-  });
+  $("memList").addEventListener("toggle", (e) => {
+    const d = e.target;
+    if (d.matches(".mem-group")) { if (memQuery.trim()) return; d.open ? memOpen.add(d.dataset.type) : memOpen.delete(d.dataset.type); store.set("aka.memOpen", [...memOpen]); }
+    else if (d.matches(".mem")) d.open ? memItemsOpen.add(d.dataset.slug) : memItemsOpen.delete(d.dataset.slug);
+  }, true);
   $("memSearch").addEventListener("input", (e) => { memQuery = e.target.value; renderMemories(); });
 
   document.querySelector(".mobile-nav").addEventListener("click", (e) => {
@@ -1546,6 +1765,7 @@ a { color: var(--akshat); }
     if (b.dataset.view) { $("main").dataset.pane = "feed"; setView(b.dataset.view); return; }
     $("main").dataset.pane = b.dataset.pane;
     setView(isFeedView() ? view : "humans");
+    requestAnimationFrame(() => measureClamps());
   });
   document.querySelector(".views").addEventListener("click", (e) => {
     const b = e.target.closest("[data-view]"); if (b) setView(b.dataset.view);
@@ -1605,7 +1825,11 @@ a { color: var(--akshat); }
     scheduleAgents();
     schedule();
   });
-  setInterval(() => { if (token && !document.hidden) { renderBoard(); if (view === "progress") renderProgress(); if (view === "agents") renderAgents(); } }, 60000); // keep "5m ago" fresh
+  setInterval(() => { if (token && !document.hidden) { renderBoard(); refreshTimes(); if (view === "progress") renderProgress(); if (view === "agents") renderAgents(); } }, 60000); // keep "5 min ago" and ETAs fresh
+  window.addEventListener("hashchange", () => { const v = location.hash.slice(1); if (token && v !== view) setView(VIEWS.includes(v) ? v : "humans"); });
+  let resizeTimer = null;
+  window.addEventListener("resize", () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(() => measureClamps(), 150); });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => measureClamps());
 
   // ---------- boot ----------
   applyTheme();
