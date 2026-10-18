@@ -626,6 +626,91 @@ tr.is-hold .code { color: var(--hold); }
 .threads-empty { color: var(--board-ink-2); }
 @media (min-width: 900px) { .inbox .list-pane, .inbox.reading .list-pane { background: var(--board); border-right-color: var(--board-line); } }
 @media (max-width: 899px) { .inbox .list-pane { margin: -16px -16px 0; padding: 16px; min-height: calc(100dvh - var(--top)); } }
+
+/* ---------- HUMAN TASKS (.agents/tasks/*.md: real-world jobs only a person can do) ---------- */
+.tabbar { grid-template-columns: repeat(5, 1fr); }
+.tk-wrap { max-width: 960px; }
+.tk-panel { border-radius: var(--r); border: 1px solid var(--line); background: var(--surface); margin-bottom: 16px; overflow: hidden; }
+.tk-panel > header { display: flex; align-items: center; gap: 10px; padding: 12px 16px; }
+.tk-panel > header h2 { font-size: 16px; }
+.tk-panel > header .time { margin-left: auto; }
+.tk-list { list-style: none; margin: 0; padding: 0; }
+.tk { border-top: 1px solid var(--line); }
+.tk-main { display: grid; grid-template-columns: 18px minmax(0, 1fr); gap: 4px 12px; align-items: start; padding: 12px 16px; }
+.tk-box { width: 18px; height: 18px; border-radius: 4px; border: 1.5px solid var(--line-2); display: grid; place-items: center; margin-top: 2px; color: var(--bg); }
+.tk.done .tk-box { background: var(--go-ink); border-color: var(--go-ink); }
+.tk-text { min-width: 0; }
+.tk-t { font-weight: 700; font-size: 15px; line-height: 1.4; overflow-wrap: anywhere; }
+.tk.done .tk-t { font-weight: 600; color: var(--ink-2); }
+.tk-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; color: var(--ink-3); font-size: 13px; margin-top: 4px; }
+.tk-meta b { color: var(--ink-2); }
+.tk-meta a { display: inline-flex; align-items: center; gap: 4px; min-width: 0; text-decoration: none; }
+.tk-meta a code { color: var(--amber-ink); font-size: 12.5px; }
+.tk-meta a:hover code { text-decoration: underline; text-underline-offset: 3px; }
+.tk-acts { grid-column: 2; display: flex; gap: 6px; margin-top: 6px; }
+.tk-res { grid-column: 2; margin-top: 6px; padding: 8px 12px; background: var(--raise); border-left: 2px solid var(--go-ink); border-radius: 0 var(--r-sm) var(--r-sm) 0; font-size: 14px; color: var(--ink); overflow-wrap: anywhere; }
+.tk-res .label { margin: 0 0 2px; font-size: 12px; color: var(--ink-3); }
+.tk-form { padding: 0 16px 14px 46px; display: grid; gap: 8px; }
+.tk-form .row { display: flex; align-items: center; gap: 8px; }
+.tk-form .row .kbd { margin-left: auto; }
+.tk-empty { display: flex; align-items: center; gap: 8px; margin: 0; padding: 0 16px 14px; color: var(--ink-3); font-size: 14px; }
+.tk-empty svg { color: var(--go-ink); }
+.tk-donebox > summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: 10px; padding: 12px 16px; }
+.tk-donebox > summary::-webkit-details-marker { display: none; }
+.tk-donebox > summary h2 { font-size: 16px; color: var(--ink-2); }
+.tk-donebox > summary .caret { margin-left: auto; color: var(--ink-3); display: inline-flex; transition: transform .15s; }
+.tk-donebox[open] > summary .caret { transform: rotate(180deg); }
+.tk-add { padding: 16px; display: grid; gap: 16px; border-top: 1px solid var(--line); }
+.tk-add .to-row { display: flex; flex-wrap: wrap; gap: 6px; }
+.tk-add .pair { display: grid; gap: 16px; }
+.tk-add .row { display: flex; align-items: center; gap: 8px; }
+@media (min-width: 760px) {
+  .tk-main { grid-template-columns: 18px minmax(0, 1fr) auto; }
+  .tk-acts { grid-column: auto; margin-top: 0; }
+  .tk-res { grid-column: 2 / -1; }
+  .tk-add .pair { grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); }
+}
+@media (max-width: 759px) { .tk-form { padding-left: 16px; } }
+/* five tabs: between 900 and 1179px the sync label and your name give the tabs room (as below 900) */
+@media (min-width: 900px) and (max-width: 1179px) { .topbar .sync span { display: none; } .me-btn .nm { display: none; } .topbar { gap: 12px; } .topnav { margin-left: 0; } .topnav button { padding: 0 10px; } }
+.tk-panel > header h3, .tk-donebox > summary h3 { font-size: 16px; }
+.tk-donebox > summary h3 { color: var(--ink-2); }
+.tk-kind { max-width: 360px; margin: 0; }
+.tk-wrap .sec-h { flex-wrap: wrap; gap: 2px 10px; align-items: baseline; }
+.tk-wrap .sec-h h2 { white-space: nowrap; }
+.aq-board .board-h h3 { font-size: 18px; color: var(--board-ink); display: flex; align-items: baseline; gap: 10px; }
+.aq-board .board-h h3 [lang="hi"] { font-size: 15px; color: var(--board-ink-2); }
+.aq { list-style: none; margin: 0; padding: 0; }
+.aq > li { display: grid; grid-template-columns: 76px minmax(0, 1fr) 32px 150px; gap: 4px 12px; align-items: start; padding: 11px 16px; border-bottom: 1px solid var(--board-line); scroll-margin-top: calc(var(--top) + 16px); }
+.aq > li:last-child { border-bottom: 0; }
+.aq .code { padding-top: 2px; }
+.aq > li.is-blocked .code { color: var(--led); }
+.aq > li.is-queued .code, .aq > li.is-done .code { color: var(--led-2); }
+.aq > li .st { padding-top: 2px; }
+.aq-t { color: var(--board-ink); font-weight: 600; font-size: 14.5px; line-height: 1.4; overflow-wrap: anywhere; }
+.aq > li.is-done .aq-t, .aq > li.is-queued .aq-t { color: #c3c7ce; font-weight: 500; }
+.aq-m { display: flex; flex-wrap: wrap; gap: 4px 14px; margin-top: 4px; color: var(--board-ink-2); font-size: 13px; }
+.aq-m b { color: var(--board-ink); }
+.aq-m a { color: var(--led); text-decoration: none; }
+.aq-m a:hover { text-decoration: underline; text-underline-offset: 3px; }
+.aq-m code { background: var(--board-2); border-color: var(--board-line); color: var(--led); font-size: 12.5px; }
+.aq-m .time { color: var(--board-ink-2); }
+.aq-blk { color: var(--led); }
+.aq-res { margin-top: 6px; padding: 6px 10px; border-left: 2px solid var(--go); background: var(--board-2); color: var(--board-ink); font-size: 13.5px; border-radius: 0 4px 4px 0; overflow-wrap: anywhere; }
+.aq-done > summary { list-style: none; cursor: pointer; padding: 10px 16px; border-top: 1px solid var(--board-line); }
+.aq-done > summary::-webkit-details-marker { display: none; }
+.aq-done > summary .count { background: var(--board-line); border-color: var(--board-line); color: var(--board-ink); }
+.aq-done > summary .caret { margin-left: auto; color: var(--board-ink-2); display: inline-flex; transition: transform .15s; }
+.aq-done[open] > summary .caret { transform: rotate(180deg); }
+.aq-board .board-empty code { background: var(--board-2); border-color: var(--board-line); color: var(--board-ink-2); }
+@media (prefers-reduced-motion: no-preference) {
+  .flash { animation: flash 1.4s ease-out; }
+  @keyframes flash { 0%, 30% { background: color-mix(in srgb, var(--led) 16%, transparent); } 100% { background: transparent; } }
+}
+@media (max-width: 759px) {
+  .aq > li { grid-template-columns: auto minmax(0, 1fr); grid-template-areas: "code t" "own st"; gap: 6px 12px; padding: 11px 14px; }
+  .aq > li > .code { grid-area: code; } .aq > li > .aq-text { grid-area: t; } .aq > li > .owner { grid-area: own; } .aq > li > .st { grid-area: st; }
+}
 </style>
 </head>
 <body>
@@ -690,6 +775,7 @@ tr.is-hold .code { color: var(--hold); }
     </section>
     <section class="view hidden" id="v-progress" aria-label="Plan"></section>
     <section class="view hidden" id="v-memory" aria-label="Team memory"></section>
+    <section class="view hidden" id="v-tasks" aria-label="Tasks"></section>
   </main>
 
   <nav class="tabbar" id="tabbar" aria-label="Sections"></nav>
@@ -754,8 +840,11 @@ tr.is-hold .code { color: var(--hold); }
   const memOpen = new Set();
   // progress
   let pgPhase = null;
+  // human tasks
+  let tasks = [], taskAdding = false, taskAddOwner = null;
+  const taskOpen = new Set();
 
-  const VIEWS = ["today", "inbox", "progress", "memory"];
+  const VIEWS = ["today", "inbox", "tasks", "progress", "memory"];
   let view = "today";
 
   const $ = (id) => document.getElementById(id);
@@ -770,6 +859,7 @@ tr.is-hold .code { color: var(--hold); }
     inbox: I('<path d="M4.5 5.5h15a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H10l-4.5 3.5v-3.5h-1a1 1 0 0 1-1-1v-9a1 1 0 0 1 1-1z"/>'),
     progress: I('<path d="M4 6h10M4 12h16M4 18h7"/><circle cx="17" cy="6" r="2"/><circle cx="14" cy="18" r="2"/>'),
     memory: I('<path d="M5 4.5h11a3 3 0 0 1 3 3v12H8a3 3 0 0 1-3-3z"/><path d="M5 16.5a3 3 0 0 1 3-3h11"/>'),
+    tasks: I('<rect x="2.5" y="8" width="19" height="8" rx="1.5"/><path d="M6.5 8v3M10.5 8v4.5M14.5 8v3M18.5 8v4.5"/>'),
     agents: I('<circle cx="12" cy="5.5" r="2.2"/><circle cx="5.5" cy="18.5" r="2.2"/><circle cx="18.5" cy="18.5" r="2.2"/><path d="M12 7.7v4.3M12 12l-5 4.6M12 12l5 4.6"/>'),
     clock: I('<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>', 15),
     check: I('<path d="m5 12.5 4.5 4.5L19 7.5"/>', 16),
@@ -778,7 +868,7 @@ tr.is-hold .code { color: var(--hold); }
     caret: I('<path d="m8 10 4 4 4-4"/>', 16),
   };
   const NAV = [
-    { id: "today", label: "Board" }, { id: "inbox", label: "Talk" },
+    { id: "today", label: "Board" }, { id: "inbox", label: "Talk" }, { id: "tasks", label: "Tasks" },
     { id: "progress", label: "Plan" }, { id: "memory", label: "Memory" },
   ];
 
@@ -806,7 +896,7 @@ tr.is-hold .code { color: var(--hold); }
     const text = b64decode(data.content); blobCache.set(sha, text); return text;
   }
   function saveBlobCache() {
-    const live = new Set([...messages, ...statuses, ...memories].map((x) => x.sha).concat(planSha || []));
+    const live = new Set([...messages, ...statuses, ...memories, ...tasks].map((x) => x.sha).concat(planSha || []));
     const obj = {}; for (const [k, v] of blobCache) if (live.has(k)) obj[k] = v;
     store.set("aka.blobs", obj);
   }
@@ -842,7 +932,7 @@ tr.is-hold .code { color: var(--hold); }
       const agentsDir = root.tree.find((e) => e.path === ".agents" && e.type === "tree");
       if (!agentsDir) throw new Error("No .agents folder on main");
       const { data: agents } = await gh(`/git/trees/${agentsDir.sha}`);
-      const [bus, status, memory] = await Promise.all(["bus", "status", "memory"].map((d) => listDir(agents.tree, d)));
+      const [bus, status, memory, taskDir] = await Promise.all(["bus", "status", "memory", "tasks"].map((d) => listDir(agents.tree, d)));
       const read = (entries) => pool(entries, 8, async (e) => ({ file: e.path, sha: e.sha, ...parse(await blob(e.sha)) }));
       const readPlan = async () => {
         const docs = root.tree.find((e) => e.path === "docs" && e.type === "tree");
@@ -851,7 +941,8 @@ tr.is-hold .code { color: var(--hold); }
         const f = d.tree.find((e) => e.path === PLAN_FILE && e.type === "blob");
         return f ? { sha: f.sha, text: await blob(f.sha) } : null;
       };
-      const [m, s, mem, planFile] = await Promise.all([read(bus), read(status), read(memory), readPlan().catch(() => null)]);
+      const [m, s, mem, tk, planFile] = await Promise.all([read(bus), read(status), read(memory), read(taskDir), readPlan().catch(() => null)]);
+      tasks = tk.map((x) => taskOf(x.file, x.sha, x.meta, x.body)).sort((a, b) => a.file.localeCompare(b.file));
       plan = planFile ? parsePlan(planFile.text) : null;
       planSha = planFile ? planFile.sha : null;
       commitsDirty = true;
@@ -1230,7 +1321,7 @@ tr.is-hold .code { color: var(--hold); }
 
   // ---------- nav ----------
   function navCounts() {
-    return { today: openAsks().length, inbox: unreadCount() };
+    return { today: openAsks().length, inbox: unreadCount(), tasks: openTasksFor(me).length };
   }
   function renderNav() {
     const c = navCounts();
@@ -1894,6 +1985,204 @@ tr.is-hold .code { color: var(--hold); }
     $("memIndex").innerHTML = index;
   }
 
+  // ---------- TASKS (human tasks + agent tasks) ----------
+  // One file per task: .agents/tasks/<stamp>-<owner>-<slug>.md. Front matter: kind (human|agent; missing = human),
+  // owner (always a human, or all), status, created, created_by; optional due, after, blocked_by, context;
+  // started_at once an agent task runs; answer/done_at/done_by once done. scripts/agent.sh task writes the same format.
+  //   human: a real-world job only a person can do (a measurement, a site photo, reading a sign). open | done
+  //   agent: queued work the owner's agent runs, in `after` order. open | running | blocked | done
+  const TASK_KEYS = ["kind", "owner", "status", "created", "created_by", "due", "after", "blocked_by", "context", "started_at", "answer", "done_at", "done_by"];
+  let taskDraft = { kind: "human", text: "", ctx: "", due: "", after: null, blk: "" }, doneOpen = false, agentDoneOpen = false;
+  const taskAnswers = new Map();
+  function taskOf(file, sha, meta, body) {
+    const lc = (x) => String(x || "").trim().toLowerCase();
+    const status = lc(meta.status) || "open";
+    return { file, sha, meta, body, kind: lc(meta.kind) === "agent" ? "agent" : "human", owner: lc(meta.owner) || "all", status, done: status === "done",
+      created: meta.created || "", by: lc(meta.created_by), due: meta.due || "", after: meta.after || "", blockedBy: meta.blocked_by || "",
+      context: meta.context || "", startedAt: meta.started_at || "", answer: meta.answer || "", doneAt: meta.done_at || "", doneBy: lc(meta.done_by) };
+  }
+  // Front matter in a fixed key order (unknown keys kept after), one line per value, then the task text.
+  function taskText(meta, body) {
+    const keys = TASK_KEYS.concat(Object.keys(meta).filter((k) => !TASK_KEYS.includes(k))).filter((k) => meta[k] !== undefined && meta[k] !== null && String(meta[k]).trim() !== "");
+    return `---\n${keys.map((k) => `${k}: ${String(meta[k]).replace(/\s*[\r\n]+\s*/g, " ").trim()}`).join("\n")}\n---\n${String(body).trim()}\n`;
+  }
+  function taskDoneMeta(meta, answer, who, at) { return { ...meta, status: "done", answer, done_at: at, done_by: who }; }
+  // Same slug as agent.sh: lowercase, non-alphanumerics to dashes, first 40 chars, drop the cut-off last word.
+  function taskSlug(text) {
+    const s = String(text).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-/, "").slice(0, 40);
+    return s.replace(/-[^-]*$/, "").replace(/-$/, "") || "task";
+  }
+  // An owner's agent queue: every task follows the one named in its `after` (when that is in the list), otherwise
+  // creation order. Cycles and missing predecessors fall back to creation order.
+  function queueOrder(list) {
+    const byFile = new Map(list.map((t) => [t.file, t])), out = [], placed = new Set(), visiting = new Set();
+    const place = (t) => {
+      if (placed.has(t.file) || visiting.has(t.file)) return;
+      visiting.add(t.file);
+      const prev = t.after && byFile.get(t.after);
+      if (prev) place(prev);
+      visiting.delete(t.file); placed.add(t.file); out.push(t);
+    };
+    list.slice().sort((a, b) => a.file.localeCompare(b.file)).forEach(place);
+    return out;
+  }
+  // What an agent task's lamp says. A blocker that is done no longer blocks; the first unblocked open task is UP NEXT.
+  function agentTaskState(t, all, isNext) {
+    if (t.done) return { key: "done", cls: "done", txt: "DONE" };
+    if (t.status === "running") return { key: "running", cls: "go", txt: "RUNNING" };
+    const blocker = t.blockedBy && all.find((x) => x.file === t.blockedBy);
+    if ((blocker && !blocker.done) || (t.status === "blocked" && !t.blockedBy)) return { key: "blocked", cls: "blocked", txt: "BLOCKED", blocker };
+    return isNext ? { key: "next", cls: "wait", txt: "UP NEXT" } : { key: "queued", cls: "idle", txt: "QUEUED" };
+  }
+  // Open agent tasks of one owner in queue order, with their queue codes (KRN-Q1...) and lamps.
+  function agentQueue(owner, all) {
+    const q = queueOrder(all.filter((t) => t.kind === "agent" && !t.done && t.owner === owner));
+    const busy = q.some((t) => t.status === "running");
+    let nextGiven = busy;
+    return q.map((t, i) => {
+      const pre = agentTaskState(t, all, false);
+      const isNext = !nextGiven && pre.key === "queued";
+      if (isNext) nextGiven = true;
+      return { t, code: `${CODE[owner] || up(owner).slice(0, 3)}-Q${i + 1}`, state: isNext ? agentTaskState(t, all, true) : pre };
+    });
+  }
+  const humanTasks = () => tasks.filter((t) => t.kind === "human");
+  const agentTasks = () => tasks.filter((t) => t.kind === "agent");
+  const openTasksFor = (who) => humanTasks().filter((t) => !t.done && (t.owner === who || t.owner === "all"));
+  const taskOwnerName = (o) => (o === "all" ? "Everyone" : name(o));
+  const ownerRank = (o) => (o === me ? -2 : o === "all" ? -1 : TEAM.includes(o) ? TEAM.indexOf(o) : 99);
+  const byOwner = (a, b) => ownerRank(a) - ownerRank(b) || a.localeCompare(b);
+  const taskDomId = (file) => "task-" + file.replace(/[^\w-]/g, "_");
+  function contextLink(c) {
+    const url = /^https?:\/\//i.test(c) ? c : `https://github.com/${OWNER}/${REPO}/blob/${BRANCH}/${c.replace(/^\.?\//, "").split("/").map(encodeURIComponent).join("/")}`;
+    return `<a href="${esc(url)}" target="_blank" rel="noopener noreferrer" title="${esc(c)}"><code>${esc(c.replace(/\/+$/, "").split("/").pop())}</code></a>`;
+  }
+  const jumpLink = (t, label) => `<a href="#tasks" data-task-jump="${esc(t.file)}" title="${esc(flat(t.body))}">${esc(label)}</a>`;
+  function dueHtml(due) {
+    const d = /^\d{4}-\d{2}-\d{2}$/.test(due) ? new Date(`${due}T23:59:59`) : parseAt(due);
+    if (!d) return `<span class="tag wait">Due ${esc(due)}</span>`;
+    const day = d.toLocaleDateString(undefined, { day: "numeric", month: "short" });
+    return `<span class="tag wait" title="${esc(exact(d))}">${d < Date.now() ? `Overdue since ${esc(day)}` : `Due ${esc(day)}`}</span>`;
+  }
+  // ---- human task rows (shell panels) ----
+  function taskRow(t) {
+    const ctx = t.context ? `<span>Context ${contextLink(t.context)}</span>` : "";
+    const blocks = agentTasks().filter((a) => !a.done && a.blockedBy === t.file);
+    const unblocks = !t.done && blocks.length ? `<span>Unblocks ${blocks.map((a) => jumpLink(a, clip(flat(a.body), 48))).join(", ")}</span>` : "";
+    if (t.done) {
+      return `<li class="tk done" id="${taskDomId(t.file)}" data-task="${esc(t.file)}"><div class="tk-main"><span class="tk-box" role="img" aria-label="Done">${ICON.checkSm}</span>
+        <div class="tk-text"><div class="tk-t">${esc(flat(t.body))}</div>
+          <div class="tk-meta"><span>For <b>${esc(taskOwnerName(t.owner))}</b></span><span>Done${t.doneBy ? ` by <b>${esc(t.doneBy === me ? "you" : name(t.doneBy))}</b>` : ""} ${t.doneAt ? timeEl(t.doneAt) : ""}</span>${ctx}</div></div>
+        ${t.answer ? `<div class="tk-res"><div class="label">Result</div>${inline(t.answer)}</div>` : ""}</div></li>`;
+    }
+    const open = taskOpen.has(t.file), mine = t.owner === me || t.owner === "all";
+    const fid = `tka-${t.file}`;
+    return `<li class="tk" id="${taskDomId(t.file)}" data-task="${esc(t.file)}">
+      <div class="tk-main"><span class="tk-box" role="img" aria-label="Open"></span>
+        <div class="tk-text"><div class="tk-t">${esc(flat(t.body))}</div>
+          <div class="tk-meta"><span>Added${t.by ? ` by <b>${esc(t.by === me ? "you" : name(t.by))}</b>` : ""} ${t.created ? timeEl(t.created) : ""}</span>${t.due ? dueHtml(t.due) : ""}${ctx}${unblocks}</div></div>
+        <div class="tk-acts"><button class="btn ${mine ? "btn-primary" : ""} btn-sm" type="button" data-task-done-open="${esc(t.file)}" aria-expanded="${open}">${open ? "Close" : "Mark done"}</button></div>
+      </div>
+      <form class="tk-form ${open ? "" : "hidden"}" data-task-form="${esc(t.file)}">
+        <label class="label" for="${esc(fid)}">What did you find?</label>
+        <textarea class="field" id="${esc(fid)}" data-task-answer="${esc(t.file)}" rows="2" placeholder="The number, the text on the sign, or where the photos are">${esc(taskAnswers.get(t.file) || "")}</textarea>
+        <div class="row"><button class="btn btn-primary btn-sm" type="submit">Save and mark done</button><button class="btn btn-quiet btn-sm" type="button" data-task-done-open="${esc(t.file)}">Cancel</button><span class="kbd">Ctrl + Enter</span></div>
+      </form>
+    </li>`;
+  }
+  // ---- agent task rows (the queue board) ----
+  function agentRow({ t, code, state }) {
+    const all = tasks, prev = t.after && all.find((x) => x.file === t.after);
+    const prevCode = prev && !prev.done ? (agentQueue(prev.owner, all).find((r) => r.t === prev) || {}).code : "";
+    const meta = [
+      state.key === "running" && t.startedAt ? `<span>Started ${timeEl(t.startedAt)}</span>` : "",
+      state.key === "done" ? `<span>Done${t.doneBy ? ` by <b>${esc(t.doneBy === me ? "you" : name(t.doneBy))}</b>` : ""} ${t.doneAt ? timeEl(t.doneAt) : ""}</span>` : "",
+      prevCode ? `<span>After ${jumpLink(prev, prevCode)}</span>` : "",
+      state.key === "blocked" ? `<span class="aq-blk">Blocked by ${state.blocker ? `human task ${jumpLink(state.blocker, clip(flat(state.blocker.body), 60))}` : "something outside the board"}</span>` : "",
+      t.context ? `<span>Context ${contextLink(t.context)}</span>` : "",
+    ].filter(Boolean).join("");
+    return `<li class="is-${state.key}" id="${taskDomId(t.file)}" data-task="${esc(t.file)}" data-state="${state.key}">
+      <span class="code">${esc(code)}</span>
+      <div class="aq-text"><div class="aq-t">${esc(flat(t.body))}</div>${meta ? `<div class="aq-m">${meta}</div>` : ""}${t.done && t.answer ? `<div class="aq-res">${inline(t.answer)}</div>` : ""}</div>
+      <span class="owner" title="${esc(taskOwnerName(t.owner))}">${avatar(t.owner, "sm")}</span>
+      <span class="st ${state.cls}"><i aria-hidden="true"></i>${esc(state.key === "done" && t.doneAt ? `DONE ${clock(t.doneAt)}` : state.txt)}</span>
+    </li>`;
+  }
+  function addFormHtml() {
+    const d = taskDraft, agent = d.kind === "agent", owner = taskAddOwner || me;
+    const q = agent ? agentQueue(owner, tasks) : [];
+    if (agent && (d.after === null || (d.after && !q.some((r) => r.t.file === d.after)))) d.after = q.length ? q[q.length - 1].t.file : "";
+    const openHuman = humanTasks().filter((t) => !t.done);
+    return `<form class="tk-panel" id="taskAddForm"><header><h2>New task</h2></header><div class="tk-add">
+        <div class="seg tk-kind" role="group" aria-label="Kind of task">
+          <button type="button" data-task-kind="human" aria-pressed="${!agent}">Human task</button><button type="button" data-task-kind="agent" aria-pressed="${agent}">Agent task</button></div>
+        <p class="help" style="margin:-8px 0 0">${agent ? "Queued work an agent runs for its owner. It waits its turn after the task you pick below." : "A real-world job only a person can do: a measurement, a site photo, reading a sign."}</p>
+        <div><span class="label" id="tkForL">${agent ? "Whose agent runs it" : "For"}</span><div class="to-row" role="group" aria-labelledby="tkForL">${[...TEAM, "all"].map((o) => `<button class="chip" type="button" data-task-owner="${o}" aria-pressed="${owner === o}">${esc(taskOwnerName(o))}${o === me ? " (you)" : ""}</button>`).join("")}</div></div>
+        <div><label class="label" for="tkText">What needs doing</label><textarea class="field" id="tkText" rows="2" placeholder="${agent ? "Rebuild the ... per its dossier, then re-review and merge" : "Measure the door width of ..."}">${esc(d.text)}</textarea></div>
+        <div class="pair"><div><label class="label" for="tkCtx">Context (optional)</label><input class="field" id="tkCtx" value="${esc(d.ctx)}" placeholder="docs/world/landmarks-dept/dossiers/..." spellcheck="false" autocapitalize="off"></div>
+          ${agent ? `<div><label class="label" for="tkAfter">Runs after</label><select class="field" id="tkAfter"><option value="">Front of the queue</option>${q.map((r) => `<option value="${esc(r.t.file)}" ${d.after === r.t.file ? "selected" : ""}>${esc(r.code)}: ${esc(clip(flat(r.t.body), 60))}</option>`).join("")}</select></div>`
+            : `<div><label class="label" for="tkDue">Due (optional)</label><input class="field" id="tkDue" type="date" value="${esc(d.due)}"></div>`}</div>
+        ${agent ? `<div><label class="label" for="tkBlk">Blocked by a human task (optional)</label><select class="field" id="tkBlk"><option value="">Not blocked</option>${openHuman.map((t) => `<option value="${esc(t.file)}" ${d.blk === t.file ? "selected" : ""}>${esc(taskOwnerName(t.owner))}: ${esc(clip(flat(t.body), 70))}</option>`).join("")}</select></div>` : ""}
+        <div class="row"><button class="btn btn-primary" type="submit">${agent ? "Queue agent task" : "Add human task"}</button><button class="btn btn-quiet" type="button" data-task-add-cancel>Cancel</button></div>
+      </div></form>`;
+  }
+  function renderTasks(force = false) {
+    const v = $("v-tasks");
+    if (!force) { const ae = document.activeElement; if (ae && ae.closest && ae.closest("#v-tasks form") && (ae.value || ae.matches("select"))) return; }
+    const hum = humanTasks(), open = hum.filter((t) => !t.done), done = hum.filter((t) => t.done).sort((a, b) => String(b.doneAt).localeCompare(String(a.doneAt)));
+    const groups = [...new Set(open.map((t) => t.owner))].sort(byOwner).map((o) => {
+      const ts = open.filter((t) => t.owner === o);
+      return `<section class="tk-panel" aria-labelledby="tkh-${esc(o)}" data-task-group="${esc(o)}">
+        <header>${avatar(o, "sm")}<h3 id="tkh-${esc(o)}">${o === me ? "For you" : o === "all" ? "For everyone" : `For ${esc(name(o))}`}</h3><span class="count">${ts.length}</span></header>
+        <ol class="tk-list">${ts.map(taskRow).join("")}</ol></section>`;
+    }).join("");
+    const empty = !open.length ? `<section class="tk-panel"><p class="tk-empty" style="padding-top:14px">${ICON.check}Nothing is waiting on a person. Agents add a task here when only a human can get the answer.</p></section>` : "";
+    const doneHtml = done.length ? `<details class="tk-panel tk-donebox" id="tkDone" ${doneOpen ? "open" : ""}><summary><h3>Done</h3><span class="count">${done.length}</span><span class="caret">${ICON.caret}</span></summary>
+        <ol class="tk-list">${done.map(taskRow).join("")}</ol></details>` : "";
+    // agent queue board
+    const ag = agentTasks(), agOpen = ag.filter((t) => !t.done);
+    const rows = [...new Set(agOpen.map((t) => t.owner))].sort(byOwner).flatMap((o) => agentQueue(o, tasks));
+    const agDone = ag.filter((t) => t.done).sort((a, b) => String(b.doneAt).localeCompare(String(a.doneAt)))
+      .map((t) => ({ t, code: CODE[t.owner] || up(t.owner).slice(0, 3), state: agentTaskState(t, tasks, false) }));
+    const n = (k) => rows.filter((r) => r.state.key === k).length;
+    const tot = `<div class="tot"><span class="go"><b>${n("running")}</b>running</span>${n("blocked") ? `<span><b>${n("blocked")}</b>blocked</span>` : ""}<span class="dim"><b>${n("next") + n("queued")}</b>queued</span></div>`;
+    const board = `<section class="board aq-board" aria-labelledby="aqH">
+        <header class="board-h"><h3 id="aqH">Queue <span lang="hi">कतार</span></h3>${tot}</header>
+        ${rows.length ? `<ol class="aq">${rows.map(agentRow).join("")}</ol>` : `<div class="board-empty">No agent tasks queued. Queue one with <code>agent.sh task queue</code> or Add a task.</div>`}
+        ${agDone.length ? `<details class="aq-done" id="aqDone" ${agentDoneOpen ? "open" : ""}><summary class="board-sub"><h3>Done <span lang="hi">पूर्ण</span></h3><span class="count">${agDone.length}</span><span class="caret">${ICON.caret}</span></summary><ol class="aq">${agDone.map(agentRow).join("")}</ol></details>` : ""}
+        <div class="board-foot">Each owner's queue runs top to bottom (<code>after</code> order). RUNNING: an agent is on it. BLOCKED: waiting on a human task. UP NEXT: the next one its agent picks up.</div>
+      </section>`;
+    v.innerHTML = `<div class="tk-wrap">
+      <header class="page-h"><div><h1>Tasks</h1><div class="sub">What people need to go and find out, and the work queued for each person's agent.</div></div>
+        ${taskAdding ? "" : '<div class="acts"><button class="btn btn-primary" type="button" data-task-add>Add a task</button></div>'}</header>
+      ${taskAdding ? addFormHtml() : ""}
+      <section class="sec" aria-labelledby="htH"><div class="sec-h"><h2 id="htH">Human tasks</h2><span class="meta">Real-world jobs a person does: measure, photograph, read a sign. Mark yours done with what you found.</span></div>
+        ${groups}${empty}${doneHtml}</section>
+      <section class="sec" aria-labelledby="atH"><div class="sec-h"><h2 id="atH">Agent tasks</h2><span class="meta">Queued work an agent runs for its owner, in order.</span></div>
+        ${board}</section>
+    </div>`;
+  }
+  async function addTask({ kind, owner, text, context, due, after, blockedBy }) {
+    const { at, file } = localStamp();
+    const fname = `${file}-${owner}-${taskSlug(text)}.md`;
+    const agent = kind === "agent";
+    const meta = { kind: agent ? "agent" : "human", owner, status: agent && blockedBy ? "blocked" : "open", created: at, created_by: me,
+      due: agent ? "" : due, after: agent ? after : "", blocked_by: agent ? blockedBy : "", context };
+    await putFile(`.agents/tasks/${fname}`, taskText(meta, text), `[${me}] board: ${agent ? "agent" : "human"} task for ${owner}`);
+    return fname;
+  }
+  async function markTaskDone(t, answer) {
+    const path = `.agents/tasks/${t.file}`, msg = `[${me}] board: ${t.kind} task done`, at = localStamp().at;
+    try { await putFile(path, taskText(taskDoneMeta(t.meta, answer, me, at), t.body), msg, t.sha); }
+    catch (e) {
+      if (e.status !== 409 && e.status !== 422) throw e;
+      // the file changed since we loaded it: re-read it and apply the result on top of that version
+      const { data } = await gh(`/contents/${path.split("/").map(encodeURIComponent).join("/")}?ref=${BRANCH}`);
+      const cur = parse(b64decode(data.content));
+      await putFile(path, taskText(taskDoneMeta(cur.meta, answer, me, at), cur.body), msg, data.sha);
+    }
+  }
+
   // ---------- AGENT MAP ----------
   let agentRunning = 0;
   async function loadAgents() {
@@ -1982,7 +2271,7 @@ tr.is-hold .code { color: var(--hold); }
     if (h === "humans") return { v: "inbox", chan: "humans" };
     if (h === "chat") return { v: "inbox", chan: "agents" };
     const [v, chan, id] = h.split("/");
-    const alias = { board: "today", talk: "inbox", plan: "progress", agents: "today" };
+    const alias = { board: "today", talk: "inbox", plan: "progress", agents: "today", "human-tasks": "tasks", "agent-tasks": "tasks" };
     const vv = alias[v] || v;
     return { v: VIEWS.includes(vv) ? vv : "today", chan, id };
   }
@@ -1998,6 +2287,7 @@ tr.is-hold .code { color: var(--hold); }
     else if (view === "inbox") renderInbox();
     else if (view === "progress") { renderProgress(); refreshCommits(); }
     else if (view === "memory") renderMemory();
+    else if (view === "tasks") renderTasks();
     writeHash();
     if (view !== "inbox" || !isWide()) window.scrollTo(0, 0);
   }
@@ -2007,6 +2297,7 @@ tr.is-hold .code { color: var(--hold); }
     else if (view === "inbox") { const s = $("readPane").scrollTop; const typing = document.activeElement && ["replyText", "composeText"].includes(document.activeElement.id); if (!typing) { renderInbox(); $("readPane").scrollTop = s; } }
     else if (view === "progress") renderProgress();
     else if (view === "memory") renderMemory(true);
+    else if (view === "tasks") renderTasks();
   }
   function setSync(state, detail = "") {
     const t = new Date().toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit", hour12: false });
@@ -2152,6 +2443,23 @@ tr.is-hold .code { color: var(--hold); }
       catch (err) { showToast(`Couldn't save: ${err.message}`, true); b.disabled = false; b.textContent = "Save status"; }
       return;
     }
+    if ((b = t.closest("[data-task-done-open]"))) {
+      const id = b.dataset.taskDoneOpen; taskOpen.has(id) ? taskOpen.delete(id) : taskOpen.add(id); renderTasks(true);
+      if (taskOpen.has(id)) { const ta = document.getElementById("tka-" + id); if (ta) ta.focus(); }
+      return;
+    }
+    if (t.closest("[data-task-add]")) { taskAdding = true; renderTasks(true); const ta = $("tkText"); if (ta) ta.focus(); return; }
+    if (t.closest("[data-task-add-cancel]")) { taskAdding = false; renderTasks(true); return; }
+    if ((b = t.closest("[data-task-owner]"))) { taskAddOwner = b.dataset.taskOwner; taskDraft.after = null; renderTasks(true); return; }
+    if ((b = t.closest("[data-task-kind]"))) { taskDraft.kind = b.dataset.taskKind; taskDraft.after = null; renderTasks(true); return; }
+    if ((b = t.closest("[data-task-jump]"))) {
+      e.preventDefault();
+      const f = b.dataset.taskJump, tk = tasks.find((x) => x.file === f);
+      if (tk && tk.done) { if (tk.kind === "human") doneOpen = true; else agentDoneOpen = true; renderTasks(true); }
+      const el = document.getElementById(taskDomId(f));
+      if (el) { el.scrollIntoView({ block: "center", behavior: "smooth" }); el.classList.remove("flash"); void el.offsetWidth; el.classList.add("flash"); }
+      return;
+    }
     if ((b = t.closest("[data-phase]"))) { pgPhase = b.dataset.phase; renderProgress(); return; }
     if ((b = t.closest("[data-memtype]"))) { memType = b.dataset.memtype; renderMemory(true); return; }
     if ((b = t.closest("[data-memjump]"))) { e.preventDefault(); memType = "all"; renderMemory(true); const el = $("mg-" + b.dataset.memjump); if (el) el.scrollIntoView({ behavior: "smooth" }); return; }
@@ -2160,8 +2468,14 @@ tr.is-hold .code { color: var(--hold); }
     if (e.target.id === "etaCustom" && e.target.value) { statusEta = 0; document.querySelectorAll("[data-eta]").forEach((x) => x.setAttribute("aria-pressed", "false")); }
     if (e.target.id === "memSearch") { memQuery = e.target.value; renderMemory(true); }
     if (e.target.id === "thSearch") { thQuery = e.target.value; renderInbox(); }
+    if (e.target.dataset && e.target.dataset.taskAnswer) taskAnswers.set(e.target.dataset.taskAnswer, e.target.value);
+    if (e.target.id === "tkText") taskDraft.text = e.target.value;
+    if (e.target.id === "tkCtx") taskDraft.ctx = e.target.value;
+    if (e.target.id === "tkDue") taskDraft.due = e.target.value;
+    if (e.target.id === "tkAfter") taskDraft.after = e.target.value;
+    if (e.target.id === "tkBlk") taskDraft.blk = e.target.value;
   });
-  document.addEventListener("toggle", (e) => { const d = e.target; if (d.matches && d.matches(".mem")) d.open ? memOpen.add(d.dataset.slug) : memOpen.delete(d.dataset.slug); }, true);
+  document.addEventListener("toggle", (e) => { const d = e.target; if (d.matches && d.matches(".mem")) d.open ? memOpen.add(d.dataset.slug) : memOpen.delete(d.dataset.slug); if (d.id === "tkDone") doneOpen = d.open; if (d.id === "aqDone") agentDoneOpen = d.open; }, true);
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") closeMenu();
     if (e.key === "Enter" && (e.ctrlKey || e.metaKey) && e.target.matches("textarea")) { const f = e.target.closest("form"); if (f) { e.preventDefault(); f.requestSubmit(); } }
@@ -2181,6 +2495,25 @@ tr.is-hold .code { color: var(--hold); }
       const d = f.dataset;
       const ok = await submitWith(f.querySelector("[type=submit]"), () => sendMessage({ text, to: d.to, kind: d.kind, re: d.re, channel: d.chan }), d.kind === "answer" ? `Answer sent to ${name(d.to)}.` : `Reply sent to ${toText(d.to)}.`);
       if (ok) renderInbox();
+      return;
+    }
+    if (f.matches("[data-task-form]")) {
+      e.preventDefault();
+      const tk = tasks.find((x) => x.file === f.dataset.taskForm), ta = f.querySelector("textarea"), text = flat(ta.value);
+      if (!tk || !text) { ta.focus(); return; }
+      const ok = await submitWith(f.querySelector("[type=submit]"), () => markTaskDone(tk, text), "Marked done. Your result is on the task for everyone.");
+      if (ok) { taskOpen.delete(tk.file); taskAnswers.delete(tk.file); renderTasks(true); renderNav(); }
+      return;
+    }
+    if (f.id === "taskAddForm") {
+      e.preventDefault();
+      const ta = $("tkText"), text = ta.value.trim(); if (!text) { ta.focus(); return; }
+      const owner = taskAddOwner || me, kind = taskDraft.kind, context = $("tkCtx").value.trim();
+      const due = $("tkDue") ? $("tkDue").value.trim() : "", after = $("tkAfter") ? $("tkAfter").value : "", blockedBy = $("tkBlk") ? $("tkBlk").value : "";
+      const whose = owner === me ? "you" : taskOwnerName(owner);
+      const ok = await submitWith(f.querySelector("[type=submit]"), () => addTask({ kind, owner, text, context, due, after, blockedBy }),
+        kind === "agent" ? `Queued for ${owner === me ? "your" : `${taskOwnerName(owner)}'s`} agent.` : `Human task added for ${whose}.`);
+      if (ok) { taskAdding = false; taskAddOwner = me; taskDraft = { kind, text: "", ctx: "", due: "", after: null, blk: "" }; renderTasks(true); renderNav(); }
       return;
     }
     if (f.id === "composeForm") {

@@ -32,4 +32,4 @@ function load({ team = ['karan', 'ash', 'akshat', 'hahn', 'ttt'], me = 'karan', 
   return context.api;
 }
 const ago = (min) => new Date(Date.now() - min * 60000).toISOString();
-module.exports = { load, ago, html };
+module.exports = { load, ago, html, grab };
