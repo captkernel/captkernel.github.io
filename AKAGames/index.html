@@ -312,6 +312,16 @@ textarea.field { resize: vertical; min-height: 64px; }
 .st i { width: 8px; height: 8px; border-radius: 50%; flex: none; background: currentColor; }
 .st.go { color: var(--go); } .st.late { color: var(--led); } .st.hold { color: var(--hold); } .st.wait { color: var(--led-2); } .st.idle, .st.done { color: var(--idle); }
 tr.is-hold .code { color: var(--hold); }
+/* CI-07 states: shape differs as well as colour, so they read without colour too */
+.st.blocked { color: var(--led); } .st.blocked i { border-radius: 1px; }
+.st.stale { color: #a0a6b0; } .st.stale i, .st.idle i { background: transparent; border: 1.5px solid currentColor; } .st.stale i { border-style: dashed; }
+.dep tr.is-stale .an .nm, .dep tr.is-stale .code { color: #a0a6b0; }
+.led.past { color: var(--board-ink-2); text-decoration: line-through; text-decoration-thickness: 1px; }
+.tr-person .an .nm { font-size: 17px; }
+.dep tbody tr.tr-person:not(:first-child) td { border-top: 1px solid var(--line-2); }
+.tr-sub2 .an { padding-left: 36px; }
+.tr-sub2 .an::before { left: 22px; }
+.board-h .tot .dim b { color: #a0a6b0; }
 .dep tr.is-done .an .nm, .dep tr.is-done .code { color: var(--idle); }
 .board .owner { display: inline-flex; }
 .board-sub { display: flex; align-items: baseline; gap: 10px; padding: 12px 16px 8px; border-top: 1px solid var(--board-line); background: var(--board-2); }
@@ -356,6 +366,29 @@ tr.is-hold .code { color: var(--hold); }
 .people .eta-led { font: 800 16px/1 var(--led-face); color: var(--amber-ink); letter-spacing: .03em; }
 .people .eta-led.late { color: var(--hold-ink); }
 .people .eta-txt { font-size: 13px; color: var(--ink-3); }
+.pst { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 700; color: var(--ink-3); white-space: nowrap; }
+.pst i { width: 7px; height: 7px; border-radius: 50%; border: 1.5px solid currentColor; flex: none; }
+.pst.go { color: var(--go-ink); } .pst.go i { background: currentColor; }
+.pst.hold { color: var(--hold-ink); } .pst.hold i { background: currentColor; }
+.pst.wait, .pst.blocked { color: var(--amber-ink); } .pst.wait i { background: currentColor; } .pst.blocked i { background: currentColor; border-radius: 1px; }
+.pst.stale i { border-style: dashed; }
+.people .why { font-size: 13px; color: var(--ink-2); border-left: 2px solid var(--line-2); padding-left: 8px; margin: 2px 0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.people .why.hold { border-color: var(--hold); } .people .why.wait, .people .why.blocked { border-color: var(--amber-ink); } .people .why.stale { border-left-style: dashed; color: var(--ink-3); }
+/* CI badge */
+.ci { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: 4px 12px; padding: 12px 16px; margin-bottom: 12px; border-radius: var(--r); border: 1px solid var(--line); border-left: 4px solid var(--line-2); background: var(--surface); }
+.ci-lamp { width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--ink-3); }
+.ci-main { font-weight: 700; font-size: 15px; line-height: 1.4; overflow-wrap: anywhere; }
+.ci-sub { color: var(--ink-3); font-size: 13px; margin-top: 2px; overflow-wrap: anywhere; }
+.ci a code, .ci code { font-family: var(--mono); font-size: 13px; padding: 0 1px; background: none; border: 0; }
+.people > li > :not(.av) { grid-column: 2; min-width: 0; }
+.ci > .btn { grid-column: 2; justify-self: start; margin-top: 6px; }
+@media (min-width: 760px) { .ci { grid-template-columns: auto minmax(0, 1fr) auto; } .ci > .btn { grid-column: auto; margin-top: 0; } }
+.ci-none .ci-main { color: var(--ink-2); font-weight: 600; }
+.ci-green { border-left-color: var(--go-ink); } .ci-green .ci-lamp { background: var(--go-ink); border-color: var(--go-ink); } .ci-green .ci-main { color: var(--go-ink); }
+.ci-red { border-color: color-mix(in srgb, var(--hold) 55%, var(--line)); border-left-color: var(--hold); background: color-mix(in srgb, var(--hold) 7%, var(--surface)); }
+.ci-red .ci-lamp { background: var(--hold); border-color: var(--hold); } .ci-red .ci-main { color: var(--hold-ink); }
+.ci-running { border-left-color: var(--amber-ink); } .ci-running .ci-lamp { border-color: var(--amber-ink); border-style: dashed; }
+.ci-wasred { border-left-color: var(--hold); } .ci-wasred .ci-main { color: var(--hold-ink); }
 .status-edit { grid-column: 1 / -1; display: grid; gap: 14px; margin-top: 10px; }
 .eta-pick { display: flex; flex-wrap: wrap; gap: 6px; }
 .eta-pick input { width: 86px; height: 30px; padding: 0 10px; font-size: 13px; }
@@ -1290,17 +1323,78 @@ tr.is-hold .code { color: var(--hold); }
   }
 
   const ledDur = (a, b) => { const m = Math.max(0, ((b ? new Date(b) : new Date()) - new Date(a)) / 60000); if (!isFinite(m)) return ""; if (m < 60) return `${Math.max(1, Math.round(m))}M`; const h = Math.floor(m / 60), r = Math.round(m % 60); return h < 24 ? `${h}H${String(r).padStart(2, "0")}` : `${Math.round(h / 24)}D`; };
-  function sessionStatus(s, who, eta) {
+  // ---------- states (CI-07; thresholds and precedence documented in AKAGames docs/board/STATES.md) ----------
+  // Each person is in exactly one state, by precedence: AWAITING (an open ask) > BLOCKED (their status says so)
+  // > RUNNING (a live agent) > STALE (nothing fresh) > READY (idle, nothing pending). Other states that also
+  // apply are listed after the detail ("also running 2 agents"), so nothing is hidden by the precedence.
+  // An idle session is READY: waiting for its next prompt is not a pending human decision.
+  const LIVE_MIN = 15;      // agents.json `last` is stamped on every hook event (each tool call); one foreground tool call can run 10 min
+  const STALE_H = 6;        // a status line older than this, with no agent activity in the same window
+  const ETA_GRACE_MIN = 60; // an ETA missed by more than this
+  const BLOCKED_RE = /\bblocked\b|\bwaiting on\b|\bcan['’]?t proceed\b|\bcannot proceed\b/i;
+  const RANK = { hold: 0, wait: 1, blocked: 2, go: 3, stale: 4, idle: 5 };
+  const askedOf = (m) => (m.to === "all" ? TEAM.filter((x) => x !== m.from) : [m.to]);
+  const waitingOn = (m) => askedOf(m).filter((w) => !answersTo(m.id).some((a) => a.from === w));
+  // A subagent only counts as running while it keeps reporting; a lost SubagentStop must not run forever.
+  function subState(a, s) {
+    if (a.state === "running") { const t = a.last || a.started || (s && s.last); return t && mins(t) >= LIVE_MIN ? "stale" : "running"; }
+    return a.state === "idle" || a.state === "ready" ? "ready" : "done";
+  }
+  function blockerOf(text) {
+    const t = flat(text || "");
+    if (!BLOCKED_RE.test(t)) return "";
+    return clip(t.split(/(?<=[.!?;])\s+|\s+[—-]\s+/).find((x) => BLOCKED_RE.test(x)) || t, 160);
+  }
+  function sessionStatus(s) {
     const state = sessionState(s);
-    if (state === "working") {
-      if (eta) {
-        const d = (eta - Date.now()) / 60000;
-        return d < 0 ? { cls: "late", txt: `LATE ${up(span(-d))}`, rank: 1 } : { cls: "go", txt: "ON TIME", rank: 2 };
-      }
-      return { cls: "go", txt: "RUNNING", rank: 2 };
+    if (state === "working") return { cls: "go", txt: "RUNNING", rank: RANK.go };
+    if (s.status === "working") return { cls: "stale", txt: `STALE ${up(span(mins(s.last)))}`, rank: RANK.stale };
+    return { cls: "idle", txt: "READY", rank: RANK.idle };
+  }
+  function personState(who) {
+    const st = statuses.find((s) => s.who === who), map = agentMaps[who];
+    const all = ((map && map.sessions) || []).filter((s) => s.kind !== "watcher");
+    const live = all.filter((s) => sessionState(s) !== "ended");
+    const runningN = live.filter((s) => sessionState(s) === "working").length
+      + live.reduce((n, s) => n + (s.agents || []).filter((a) => subState(a, s) === "running").length, 0);
+    const silent = live.filter((s) => sessionStatus(s).cls === "stale").map((s) => s.last)
+      .concat(live.flatMap((s) => (s.agents || []).filter((a) => subState(a, s) === "stale").map((a) => a.last || a.started)));
+    const stamps = all.flatMap((s) => [s.last, ...(s.agents || []).map((a) => a.last)]).map(parseAt).filter(Boolean).map(Number);
+    const lastAct = stamps.length ? new Date(Math.max(...stamps)) : null;
+    const actH = lastAct ? (Date.now() - lastAct) / 3600000 : Infinity;
+    const upd = st && parseAt(st.updated), updH = upd ? (Date.now() - upd) / 3600000 : Infinity;
+    const eta = st && parseAt(st.eta), etaLate = eta ? (Date.now() - eta) / 60000 : -Infinity;
+    const incoming = messages.filter((m) => askOpenFor(m, who)).reverse();
+    const outgoing = messages.filter((m) => m.kind === "ask" && m.from === who && waitingOn(m).length).reverse();
+    const more = (n) => (n > 1 ? ` (+${n - 1} more)` : "");
+    const out = [];
+    if (incoming.length) {
+      const m = incoming[0];
+      out.push({ key: "awaiting", dir: "in", ask: m.id, cls: who === me ? "hold" : "wait", txt: who === me ? "NEEDS YOUR ANSWER" : `NEEDS ${up(name(who))}`,
+        label: who === me ? "Needs your answer" : `Needs ${name(who)}'s answer`, also: who === me ? "needs your answer" : `needs ${name(who)}'s answer`,
+        detail: `${fromText(m)} asked ${who === me ? "you" : m.to === "all" ? "everyone" : name(who)} ${rel(m.at)}: ${askLine(m)}${more(incoming.length)}` });
     }
-    if (s.status === "working" && mins(s.last) >= 15) return { cls: "late", txt: `NO UPDATE ${up(span(mins(s.last)))}`, rank: 1 };
-    return who === me ? { cls: "hold", txt: "WAITING ON YOU", rank: 0 } : { cls: "wait", txt: `WAITING ON ${up(name(who))}`, rank: 3 };
+    if (outgoing.length) {
+      const m = outgoing[0], w = waitingOn(m), onMe = w.includes(me);
+      const names = w.map((x) => (x === me ? "you" : name(x))).join(", ");
+      const target = onMe ? "YOU" : w.length === 1 ? up(name(w[0])) : "TEAM";
+      out.push({ key: "awaiting", dir: "out", ask: m.id, cls: onMe ? "hold" : "wait", txt: `WAITING ON ${target}`,
+        label: `Waiting on ${onMe ? "you" : w.length === 1 ? name(w[0]) : "the team"}`, also: `waiting on ${names}`,
+        detail: `${who === me ? "Your agent" : name(who)} asked ${names} ${rel(m.at)}: ${askLine(m)}${more(outgoing.length)}` });
+    }
+    const blocker = st ? blockerOf(st.body) : "";
+    if (blocker) out.push({ key: "blocked", cls: "blocked", txt: "BLOCKED", label: "Blocked", also: "blocked", detail: blocker });
+    if (runningN) {
+      out.push({ key: "running", cls: "go", txt: "RUNNING", label: "Running", also: `running ${runningN} agent${runningN === 1 ? "" : "s"}`,
+        detail: `${runningN} agent${runningN === 1 ? "" : "s"} running${etaLate > 0 ? `, ETA passed ${span(etaLate)} ago` : ""}${st ? ` · ${flat(st.body)}` : ""}` });
+    }
+    const staleWhy = etaLate > ETA_GRACE_MIN ? `ETA ${clock(eta)} passed ${span(etaLate)} ago`
+      : updH > STALE_H && actH > STALE_H ? `${st ? `Status is ${span(updH * 60)} old` : "No status posted"}; ${lastAct ? `last agent activity ${rel(lastAct)}` : map ? "no agent activity" : "agent map not published"}`
+      : silent.length ? `${silent.length} agent${silent.length === 1 ? "" : "s"} marked working but silent for ${span(Math.min(...silent.map(mins)))}` : "";
+    if (staleWhy) out.push({ key: "stale", cls: "stale", txt: "STALE", label: "Stale", also: "stale", detail: `${staleWhy}${st ? ` · ${flat(st.body)}` : ""}` });
+    const head = out[0] || { key: "ready", cls: "idle", txt: "READY", label: "Ready",
+      detail: `${live.length ? "Session open, waiting for a prompt" : "Idle"}; nothing pending${st ? ` · ${flat(st.body)}` : ""}` };
+    return { ...head, rank: RANK[head.cls], others: out.slice(1).map((x) => x.also) };
   }
   function boardData() {
     const byWho = Object.fromEntries(statuses.map((s) => [s.who, s]));
@@ -1313,11 +1407,11 @@ tr.is-hold .code { color: var(--hold); }
       const sessions = ((map && map.sessions) || []).filter((s) => s.kind !== "watcher")
         .slice().sort((a, b) => String(a.started).localeCompare(String(b.started)));
       const live = sessions.filter((s) => sessionState(s) !== "ended");
-      const etaFor = live.find((s) => sessionState(s) === "working") || live[0];
-      if (!live.length) {
-        rows.push({ key: `${who}:status`, who, code: CODE[who], name: name(who), task: map ? "No Claude session open" : "Agent map not published",
-          dep: null, run: "", eta: etaD, status: map ? { cls: "idle", txt: "NO SESSION", rank: 4 } : { cls: "idle", txt: "NOT REPORTING", rank: 5 }, sub: false });
-      }
+      const ps = personState(who);
+      // The person's own row heads their group; their sessions and subagents sit under it.
+      rows.push({ key: `${who}:status`, who, code: CODE[who], name: name(who), person: true,
+        task: ps.detail + (ps.others.length ? ` · also ${ps.others.join(", ")}` : "") + (live.length ? "" : map ? " · no agent session open" : ps.detail.includes("agent map not published") ? "" : " · agent map not published"),
+        dep: null, run: "", eta: etaD, status: ps, sub: false, group: who });
       sessions.forEach((s, i) => {
         const code = `${CODE[who]}-${i + 1}`;
         const state = sessionState(s);
@@ -1326,24 +1420,38 @@ tr.is-hold .code { color: var(--hold); }
           if (mins(s.last) < 120) arrived.push({ key: `${who}:${s.id}`, who, code, name: s.title || KIND[s.kind] || "Session", task: "Session closed", at: s.last, took: ledDur(s.started, s.last) });
           return;
         }
-        const eta = s === etaFor ? etaD : null;
-        const status = sessionStatus(s, who, eta);
+        const status = sessionStatus(s, who);
         const waiting = /^waiting for/i.test(s.activity || "");
-        const task = s.activity && !waiting ? s.activity : waiting ? "Waiting for its next prompt" : "";
-        rows.push({ key: `${who}:${s.id}`, who, code, name: s.title || KIND[s.kind] || s.agent || "Session", task, dep: s.started, run: ledDur(s.started), eta, status, sub: false,
-          group: `${who}:${s.id}` });
+        const task = status.cls === "stale" ? `${s.activity || "Working"} (no report for ${span(mins(s.last))})` : s.activity && !waiting ? s.activity : waiting ? "Waiting for its next prompt" : "";
+        rows.push({ key: `${who}:${s.id}`, who, code, name: s.title || KIND[s.kind] || s.agent || "Session", task, dep: s.started, run: status.cls === "go" ? ledDur(s.started) : "", eta: null, status, sub: true,
+          group: who });
         let k = 0;
         for (const a of subs) {
           k++;
-          const running = a.state === "running";
-          if (running) {
-            rows.push({ key: `${who}:${s.id}:${a.id}`, who, code: `${code}.${k}`, name: a.desc || a.type || "Subagent", task: a.activity || a.type || "", dep: a.started, run: ledDur(a.started), eta: null,
-              status: { cls: "go", txt: "RUNNING", rank: 2 }, sub: true, group: `${who}:${s.id}` });
+          const ss = subState(a, s);
+          const role = ((map && map.roster) || []).find((r) => r.id === (a.role || a.type));
+          if (ss !== "done") {
+            const status = ss === "running" ? { cls: "go", txt: "RUNNING", rank: RANK.go } : ss === "stale" ? { cls: "stale", txt: `STALE ${up(span(mins(a.last || a.started)))}`, rank: RANK.stale } : { cls: "idle", txt: "READY", rank: RANK.idle };
+            rows.push({ key: `${who}:${s.id}:${a.id}`, who, code: `${code}.${k}`, name: role && role.name || a.desc || a.type || "Subagent",
+              task: ss === "stale" ? `${a.activity || a.type || "Working"} (no report for ${span(mins(a.last || a.started))})` : a.activity || a.desc || a.type || "",
+              dep: a.started, run: ss === "running" ? ledDur(a.started) : "", eta: null, status, sub: true, sub2: true, group: who });
           } else if (mins(a.ended || a.last) < 120) {
             arrived.push({ key: `${who}:${s.id}:${a.id}`, who, code: `${code}.${k}`, name: a.desc || a.type || "Subagent", task: a.type || "", at: a.ended || a.last, took: ledDur(a.started, a.ended || a.last) });
           }
         }
       });
+      // A configured specialist is available even when no worker is running. Keep
+      // this roster separate from session history: no invented starts or uptime.
+      const reported = new Set(live.flatMap((s) => (s.agents || []).filter((a) => ["running", "idle", "ready"].includes(a.state)).map((a) => a.role || a.type)));
+      const parent = live.find((s) => sessionState(s) === "working") || live[0];
+      const parentCode = parent ? `${CODE[who]}-${sessions.indexOf(parent) + 1}` : CODE[who];
+      for (const [i, role] of ((map && map.roster) || []).entries()) {
+        if (!role.id || reported.has(role.id)) continue;
+        reported.add(role.id);
+        rows.push({ key: `${who}:role:${role.id}`, who, code: `${parentCode}.R${i + 1}`, name: role.name || role.id,
+          task: role.description || "Configured; waiting for a task", dep: null, run: "", eta: null,
+          status: { cls: "idle", txt: "READY", rank: RANK.idle }, sub: true, sub2: !!parent, group: who });
+      }
     }
     arrived.sort((a, b) => String(b.at).localeCompare(String(a.at)));
     return { rows, arrived: arrived.slice(0, 6), loading };
@@ -1352,8 +1460,9 @@ tr.is-hold .code { color: var(--hold); }
   function rowHtml(r) {
     const prev = lastStatus.get(r.key), relight = prev && prev !== r.status.txt;
     lastStatus.set(r.key, r.status.txt);
-    const eta = r.eta ? `<span class="led" title="${esc(exact(r.eta))}">${esc(clock(r.eta))}</span>` : `<span class="led none on-wide">--:--</span>${r.run ? `<span class="led dim on-phone" title="Running">${esc(r.run)}</span>` : '<span class="led none on-phone">--:--</span>'}`;
-    return `<tr class="${r.sub ? "tr-sub" : ""} is-${r.status.cls} ${relight ? "relight" : ""}">
+    const etaPast = r.eta && r.eta < Date.now();
+    const eta = r.eta ? `<span class="led ${etaPast ? "past" : ""}" title="${esc((etaPast ? "ETA passed: " : "ETA ") + exact(r.eta))}">${esc(clock(r.eta))}</span>` : `<span class="led none on-wide">--:--</span>${r.run ? `<span class="led dim on-phone" title="Running">${esc(r.run)}</span>` : '<span class="led none on-phone">--:--</span>'}`;
+    return `<tr class="${r.sub ? "tr-sub" : ""} ${r.sub2 ? "tr-sub2" : ""} ${r.person ? "tr-person" : ""} is-${r.status.cls} ${relight ? "relight" : ""}" data-state="${esc(r.status.key || r.status.cls)}">
       <td class="c-code"><span class="code">${esc(r.code)}</span></td>
       <td class="c-an"><div class="an"><div class="nm" title="${esc(r.name)}">${esc(r.name)}</div>${r.task ? `<div class="ts" title="${esc(r.task)}">${esc(clip(r.task, 140))}</div>` : ""}</div></td>
       <td class="c-own"><span class="owner" title="${esc(name(r.who))}">${avatar(r.who, "sm")}</span></td>
@@ -1385,11 +1494,14 @@ tr.is-hold .code { color: var(--hold); }
     // keep each session's subagents directly under it, sessions ranked by urgency then departure
     const groups = new Map();
     for (const r of rows) { const g = r.group || r.key; if (!groups.has(g)) groups.set(g, []); groups.get(g).push(r); }
-    const ordered = [...groups.values()].sort((a, b) => a[0].status.rank - b[0].status.rank || String(a[0].dep || "").localeCompare(String(b[0].dep || ""))).flat();
-    const working = rows.filter((r) => r.status.cls === "go").length;
-    const late = rows.filter((r) => r.status.cls === "late" && r.status.txt.startsWith("LATE")).length;
-    const stalled = rows.filter((r) => r.status.txt.startsWith("NO UPDATE")).length;
-    const mine = rows.filter((r) => r.status.cls === "hold").length;
+    // each person's group is ranked by their state (STATES.md precedence), you first among equals, then team order
+    const teamIx = (w) => (w === me ? -1 : TEAM.indexOf(w));
+    const ordered = [...groups.values()].sort((a, b) => a[0].status.rank - b[0].status.rank || teamIx(a[0].who) - teamIx(b[0].who)).flat();
+    const people = rows.filter((r) => r.person);
+    const working = rows.filter((r) => !r.person && r.status.cls === "go").length;
+    const blocked = people.filter((r) => r.status.key === "blocked").length;
+    const stale = people.filter((r) => r.status.key === "stale").length;
+    const mine = asks.length;
     const heldHtml = asks.length ? `<ol class="held-list">${asks.map((m) => {
       const open = answerOpen.has(m.id);
       return `<li class="hrow" data-ask-card="${esc(m.id)}">
@@ -1410,9 +1522,12 @@ tr.is-hold .code { color: var(--hold); }
     const order = [me, ...TEAM.filter((t) => t !== me)];
     const peopleHtml = `<ul class="people">${order.map((who) => {
       const s = byWho[who], own = who === me, d = s && parseAt(s.eta), diff = d ? (d - Date.now()) / 60000 : 0;
+      const ps = agentMaps[who] !== undefined ? personState(who) : null;
+      const pst = ps ? `<span class="pst ${ps.cls}" data-state="${esc(ps.key)}"><i aria-hidden="true"></i>${esc(ps.label)}</span>` : "";
+      const why = ps && ["awaiting", "blocked", "stale"].includes(ps.key) ? `<div class="why ${ps.cls}">${esc(ps.detail.split(" \u00b7 ")[0])}</div>` : "";
       const eta = d ? `<span class="eta-led ${diff < 0 ? "late" : ""}" title="${esc(exact(d))}">${esc(clock(d))}</span><span class="eta-txt">${diff < 0 ? `overdue by ${esc(span(-diff))}` : `in ${esc(span(diff))}`}</span>` : "";
       return `<li data-who="${esc(who)}">${avatar(who)}
-        <div class="who"><b>${esc(name(who))}</b>${own ? '<span class="time">you</span>' : ""}${s ? timeEl(s.updated, "rel", "updated ") : ""}</div>
+        <div class="who"><b>${esc(name(who))}</b>${own ? '<span class="time">you</span>' : ""}${pst}${s ? timeEl(s.updated, "rel", "updated ") : ""}</div>${why}
         <div class="what" title="${s ? esc(flat(s.body)) : ""}">${s ? esc(flat(s.body)) : '<span style="color:var(--ink-3)">No status yet.</span>'}</div>
         ${eta || own ? `<div class="foot">${eta}${own ? '<button class="linkish" type="button" data-edit-status>Update my status</button>' : ""}</div>` : ""}
       </li>`;
@@ -1427,10 +1542,11 @@ tr.is-hold .code { color: var(--hold); }
     const pushHtml = `<section class="panel" aria-labelledby="pushH"><h2 id="pushH">Latest pushes</h2>${work.length
       ? `<ul class="pushes">${work.map((w) => `<li>${avatar(w.who, "sm")}<a href="https://github.com/${OWNER}/${REPO}/commit/${esc(w.sha)}" target="_blank" rel="noopener noreferrer">${esc(w.what)}</a>${timeEl(w.at, "short")}</li>`).join("")}</ul>`
       : `<p class="quiet">${commitsLoading ? "Loading history..." : "Nothing pushed recently."}</p>`}</section>`;
-    const tot = `<div class="tot"><span class="go"><b>${working}</b>running</span>${late ? `<span><b>${late}</b>late</span>` : ""}${stalled ? `<span><b>${stalled}</b>stalled</span>` : ""}${mine ? `<span class="hot"><b>${mine}</b>waiting on you</span>` : ""}</div>`;
+    const tot = `<div class="tot"><span class="go"><b>${working}</b>running</span>${blocked ? `<span><b>${blocked}</b>blocked</span>` : ""}${stale ? `<span class="dim"><b>${stale}</b>stale</span>` : ""}${mine ? `<span class="hot"><b>${mine}</b>need${mine === 1 ? "s" : ""} your answer</span>` : ""}</div>`;
     const bodyRows = ordered.length ? ordered.map(rowHtml).join("") : "";
     $("v-today").innerHTML = `
       <h1 class="sr">Board</h1>
+      ${ciHtml()}
       <section class="held ${asks.length ? "on" : ""}" aria-labelledby="heldH">
         <header><span class="lamp" aria-hidden="true"></span><h2 id="heldH">Held for you</h2>${asks.length ? `<span class="count hot">${asks.length}</span>` : ""}</header>
         ${heldHtml}
@@ -1440,7 +1556,7 @@ tr.is-hold .code { color: var(--hold); }
           <header class="board-h"><h2 id="depH">Departures <span lang="hi">प्रस्थान</span></h2>${tot}</header>
           ${bodyRows ? `<table class="dep">${HEAD}<tbody>${bodyRows}</tbody>${arrived.length ? `<tbody class="arr"><tr class="arr-h"><th colspan="7" scope="rowgroup">Arrived <span lang="hi">आगमन</span></th></tr>${arrived.map(arrivedHtml).join("")}</tbody>` : ""}</table>`
             : `<div class="board-empty">${loading ? '<div class="skel" style="width:60%;margin-bottom:10px"></div><div class="skel" style="width:40%"></div>' : anyLive ? "No agents are running right now." : "No machine is publishing its agent map yet."}</div>`}
-          <div class="board-foot">${anyLive ? `Live from each machine's <code>agentmap</code> hook, refreshed every 10 s. ETA comes from each person's status.` : `No machine is publishing its agent map yet, so this board shows each person's status line. Agent sessions appear here once the <code>agentmap</code> hook is switched on.`}</div>
+          <div class="board-foot">${anyLive ? `Claude Code and Codex session reports refresh every 10 s. Configured specialists stay READY until assigned; ETA comes from each person's status. States: NEEDS YOUR ANSWER / WAITING ON (an open ask), BLOCKED (status says so), RUNNING (reported in the last ${LIVE_MIN} min), STALE (nothing fresh for ${STALE_H} h, or ETA missed by over ${ETA_GRACE_MIN / 60} h), READY (idle, nothing pending).` : `No machine is publishing its agent map yet, so this board shows each person's status line. Agent sessions appear here once reporting is switched on.`}</div>
         </section>
         <aside class="side" aria-label="Team">
           <section class="panel" aria-labelledby="whoH"><h2 id="whoH">Who's on what</h2>${peopleHtml}</section>
@@ -1789,8 +1905,48 @@ tr.is-hold .code { color: var(--hold); }
         agentMaps[who] = JSON.parse(b64decode(r.data.content));
       } catch (e) { if (e.status === 404) agentMaps[who] = null; }
     }));
+    await loadCI();
     agentsLoaded = true;
     renderAgents();
+  }
+  // ---------- CI badge: ci.json on branch live/ci, published by the AKAGames test workflow ----------
+  let ci, ciEtag = null; // undefined = not loaded yet, null = no file/branch yet
+  async function loadCI() {
+    try {
+      const r = await gh(`/contents/ci.json?ref=${encodeURIComponent("live/ci")}`, { headers: ciEtag ? { "If-None-Match": ciEtag } : {} });
+      if (r.notModified) return;
+      const j = JSON.parse(b64decode(r.data.content));
+      ci = j && typeof j === "object" && !Array.isArray(j) ? j : { err: "unreadable ci.json" };
+      ciEtag = r.res.headers.get("ETag");
+    } catch (e) {
+      if (e.status === 404) { ci = null; ciEtag = null; return; }
+      if (!ci || ci.err) ci = { err: e instanceof SyntaxError ? "unreadable ci.json" : e.message || "network error" };
+    }
+  }
+  function ciHtml() {
+    const box = (cls, main, sub = "", act = "") => `<section class="ci ${cls}" aria-label="Continuous integration" data-ci="${cls.split(" ")[0].replace("ci-", "")}"><span class="ci-lamp" aria-hidden="true"></span><div class="ci-text"><div class="ci-main">${main}</div>${sub ? `<div class="ci-sub">${sub}</div>` : ""}</div>${act}</section>`;
+    if (ci === undefined) return box("ci-none", "CI: checking...");
+    if (ci === null) return box("ci-none", "CI: no runs yet", "The test workflow publishes its result here after its first run on main.");
+    if (ci.err) return box("ci-none", "CI: status unavailable", esc(ci.err));
+    const sha7 = (x) => String(x || "").slice(0, 7);
+    const link = (sha) => (/^[0-9a-f]{7,40}$/i.test(String(sha || "")) ? `<a href="https://github.com/${OWNER}/${REPO}/commit/${esc(sha)}" target="_blank" rel="noopener noreferrer"><code>${esc(sha7(sha))}</code></a>` : sha ? `<code>${esc(sha7(sha))}</code>` : "");
+    const who = (w) => (w ? (w === me ? "you" : esc(name(String(w).toLowerCase()))) : "unknown");
+    const run = /^https:\/\/github\.com\//.test(ci.run_url || "") ? `<a class="btn btn-sm ${ci.state === "red" ? "btn-primary" : "btn-quiet"}" href="${esc(ci.run_url)}" target="_blank" rel="noopener noreferrer">View run</a>` : "";
+    const num = (x) => (x !== null && x !== "" && Number.isFinite(Number(x)) ? Number(x) : null);
+    const passed = num(ci.passed), total = num(ci.total);
+    const tally = passed !== null && total !== null ? `${passed}/${total}` : "";
+    const failed = Array.isArray(ci.failed) ? ci.failed.map((f) => String(f).replace(/^res:\/\//, "")) : [];
+    const fails = failed.length ? failed.slice(0, 3).map((f) => `<code>${esc(f)}</code>`).join(", ") + (failed.length > 3 ? ` and ${failed.length - 3} more` : "") : "";
+    const suite = ci.suite ? `${esc(ci.suite)} suite` : "";
+    const upd = ci.updated && parseAt(ci.updated) ? timeEl(ci.updated, "rel", "updated ") : "";
+    const rs = ci.red_since && typeof ci.red_since === "object" ? ci.red_since : null;
+    const owner = ci.repair_owner ? `repair owner <b>${who(ci.repair_owner)}</b>` : "no repair owner yet";
+    const redLine = (r) => `main is RED since ${link(r ? r.commit : ci.commit)} by <b>${who(r ? r.author : ci.author)}</b>${r && r.at && parseAt(r.at) ? ` (${timeEl(r.at)})` : ""}`;
+    const meta = [suite, ci.commit_msg ? esc(clip(String(ci.commit_msg), 90)) : "", upd].filter(Boolean).join(" \u00b7 ");
+    if (ci.state === "green") return box("ci-green", `main is green${tally || ci.commit ? ` (${[tally, link(ci.commit)].filter(Boolean).join(", ")})` : ""}`, meta, run);
+    if (ci.state === "red") return box("ci-red", `${redLine(rs)} \u2014 ${owner}`, [fails ? `Failing: ${fails}` : "", tally ? `${tally} passed` : "", meta].filter(Boolean).join(" \u00b7 "), run);
+    if (ci.state === "running") return box(rs ? "ci-running ci-wasred" : "ci-running", `CI running${suite ? ` (${suite})` : ""} on ${link(ci.commit) || "main"} by <b>${who(ci.author)}</b>${rs ? ` \u2014 ${redLine(rs)}, ${owner}` : ""}`, meta, run);
+    return box("ci-none", `CI: unknown state "${esc(String(ci.state || ""))}"`, meta, run);
   }
   function scheduleAgents() {
     clearTimeout(agentsTimer);
@@ -1808,13 +1964,13 @@ tr.is-hold .code { color: var(--hold); }
   const prettyModel = (m) => (m || "").replace(/^claude-/, "").replace(/-(\d+)-(\d+)$/, " $1.$2").replace(/-/g, " ");
   function sessionState(s) {
     if (s.status === "ended") return "ended";
-    if (s.status === "working" && mins(s.last) < 15) return "working";
+    if (s.status === "working" && mins(s.last) < LIVE_MIN) return "working";
     return mins(s.last) > 240 ? "ended" : "idle";
   }
   function renderAgents() {
     let running = 0;
     for (const who of TEAM) { const map = agentMaps[who]; if (!map) continue;
-      for (const s of map.sessions || []) { if (sessionState(s) === "working") running++; running += (s.agents || []).filter((a) => a.state === "running").length; } }
+      for (const s of map.sessions || []) { if (sessionState(s) === "working") running++; running += (s.agents || []).filter((a) => subState(a, s) === "running").length; } }
     agentRunning = running;
     if (view === "today") renderToday();
     renderNav();
