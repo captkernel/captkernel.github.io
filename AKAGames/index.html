@@ -627,8 +627,21 @@ tr.is-hold .code { color: var(--hold); }
 @media (min-width: 900px) { .inbox .list-pane, .inbox.reading .list-pane { background: var(--board); border-right-color: var(--board-line); } }
 @media (max-width: 899px) { .inbox .list-pane { margin: -16px -16px 0; padding: 16px; min-height: calc(100dvh - var(--top)); } }
 
+/* ---------- WIKI ---------- */
+.wiki-acts { display: flex; gap: 8px; }
+.wiki-note { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 6px; margin: -8px 0 12px; color: var(--ink-3); font-size: 13px; }
+.wiki-note:empty { display: none; }
+.wiki-note a { color: var(--amber-ink); text-decoration: none; } .wiki-note a:hover { text-decoration: underline; text-underline-offset: 3px; }
+.wiki-note .wiki-new { color: var(--amber-ink); }
+.wiki-frame { display: block; width: 100%; height: calc(100dvh - var(--top) - 230px); min-height: 460px; border: 1px solid var(--line); border-radius: var(--r); background: #f7f3ec; }
+.wiki-state { padding: 48px 16px; text-align: center; color: var(--ink-2); font-size: 15px; border: 1px dashed var(--line-2); border-radius: var(--r); max-width: 70ch; margin: 0 auto; }
+@media (min-width: 900px) { .wiki-frame { height: calc(100dvh - var(--top) - 170px); } }
+/* six tabs on the top nav: tighter buttons until the wide layout, and the clock yields below 1060px */
+@media (min-width: 900px) and (max-width: 1179px) { .topnav button { padding: 0 8px; gap: 6px; } .brand { font-size: 15px; } }
+@media (min-width: 900px) and (max-width: 1059px) { .topbar .clock { display: none; } }
+
 /* ---------- HUMAN TASKS (.agents/tasks/*.md: real-world jobs only a person can do) ---------- */
-.tabbar { grid-template-columns: repeat(5, 1fr); }
+.tabbar { grid-template-columns: repeat(6, 1fr); }
 .tk-wrap { max-width: 960px; }
 .tk-panel { border-radius: var(--r); border: 1px solid var(--line); background: var(--surface); margin-bottom: 16px; overflow: hidden; }
 .tk-panel > header { display: flex; align-items: center; gap: 10px; padding: 12px 16px; }
@@ -776,6 +789,7 @@ tr.is-hold .code { color: var(--hold); }
     <section class="view hidden" id="v-progress" aria-label="Plan"></section>
     <section class="view hidden" id="v-memory" aria-label="Team memory"></section>
     <section class="view hidden" id="v-tasks" aria-label="Tasks"></section>
+    <section class="view hidden" id="v-wiki" aria-label="Wiki"></section>
   </main>
 
   <nav class="tabbar" id="tabbar" aria-label="Sections"></nav>
@@ -843,8 +857,11 @@ tr.is-hold .code { color: var(--hold); }
   // human tasks
   let tasks = [], taskAdding = false, taskAddOwner = null;
   const taskOpen = new Set();
+  // wiki (docs/wiki/wiki.html on main, read through the token; never copied to this public repo)
+  const WIKI_DIR = "docs/wiki", WIKI_FILE = "wiki.html";
+  let wikiSha = null, wikiHtml = null, wikiLoadedSha = null, wikiInfo = null, wikiLoading = null, wikiErr = "", wikiBlobUrl = null;
 
-  const VIEWS = ["today", "inbox", "tasks", "progress", "memory"];
+  const VIEWS = ["today", "inbox", "tasks", "progress", "memory", "wiki"];
   let view = "today";
 
   const $ = (id) => document.getElementById(id);
@@ -860,6 +877,7 @@ tr.is-hold .code { color: var(--hold); }
     progress: I('<path d="M4 6h10M4 12h16M4 18h7"/><circle cx="17" cy="6" r="2"/><circle cx="14" cy="18" r="2"/>'),
     memory: I('<path d="M5 4.5h11a3 3 0 0 1 3 3v12H8a3 3 0 0 1-3-3z"/><path d="M5 16.5a3 3 0 0 1 3-3h11"/>'),
     tasks: I('<rect x="2.5" y="8" width="19" height="8" rx="1.5"/><path d="M6.5 8v3M10.5 8v4.5M14.5 8v3M18.5 8v4.5"/>'),
+    wiki: I('<path d="M4 5.5h6a2 2 0 0 1 2 2v12a2 2 0 0 0-2-2H4z"/><path d="M20 5.5h-6a2 2 0 0 0-2 2v12a2 2 0 0 1 2-2h6z"/>'),
     agents: I('<circle cx="12" cy="5.5" r="2.2"/><circle cx="5.5" cy="18.5" r="2.2"/><circle cx="18.5" cy="18.5" r="2.2"/><path d="M12 7.7v4.3M12 12l-5 4.6M12 12l5 4.6"/>'),
     clock: I('<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>', 15),
     check: I('<path d="m5 12.5 4.5 4.5L19 7.5"/>', 16),
@@ -869,7 +887,7 @@ tr.is-hold .code { color: var(--hold); }
   };
   const NAV = [
     { id: "today", label: "Board" }, { id: "inbox", label: "Talk" }, { id: "tasks", label: "Tasks" },
-    { id: "progress", label: "Plan" }, { id: "memory", label: "Memory" },
+    { id: "progress", label: "Plan" }, { id: "memory", label: "Memory" }, { id: "wiki", label: "Wiki" },
   ];
 
   // ---------- encoding ----------
@@ -936,9 +954,15 @@ tr.is-hold .code { color: var(--hold); }
       const read = (entries) => pool(entries, 8, async (e) => ({ file: e.path, sha: e.sha, ...parse(await blob(e.sha)) }));
       const readPlan = async () => {
         const docs = root.tree.find((e) => e.path === "docs" && e.type === "tree");
+        wikiSha = null;
         if (!docs) return null;
         const { data: d } = await gh(`/git/trees/${docs.sha}`);
         const f = d.tree.find((e) => e.path === PLAN_FILE && e.type === "blob");
+        // the wiki's blob sha comes from the same main tree, so the Wiki tab always shows what is on main
+        const wikiDir = d.tree.find((e) => e.path === WIKI_DIR.split("/").pop() && e.type === "tree");
+        const wd = wikiDir ? await gh(`/git/trees/${wikiDir.sha}`).then((r) => r.data).catch(() => null) : null;
+        const w = wd && wd.tree.find((e) => e.path === WIKI_FILE && e.type === "blob");
+        wikiSha = w ? w.sha : null;
         return f ? { sha: f.sha, text: await blob(f.sha) } : null;
       };
       const [m, s, mem, tk, planFile] = await Promise.all([read(bus), read(status), read(memory), read(taskDir), readPlan().catch(() => null)]);
@@ -2265,13 +2289,90 @@ tr.is-hold .code { color: var(--hold); }
     renderNav();
   }
 
+  // ---------- WIKI (docs/wiki/wiki.html, read from the private repo's main through the token; never copied here) ----------
+  const fmtBytes = (n) => n < 1024 ? `${n} B` : n < 1048576 ? `${Math.round(n / 1024)} KB` : `${(n / 1048576).toFixed(1)} MB`;
+  const wikiPath = () => `${WIKI_DIR}/${WIKI_FILE}`;
+  async function fetchWiki(force = false) {
+    if (wikiLoading) return wikiLoading;
+    if (!token || (!lastSha && !force)) return;
+    wikiLoading = (async () => {
+      wikiErr = "";
+      try {
+        if (force) await load(true); // re-read main's tree so wikiSha is the current blob
+        if (!wikiSha) { wikiHtml = null; wikiLoadedSha = null; wikiInfo = null; return; }
+        if (wikiLoadedSha === wikiSha && wikiHtml && !force) return;
+        // blobs API, not contents: contents stops at 1 MB, blobs go to 100 MB. Base64 in, text out, kept in memory only.
+        const { data } = await gh(`/git/blobs/${wikiSha}`);
+        const html = b64decode(data.content);
+        const info = { sha: wikiSha, size: data.size || new TextEncoder().encode(html).length, commit: null };
+        try {
+          const { data: cs } = await gh(`/commits?sha=${BRANCH}&path=${encodeURIComponent(wikiPath())}&per_page=1`);
+          const c = Array.isArray(cs) && cs[0];
+          if (c) info.commit = { sha: c.sha, date: (c.commit.committer || c.commit.author || {}).date || "", message: (c.commit.message || "").split("\n")[0],
+            who: c.author && c.author.login ? (LOGINS[c.author.login.toLowerCase()] || c.author.login) : "" };
+        } catch {}
+        if (wikiBlobUrl) { try { URL.revokeObjectURL(wikiBlobUrl); } catch {} wikiBlobUrl = null; }
+        wikiHtml = html; wikiLoadedSha = wikiSha; wikiInfo = info;
+      } catch (e) {
+        if (e.status === 401) { signOut("Your token was rejected (401). Sign in again."); return; }
+        wikiErr = e.status === 404 ? `${wikiPath()} is not on main (404).` : e.message || "Network error";
+      } finally { wikiLoading = null; }
+    })();
+    await wikiLoading;
+    if (view === "wiki") renderWiki();
+  }
+  function openWikiTab() {
+    if (!wikiHtml) return;
+    if (!wikiBlobUrl) {
+      // A blob: URL shares this page's origin (and so its stored token), so the copy that opens in a new tab
+      // carries no scripts: the wiki's own are stripped and a CSP forbids any other.
+      const safe = wikiHtml.replace(/<script\b[\s\S]*?<\/script>/gi, "")
+        .replace(/<head\b[^>]*>/i, (m) => `${m}<meta http-equiv="Content-Security-Policy" content="script-src 'none'; object-src 'none'; base-uri 'none'">`);
+      wikiBlobUrl = URL.createObjectURL(new Blob([safe], { type: "text/html" }));
+    }
+    const w = window.open(wikiBlobUrl, "_blank", "noopener");
+    if (!w) showToast("Your browser blocked the new tab. Allow pop-ups for this site.", true);
+  }
+  function renderWiki() {
+    const v = $("v-wiki");
+    if (!v.dataset.built) {
+      v.dataset.built = "1";
+      v.innerHTML = `<header class="page-h"><div><h1>Wiki</h1><div class="sub">Story, lore, setting and design. <code>${esc(wikiPath())}</code> is read from the private repo's <code>main</code> through your token and shown here only; nothing from it is on the public site.</div></div>
+        <div class="wiki-acts"><button class="btn btn-sm" type="button" id="wikiReload">Reload</button><button class="btn btn-sm" type="button" id="wikiOpen">Open in new tab</button></div></header>
+        <div class="wiki-note" id="wikiNote"></div><div id="wikiBody"></div>`;
+    }
+    const state = (html) => `<div class="wiki-state">${html}</div>`;
+    const body = $("wikiBody"), note = $("wikiNote"), frame = $("wikiFrame");
+    $("wikiReload").disabled = !!wikiLoading || !token;
+    $("wikiOpen").disabled = !wikiHtml;
+    if (!token) { note.innerHTML = ""; body.innerHTML = state("Sign in with your GitHub token to read the wiki. It lives in the private repo and is never served without one."); return; }
+    if (wikiErr) { note.innerHTML = ""; body.innerHTML = state(`Couldn't load the wiki: ${esc(wikiErr)}`); return; }
+    if (!wikiHtml) {
+      note.innerHTML = "";
+      if (lastSha && !wikiSha && !wikiLoading) { body.innerHTML = state(`No <code>${esc(wikiPath())}</code> on main yet. Build it with <code>python docs/wiki/build_html.py</code> and push.`); return; }
+      body.innerHTML = state("Loading the wiki from main…");
+      if (!wikiLoading) fetchWiki();
+      return;
+    }
+    const c = wikiInfo.commit;
+    const stale = wikiSha !== wikiLoadedSha;
+    note.innerHTML = `<span>Loaded from <code>main</code></span>` +
+      (c ? `<span>· <a href="https://github.com/${OWNER}/${REPO}/commit/${esc(c.sha)}" target="_blank" rel="noopener" title="${esc(c.message)}">${esc(c.sha.slice(0, 7))}</a>${c.date ? ` <time datetime="${esc(c.date)}" title="${esc(c.date)}">${esc(rel(c.date))}</time>` : ""}${c.who ? ` by ${esc(name(c.who))}` : ""}</span>` : "") +
+      `<span>· ${fmtBytes(wikiInfo.size)}</span>` + (stale ? `<b class="wiki-new">· ${wikiSha ? "A newer wiki is on main" : "The wiki is no longer on main"}: Reload</b>` : "");
+    if (!frame || frame.dataset.sha !== wikiLoadedSha) {
+      // sandboxed with no same-origin: the wiki's sidebar-highlight script may run, but in a null origin that cannot reach this page or its storage
+      body.innerHTML = `<iframe class="wiki-frame" id="wikiFrame" title="AKAGames wiki" sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox" referrerpolicy="no-referrer" data-sha="${esc(wikiLoadedSha)}"></iframe>`;
+      $("wikiFrame").srcdoc = wikiHtml;
+    }
+  }
+
   // ---------- views ----------
   function parseHash() {
     const h = decodeURIComponent(location.hash.slice(1));
     if (h === "humans") return { v: "inbox", chan: "humans" };
     if (h === "chat") return { v: "inbox", chan: "agents" };
     const [v, chan, id] = h.split("/");
-    const alias = { board: "today", talk: "inbox", plan: "progress", agents: "today", "human-tasks": "tasks", "agent-tasks": "tasks" };
+    const alias = { board: "today", talk: "inbox", plan: "progress", agents: "today", "human-tasks": "tasks", "agent-tasks": "tasks", lore: "wiki", docs: "wiki" };
     const vv = alias[v] || v;
     return { v: VIEWS.includes(vv) ? vv : "today", chan, id };
   }
@@ -2288,6 +2389,7 @@ tr.is-hold .code { color: var(--hold); }
     else if (view === "progress") { renderProgress(); refreshCommits(); }
     else if (view === "memory") renderMemory();
     else if (view === "tasks") renderTasks();
+    else if (view === "wiki") renderWiki();
     writeHash();
     if (view !== "inbox" || !isWide()) window.scrollTo(0, 0);
   }
@@ -2298,6 +2400,7 @@ tr.is-hold .code { color: var(--hold); }
     else if (view === "progress") renderProgress();
     else if (view === "memory") renderMemory(true);
     else if (view === "tasks") renderTasks();
+    else if (view === "wiki") renderWiki();
   }
   function setSync(state, detail = "") {
     const t = new Date().toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit", hour12: false });
@@ -2461,6 +2564,8 @@ tr.is-hold .code { color: var(--hold); }
       return;
     }
     if ((b = t.closest("[data-phase]"))) { pgPhase = b.dataset.phase; renderProgress(); return; }
+    if (t.closest("#wikiReload")) { fetchWiki(true); renderWiki(); return; }
+    if (t.closest("#wikiOpen")) { openWikiTab(); return; }
     if ((b = t.closest("[data-memtype]"))) { memType = b.dataset.memtype; renderMemory(true); return; }
     if ((b = t.closest("[data-memjump]"))) { e.preventDefault(); memType = "all"; renderMemory(true); const el = $("mg-" + b.dataset.memjump); if (el) el.scrollIntoView({ behavior: "smooth" }); return; }
   });
