@@ -636,12 +636,16 @@ tr.is-hold .code { color: var(--hold); }
 .wiki-frame { display: block; width: 100%; height: calc(100dvh - var(--top) - 230px); min-height: 460px; border: 1px solid var(--line); border-radius: var(--r); background: #f7f3ec; }
 .wiki-state { padding: 48px 16px; text-align: center; color: var(--ink-2); font-size: 15px; border: 1px dashed var(--line-2); border-radius: var(--r); max-width: 70ch; margin: 0 auto; }
 @media (min-width: 900px) { .wiki-frame { height: calc(100dvh - var(--top) - 170px); } }
-/* six tabs on the top nav: tighter buttons until the wide layout, and the clock yields below 1060px */
-@media (min-width: 900px) and (max-width: 1179px) { .topnav button { padding: 0 8px; gap: 6px; } .brand { font-size: 15px; } }
+/* seven tabs on the top nav: tighter buttons until the wide layout (1320px), the clock yields below 1060px, and below
+   that the buttons tighten once more */
+.lib-link:empty { display: none; }
+.lib-link a.btn { color: inherit; text-decoration: none; }
+#v-library .wiki-acts { flex-wrap: wrap; }
+@media (min-width: 900px) and (max-width: 1319px) { .topnav button { padding: 0 8px; gap: 6px; } .brand { font-size: 15px; } }
 @media (min-width: 900px) and (max-width: 1059px) { .topbar .clock { display: none; } }
 
 /* ---------- HUMAN TASKS (.agents/tasks/*.md: real-world jobs only a person can do) ---------- */
-.tabbar { grid-template-columns: repeat(6, 1fr); }
+.tabbar { grid-template-columns: repeat(7, 1fr); }
 .tk-wrap { max-width: 960px; }
 .tk-panel { border-radius: var(--r); border: 1px solid var(--line); background: var(--surface); margin-bottom: 16px; overflow: hidden; }
 .tk-panel > header { display: flex; align-items: center; gap: 10px; padding: 12px 16px; }
@@ -684,8 +688,9 @@ tr.is-hold .code { color: var(--hold); }
   .tk-add .pair { grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); }
 }
 @media (max-width: 759px) { .tk-form { padding-left: 16px; } }
-/* five tabs: between 900 and 1179px the sync label and your name give the tabs room (as below 900) */
-@media (min-width: 900px) and (max-width: 1179px) { .topbar .sync span { display: none; } .me-btn .nm { display: none; } .topbar { gap: 12px; } .topnav { margin-left: 0; } .topnav button { padding: 0 10px; } }
+/* between 900 and 1319px the sync label and your name give the tabs room (as below 900) */
+@media (min-width: 900px) and (max-width: 1319px) { .topbar .sync span { display: none; } .me-btn .nm { display: none; } .topbar { gap: 12px; } .topnav { margin-left: 0; } .topnav button { padding: 0 8px; } }
+@media (min-width: 900px) and (max-width: 1059px) { .topnav { gap: 2px; } .topnav button { padding: 0 7px; gap: 5px; font-size: 13px; } }
 .tk-panel > header h3, .tk-donebox > summary h3 { font-size: 16px; }
 .tk-donebox > summary h3 { color: var(--ink-2); }
 .tk-kind { max-width: 360px; margin: 0; }
@@ -790,6 +795,7 @@ tr.is-hold .code { color: var(--hold); }
     <section class="view hidden" id="v-memory" aria-label="Team memory"></section>
     <section class="view hidden" id="v-tasks" aria-label="Tasks"></section>
     <section class="view hidden" id="v-wiki" aria-label="Wiki"></section>
+    <section class="view hidden" id="v-library" aria-label="Library"></section>
   </main>
 
   <nav class="tabbar" id="tabbar" aria-label="Sections"></nav>
@@ -860,8 +866,13 @@ tr.is-hold .code { color: var(--hold); }
   // wiki (docs/wiki/wiki.html on main, read through the token; never copied to this public repo)
   const WIKI_DIR = "docs/wiki", WIKI_FILE = "wiki.html";
   let wikiSha = null, wikiHtml = null, wikiLoadedSha = null, wikiInfo = null, wikiLoading = null, wikiErr = "", wikiBlobUrl = null;
+  // library (catalogue/index.html on the orphan branch `library`, read through the token; never copied here)
+  const LIB_BRANCH = "library", LIB_DIR = "catalogue", LIB_FILE = "index.html";
+  let libHead = null, libSha = null, libHtml = null, libLoadedSha = null, libInfo = null, libLoading = null, libErr = "", libBlobUrl = null, libEtag = null, libChecked = false;
+  // the claude.ai link lives in .agents/board/links.json on main (private), so it is never in this public source
+  let boardDirSha = null, linksDirSha, linksLoading = null, libLink = null; // linksDirSha starts undefined so the first read always runs
 
-  const VIEWS = ["today", "inbox", "tasks", "progress", "memory", "wiki"];
+  const VIEWS = ["today", "inbox", "tasks", "progress", "memory", "wiki", "library"];
   let view = "today";
 
   const $ = (id) => document.getElementById(id);
@@ -878,6 +889,7 @@ tr.is-hold .code { color: var(--hold); }
     memory: I('<path d="M5 4.5h11a3 3 0 0 1 3 3v12H8a3 3 0 0 1-3-3z"/><path d="M5 16.5a3 3 0 0 1 3-3h11"/>'),
     tasks: I('<rect x="2.5" y="8" width="19" height="8" rx="1.5"/><path d="M6.5 8v3M10.5 8v4.5M14.5 8v3M18.5 8v4.5"/>'),
     wiki: I('<path d="M4 5.5h6a2 2 0 0 1 2 2v12a2 2 0 0 0-2-2H4z"/><path d="M20 5.5h-6a2 2 0 0 0-2 2v12a2 2 0 0 1 2-2h6z"/>'),
+    library: I('<path d="M4.5 4.5h3v15h-3zM9.5 4.5h3v15h-3z"/><path d="m14.6 5.6 2.9-.8 3.9 14.5-2.9.8z"/>'),
     agents: I('<circle cx="12" cy="5.5" r="2.2"/><circle cx="5.5" cy="18.5" r="2.2"/><circle cx="18.5" cy="18.5" r="2.2"/><path d="M12 7.7v4.3M12 12l-5 4.6M12 12l5 4.6"/>'),
     clock: I('<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>', 15),
     check: I('<path d="m5 12.5 4.5 4.5L19 7.5"/>', 16),
@@ -888,6 +900,7 @@ tr.is-hold .code { color: var(--hold); }
   const NAV = [
     { id: "today", label: "Board" }, { id: "inbox", label: "Talk" }, { id: "tasks", label: "Tasks" },
     { id: "progress", label: "Plan" }, { id: "memory", label: "Memory" }, { id: "wiki", label: "Wiki" },
+    { id: "library", label: "Library" },
   ];
 
   // ---------- encoding ----------
@@ -950,6 +963,8 @@ tr.is-hold .code { color: var(--hold); }
       const agentsDir = root.tree.find((e) => e.path === ".agents" && e.type === "tree");
       if (!agentsDir) throw new Error("No .agents folder on main");
       const { data: agents } = await gh(`/git/trees/${agentsDir.sha}`);
+      const bd = agents.tree.find((e) => e.path === "board" && e.type === "tree");
+      boardDirSha = bd ? bd.sha : null; // links.json is only read when the Library tab is opened
       const [bus, status, memory, taskDir] = await Promise.all(["bus", "status", "memory", "tasks"].map((d) => listDir(agents.tree, d)));
       const read = (entries) => pool(entries, 8, async (e) => ({ file: e.path, sha: e.sha, ...parse(await blob(e.sha)) }));
       const readPlan = async () => {
@@ -2330,8 +2345,7 @@ tr.is-hold .code { color: var(--hold); }
         .replace(/<head\b[^>]*>/i, (m) => `${m}<meta http-equiv="Content-Security-Policy" content="script-src 'none'; object-src 'none'; base-uri 'none'">`);
       wikiBlobUrl = URL.createObjectURL(new Blob([safe], { type: "text/html" }));
     }
-    const w = window.open(wikiBlobUrl, "_blank", "noopener");
-    if (!w) showToast("Your browser blocked the new tab. Allow pop-ups for this site.", true);
+    window.open(wikiBlobUrl, "_blank", "noopener"); // with noopener window.open always returns null, so there is no blocked-popup check
   }
   function renderWiki() {
     const v = $("v-wiki");
@@ -2366,13 +2380,163 @@ tr.is-hold .code { color: var(--hold); }
     }
   }
 
+  // ---------- LIBRARY (catalogue/index.html on the orphan branch `library`, read through the token; never copied here) ----------
+  const libPath = () => `${LIB_DIR}/${LIB_FILE}`;
+  const safeLink = (u) => { try { const x = new URL(String(u)); return x.protocol === "https:" && (x.hostname === "claude.ai" || x.hostname.endsWith(".claude.ai")) ? x.href : null; } catch { return null; } };
+  // commit -> root tree -> catalogue/ -> index.html blob sha (null when the branch no longer carries it)
+  async function resolveLibrary(head) {
+    const { data: commit } = await gh(`/git/commits/${head}`);
+    const { data: root } = await gh(`/git/trees/${commit.tree.sha}`);
+    const dir = root.tree.find((e) => e.path === LIB_DIR && e.type === "tree");
+    const { data: d } = dir ? await gh(`/git/trees/${dir.sha}`) : { data: { tree: [] } };
+    const f = d.tree.find((e) => e.path === LIB_FILE && e.type === "blob");
+    libHead = head; libSha = f ? f.sha : null;
+  }
+  async function readLinks() {
+    if (linksLoading) return linksLoading;
+    if (!token || !lastSha || boardDirSha === linksDirSha) return;
+    const dir = boardDirSha;
+    linksLoading = (async () => {
+      let link = null;
+      try {
+        if (dir) {
+          const { data: t } = await gh(`/git/trees/${dir}`);
+          const f = t.tree.find((e) => e.path === "links.json" && e.type === "blob");
+          // blobs API straight into memory: the link is never put in the aka.blobs cache or the page source
+          if (f) { const { data } = await gh(`/git/blobs/${f.sha}`); const j = JSON.parse(b64decode(data.content)); link = safeLink(j && j.library_artifact); }
+        }
+        libLink = link; linksDirSha = dir;
+      } catch { libLink = null; } // network or bad JSON: no link, and the next render tries again
+      finally { linksLoading = null; }
+    })();
+    await linksLoading;
+    if (view === "library") renderLibrary();
+  }
+  // The new-tab copy is a blob: URL, which shares the board's origin (and its stored token). The catalogue is built by
+  // its own script, so stripping scripts (as for the wiki) would leave it empty. Instead the copy is a script-free
+  // wrapper: a CSP that allows only the catalogue's own inline scripts (by hash), and the catalogue inside the same
+  // null-origin sandbox the tab uses, so nothing it runs can reach the board's storage.
+  async function libWrapperUrl(html) {
+    if (!(window.crypto && crypto.subtle)) return null;
+    const hashes = [];
+    for (const m of html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)) {
+      if (/\bsrc\s*=/i.test(m[1])) continue;
+      const d = new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(m[2])));
+      let bin = ""; for (const x of d) bin += String.fromCharCode(x);
+      hashes.push(`'sha256-${btoa(bin)}'`);
+    }
+    const title = esc(((html.match(/<title>([^<]*)<\/title>/i) || [])[1] || "AKAGames Library").trim());
+    const csp = `script-src ${hashes.join(" ") || "'none'"}; object-src 'none'; base-uri 'none'; form-action 'none'; connect-src 'none'`;
+    const page = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">` +
+      `<meta http-equiv="Content-Security-Policy" content="${esc(csp)}"><meta name="referrer" content="no-referrer"><title>${title}</title>` +
+      `<style>html,body{margin:0;height:100%;background:#f7f3ec}iframe{display:block;width:100%;height:100%;border:0}</style></head>` +
+      `<body><iframe title="${title}" sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox" referrerpolicy="no-referrer" srcdoc="${esc(html)}"></iframe></body></html>`;
+    return URL.createObjectURL(new Blob([page], { type: "text/html" }));
+  }
+  async function fetchLibrary(force = false) {
+    if (libLoading) return libLoading;
+    if (!token) return;
+    libLoading = (async () => {
+      libErr = "";
+      try {
+        if (force || !libChecked) {
+          let ref = null, res = null;
+          try { ({ data: ref, res } = await gh(`/git/ref/heads/${LIB_BRANCH}`)); } catch (e) { if (e.status !== 404) throw e; }
+          if (ref) { libEtag = res.headers.get("ETag"); await resolveLibrary(ref.object.sha); } else { libHead = null; libSha = null; libEtag = null; }
+          libChecked = true;
+        }
+        if (!libSha) { libHtml = null; libLoadedSha = null; libInfo = null; return; }
+        if (libLoadedSha === libSha && libHtml && !force) return;
+        // blobs API, not contents: base64 in, text out, kept in memory only (never in the aka.blobs cache)
+        const { data } = await gh(`/git/blobs/${libSha}`);
+        const html = b64decode(data.content);
+        const info = { sha: libSha, size: data.size || new TextEncoder().encode(html).length, commit: null };
+        try {
+          const { data: cs } = await gh(`/commits?sha=${LIB_BRANCH}&path=${encodeURIComponent(libPath())}&per_page=1`);
+          const c = Array.isArray(cs) && cs[0];
+          if (c) info.commit = { sha: c.sha, date: (c.commit.committer || c.commit.author || {}).date || "", message: (c.commit.message || "").split("\n")[0],
+            who: c.author && c.author.login ? (LOGINS[c.author.login.toLowerCase()] || c.author.login) : "" };
+        } catch {}
+        if (libBlobUrl) { try { URL.revokeObjectURL(libBlobUrl); } catch {} libBlobUrl = null; }
+        try { libBlobUrl = await libWrapperUrl(html); } catch { libBlobUrl = null; }
+        libHtml = html; libLoadedSha = libSha; libInfo = info;
+      } catch (e) {
+        if (e.status === 401) { signOut("Your token was rejected (401). Sign in again."); return; }
+        libErr = e.message || "Network error";
+      } finally { libLoading = null; }
+    })();
+    await libLoading;
+    if (view === "library") renderLibrary();
+  }
+  // Rides the main poll: once the catalogue is loaded, one conditional request per tick (a 304 costs no rate limit)
+  async function checkLibrary() {
+    if (!token || !libInfo || libLoading) return;
+    try {
+      const r = await gh(`/git/ref/heads/${LIB_BRANCH}`, { headers: libEtag ? { "If-None-Match": libEtag } : {} });
+      if (r.notModified) return;
+      libEtag = r.res.headers.get("ETag");
+      if (r.data.object.sha === libHead) return;
+      await resolveLibrary(r.data.object.sha);
+    } catch (e) {
+      if (e.status !== 404) return;
+      libHead = null; libSha = null; libEtag = null;
+    }
+    if (view === "library") renderLibrary();
+  }
+  function openLibraryTab() {
+    if (!libBlobUrl) return;
+    window.open(libBlobUrl, "_blank", "noopener"); // with noopener window.open always returns null, so there is no blocked-popup check
+  }
+  function renderLibrary() {
+    const v = $("v-library");
+    if (!v.dataset.built) {
+      v.dataset.built = "1";
+      v.innerHTML = `<header class="page-h"><div><h1>Library</h1><div class="sub">The team's systems catalogue: what is built, what it needs and what can be reused. <code>${esc(libPath())}</code> is read from the private repo's <code>${esc(LIB_BRANCH)}</code> branch through your token and shown here only; nothing from it is on the public site.</div></div>
+        <div class="wiki-acts"><span class="lib-link" id="libLinkSlot"></span><button class="btn btn-sm" type="button" id="libReload">Reload</button><button class="btn btn-sm" type="button" id="libOpen">Open in new tab</button></div></header>
+        <div class="wiki-note" id="libNote"></div><div id="libBody"></div>`;
+    }
+    const state = (html) => `<div class="wiki-state">${html}</div>`;
+    const body = $("libBody"), note = $("libNote"), frame = $("libFrame"), slot = $("libLinkSlot");
+    $("libReload").disabled = !!libLoading || !token;
+    $("libOpen").disabled = !libHtml || !libBlobUrl;
+    if (token && lastSha && boardDirSha !== linksDirSha) readLinks();
+    const link = token ? libLink : null;
+    if ((slot.dataset.href || "") !== (link || "")) {
+      slot.dataset.href = link || "";
+      slot.innerHTML = link ? `<a class="btn btn-sm" id="libClaude" href="${esc(link)}" target="_blank" rel="noopener noreferrer">Open on claude.ai</a>` : "";
+    }
+    if (!token) { note.innerHTML = ""; body.innerHTML = state("Sign in with your GitHub token to read the library. It lives in the private repo and is never served without one."); return; }
+    if (libErr) { note.innerHTML = ""; body.innerHTML = state(`Couldn't load the library: ${esc(libErr)}`); return; }
+    if (!libHtml) {
+      note.innerHTML = "";
+      if (libChecked && !libSha && !libLoading) {
+        body.innerHTML = state(libHead ? `No <code>${esc(libPath())}</code> on the <code>${esc(LIB_BRANCH)}</code> branch yet. Build it there with <code>node catalogue/build.js</code> and push.`
+          : `There is no <code>${esc(LIB_BRANCH)}</code> branch in the repo yet.`);
+        return;
+      }
+      body.innerHTML = state(`Loading the library from <code>${esc(LIB_BRANCH)}</code>…`);
+      if (!libLoading) fetchLibrary();
+      return;
+    }
+    const c = libInfo.commit;
+    const stale = libSha !== libLoadedSha;
+    note.innerHTML = `<span>Loaded from <code>${esc(LIB_BRANCH)}</code></span>` +
+      (c ? `<span>· <a href="https://github.com/${OWNER}/${REPO}/commit/${esc(c.sha)}" target="_blank" rel="noopener" title="${esc(c.message)}">${esc(c.sha.slice(0, 7))}</a>${c.date ? ` <time datetime="${esc(c.date)}" title="${esc(c.date)}">${esc(rel(c.date))}</time>` : ""}${c.who ? ` by ${esc(name(c.who))}` : ""}</span>` : "") +
+      `<span>· ${fmtBytes(libInfo.size)}</span>` + (stale ? `<b class="wiki-new">· ${libSha ? `A newer catalogue is on ${esc(LIB_BRANCH)}` : `The catalogue is no longer on ${esc(LIB_BRANCH)}`}: Reload</b>` : "");
+    if (!frame || frame.dataset.sha !== libLoadedSha) {
+      // same sandbox as the wiki: the catalogue's filter and search script runs, but in a null origin that cannot reach this page or its storage
+      body.innerHTML = `<iframe class="wiki-frame" id="libFrame" title="AKAGames systems library" sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox" referrerpolicy="no-referrer" data-sha="${esc(libLoadedSha)}"></iframe>`;
+      $("libFrame").srcdoc = libHtml;
+    }
+  }
+
   // ---------- views ----------
   function parseHash() {
     const h = decodeURIComponent(location.hash.slice(1));
     if (h === "humans") return { v: "inbox", chan: "humans" };
     if (h === "chat") return { v: "inbox", chan: "agents" };
     const [v, chan, id] = h.split("/");
-    const alias = { board: "today", talk: "inbox", plan: "progress", agents: "today", "human-tasks": "tasks", "agent-tasks": "tasks", lore: "wiki", docs: "wiki" };
+    const alias = { board: "today", talk: "inbox", plan: "progress", agents: "today", "human-tasks": "tasks", "agent-tasks": "tasks", lore: "wiki", docs: "wiki", catalogue: "library", systems: "library" };
     const vv = alias[v] || v;
     return { v: VIEWS.includes(vv) ? vv : "today", chan, id };
   }
@@ -2390,6 +2554,7 @@ tr.is-hold .code { color: var(--hold); }
     else if (view === "memory") renderMemory();
     else if (view === "tasks") renderTasks();
     else if (view === "wiki") renderWiki();
+    else if (view === "library") renderLibrary();
     writeHash();
     if (view !== "inbox" || !isWide()) window.scrollTo(0, 0);
   }
@@ -2401,6 +2566,7 @@ tr.is-hold .code { color: var(--hold); }
     else if (view === "memory") renderMemory(true);
     else if (view === "tasks") renderTasks();
     else if (view === "wiki") renderWiki();
+    else if (view === "library") renderLibrary();
   }
   function setSync(state, detail = "") {
     const t = new Date().toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit", hour12: false });
@@ -2456,7 +2622,7 @@ tr.is-hold .code { color: var(--hold); }
   }
 
   // ---------- polling ----------
-  function schedule() { clearTimeout(pollTimer); pollTimer = setTimeout(async () => { await load(); schedule(); }, document.hidden ? POLL_HIDDEN : POLL_VISIBLE); }
+  function schedule() { clearTimeout(pollTimer); pollTimer = setTimeout(async () => { await load(); await checkLibrary(); schedule(); }, document.hidden ? POLL_HIDDEN : POLL_VISIBLE); }
 
   // ---------- sign-in ----------
   let pickedWho = me;
@@ -2465,7 +2631,12 @@ tr.is-hold .code { color: var(--hold); }
     $("whoPick").innerHTML = TEAM.map((t) => `<button type="button" data-who="${t}" aria-pressed="${pickedWho === t}">${avatar(t, "lg")}${NAMES[t]}</button>`).join("");
     $("gateErr").textContent = err;
   }
-  function signOut(err = "") { clearTimeout(pollTimer); store.del("aka.token"); token = null; lastSha = null; etag = null; showGate(err); }
+  function signOut(err = "") {
+    clearTimeout(pollTimer); store.del("aka.token"); token = null; lastSha = null; etag = null;
+    // the private pages held in memory go with the token
+    wikiHtml = wikiLoadedSha = wikiInfo = null; libHtml = libLoadedSha = libInfo = libHead = libSha = libEtag = libLink = null; libChecked = false; linksDirSha = undefined;
+    showGate(err);
+  }
   async function start() {
     $("gate").classList.add("hidden"); $("app").classList.remove("hidden");
     const prev = store.get(`aka.lastVisit.${me}`, null);
@@ -2566,6 +2737,8 @@ tr.is-hold .code { color: var(--hold); }
     if ((b = t.closest("[data-phase]"))) { pgPhase = b.dataset.phase; renderProgress(); return; }
     if (t.closest("#wikiReload")) { fetchWiki(true); renderWiki(); return; }
     if (t.closest("#wikiOpen")) { openWikiTab(); return; }
+    if (t.closest("#libReload")) { fetchLibrary(true); renderLibrary(); return; }
+    if (t.closest("#libOpen")) { openLibraryTab(); return; }
     if ((b = t.closest("[data-memtype]"))) { memType = b.dataset.memtype; renderMemory(true); return; }
     if ((b = t.closest("[data-memjump]"))) { e.preventDefault(); memType = "all"; renderMemory(true); const el = $("mg-" + b.dataset.memjump); if (el) el.scrollIntoView({ behavior: "smooth" }); return; }
   });
