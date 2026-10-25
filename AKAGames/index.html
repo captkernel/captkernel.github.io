@@ -729,6 +729,67 @@ tr.is-hold .code { color: var(--hold); }
   .aq > li { grid-template-columns: auto minmax(0, 1fr); grid-template-areas: "code t" "own st"; gap: 6px 12px; padding: 11px 14px; }
   .aq > li > .code { grid-area: code; } .aq > li > .aq-text { grid-area: t; } .aq > li > .owner { grid-area: own; } .aq > li > .st { grid-area: st; }
 }
+/* ---------- SLICE (docs/design/VERTICAL-SLICE.md: the slice rows by milestone) ---------- */
+.tabbar { grid-template-columns: repeat(8, 1fr); }
+.tabbar button { font-size: 11.5px; }
+.sl-acts { display: flex; gap: 8px; }
+.sl-acts a.btn { color: inherit; text-decoration: none; }
+.sl-grid { display: grid; gap: 16px; }
+@media (min-width: 1180px) { .sl-grid { grid-template-columns: minmax(0, 1fr) 360px; align-items: start; } }
+.sl-ms { scroll-margin-top: calc(var(--top) + 16px); }
+.sl-ms > .board-sub { align-items: center; flex-wrap: wrap; }
+.sl-board .board-h + .sl-ms > .board-sub { border-top: 0; }
+.sl-ms > .board-sub h3 { font-size: 15px; color: var(--board-ink); display: flex; align-items: baseline; gap: 10px; min-width: 0; }
+.sl-ms > .board-sub h3 .code { font-size: 15px; }
+.sl-ms > .board-sub .led-chip { margin-left: auto; font-size: 14px; }
+.sl-ms > .board-sub .st { font-size: 13px; }
+.sl-rows { list-style: none; margin: 0; padding: 0; }
+.sl-row { display: grid; grid-template-columns: 40px minmax(0, 1fr) 176px; gap: 4px 12px; align-items: start; padding: 11px 16px; border-top: 1px solid var(--board-line); scroll-margin-top: calc(var(--top) + 16px); }
+.sl-row > .code { padding-top: 2px; }
+.sl-row.is-done > .code, .sl-row.is-todo > .code { color: var(--led-2); }
+.sl-row.is-hold > .code { color: var(--hold); }
+.sl-row > .st { padding-top: 2px; }
+.sl-text { min-width: 0; }
+.sl-t { color: var(--board-ink); font-weight: 700; font-size: 15px; line-height: 1.4; overflow-wrap: anywhere; }
+.sl-row.is-done .sl-t { color: #c3c7ce; font-weight: 600; }
+.sl-where, .sl-st, .sl-tasks { margin-top: 4px; color: var(--board-ink-2); font-size: 13.5px; line-height: 1.5; overflow-wrap: anywhere; }
+.sl-st b { color: var(--board-ink); }
+.sl-k { display: inline-block; min-width: 46px; margin-right: 8px; font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #7d838d; }
+.sl-row code, .sl-board .board-foot code { background: var(--board-2); border-color: var(--board-line); color: var(--board-ink-2); font-size: 12.5px; }
+.sl-where code { color: var(--led); }
+.sl-row a, .sl-board .board-foot a { color: var(--led); text-decoration: none; }
+.sl-row a:hover, .sl-board .board-foot a:hover { text-decoration: underline; text-underline-offset: 3px; }
+.sl-more > summary { list-style: none; cursor: pointer; }
+.sl-more > summary::-webkit-details-marker { display: none; }
+.sl-tog { color: var(--led); font-weight: 600; white-space: nowrap; }
+.sl-more .less, .sl-more[open] .more, .sl-more[open] .sl-clip { display: none; }
+.sl-more[open] .less { display: inline; }
+.sl-full { margin-top: 2px; }
+.sl-tasks { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; }
+.sl-tasks .sl-k { margin-right: 0; }
+.sl-tasks .q { font: 800 13px/1 var(--led-face); letter-spacing: .04em; color: var(--led-2); margin-right: 6px; }
+.sl-dec { display: inline-flex; align-items: center; height: 22px; padding: 0 8px; border-radius: 4px; font-size: 12px; font-weight: 700; color: var(--led-2); border: 1px solid var(--board-line); background: var(--board-2); white-space: nowrap; }
+.sl-dec.hot { color: var(--hold); background: var(--hold-bg); border-color: color-mix(in srgb, var(--hold) 45%, transparent); }
+.sl-notes { margin-top: 6px; }
+.sl-notes > summary { cursor: pointer; color: var(--board-ink-2); font-weight: 600; font-size: 13px; }
+.sl-notes .prose { margin-top: 6px; color: var(--board-ink-2); font-size: 13.5px; }
+.sl-notes .prose b { color: var(--board-ink); }
+.sl-panel .prose { font-size: 14px; color: var(--ink-2); }
+.sl-panel .prose b { color: var(--ink); }
+.sl-more-p { margin-top: 8px; }
+.sl-more-p > summary { cursor: pointer; font-weight: 600; color: var(--ink-2); }
+.sl-tw { overflow-x: auto; margin: 8px 0; }
+.sl-table { border-collapse: collapse; font-size: 13px; width: 100%; }
+.sl-table th, .sl-table td { text-align: left; vertical-align: top; padding: 6px 8px; border-bottom: 1px solid var(--line); }
+.sl-table th { font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); }
+/* eight tabs: between 900 and 1179px the wordmark keeps only its mark so the me button stays on screen */
+@media (min-width: 900px) and (max-width: 1179px) { .brand { font-size: 0; gap: 0; } }
+@media (min-width: 1320px) and (max-width: 1439px) { .topbar .sync span { display: none; } .me-btn .nm { display: none; } }
+@media (max-width: 759px) {
+  .sl-row { grid-template-columns: auto minmax(0, 1fr); grid-template-areas: "code t" ". st"; gap: 6px 12px; padding: 11px 14px; }
+  .sl-row > .code { grid-area: code; } .sl-row > .sl-text { grid-area: t; } .sl-row > .st { grid-area: st; }
+  .sl-ms > .board-sub .led-chip { margin-left: 0; }
+}
 </style>
 </head>
 <body>
@@ -792,6 +853,7 @@ tr.is-hold .code { color: var(--hold); }
       </div>
     </section>
     <section class="view hidden" id="v-progress" aria-label="Plan"></section>
+    <section class="view hidden" id="v-slice" aria-label="Vertical slice"></section>
     <section class="view hidden" id="v-memory" aria-label="Team memory"></section>
     <section class="view hidden" id="v-tasks" aria-label="Tasks"></section>
     <section class="view hidden" id="v-wiki" aria-label="Wiki"></section>
@@ -872,7 +934,10 @@ tr.is-hold .code { color: var(--hold); }
   // the claude.ai link lives in .agents/board/links.json on main (private), so it is never in this public source
   let boardDirSha = null, linksDirSha, linksLoading = null, libLink = null; // linksDirSha starts undefined so the first read always runs
 
-  const VIEWS = ["today", "inbox", "tasks", "progress", "memory", "wiki", "library"];
+  // vertical slice (docs/design/VERTICAL-SLICE.md on main, parsed at view time; never copied here)
+  let slice = null, sliceSha = null, loadErr = "";
+
+  const VIEWS = ["today", "inbox", "tasks", "progress", "slice", "memory", "wiki", "library"];
   let view = "today";
 
   const $ = (id) => document.getElementById(id);
@@ -886,6 +951,7 @@ tr.is-hold .code { color: var(--hold); }
     today: I('<rect x="3" y="4.5" width="18" height="15" rx="2"/><path d="M3 9.5h18M3 14.5h18M8.5 9.5v10"/>'),
     inbox: I('<path d="M4.5 5.5h15a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H10l-4.5 3.5v-3.5h-1a1 1 0 0 1-1-1v-9a1 1 0 0 1 1-1z"/>'),
     progress: I('<path d="M4 6h10M4 12h16M4 18h7"/><circle cx="17" cy="6" r="2"/><circle cx="14" cy="18" r="2"/>'),
+    slice: I('<path d="M5.5 20.5v-16"/><path d="M5.5 5h12l-2.6 3.8 2.6 3.7h-12"/>'),
     memory: I('<path d="M5 4.5h11a3 3 0 0 1 3 3v12H8a3 3 0 0 1-3-3z"/><path d="M5 16.5a3 3 0 0 1 3-3h11"/>'),
     tasks: I('<rect x="2.5" y="8" width="19" height="8" rx="1.5"/><path d="M6.5 8v3M10.5 8v4.5M14.5 8v3M18.5 8v4.5"/>'),
     wiki: I('<path d="M4 5.5h6a2 2 0 0 1 2 2v12a2 2 0 0 0-2-2H4z"/><path d="M20 5.5h-6a2 2 0 0 0-2 2v12a2 2 0 0 1 2-2h6z"/>'),
@@ -899,7 +965,7 @@ tr.is-hold .code { color: var(--hold); }
   };
   const NAV = [
     { id: "today", label: "Board" }, { id: "inbox", label: "Talk" }, { id: "tasks", label: "Tasks" },
-    { id: "progress", label: "Plan" }, { id: "memory", label: "Memory" }, { id: "wiki", label: "Wiki" },
+    { id: "progress", label: "Plan" }, { id: "slice", label: "Slice" }, { id: "memory", label: "Memory" }, { id: "wiki", label: "Wiki" },
     { id: "library", label: "Library" },
   ];
 
@@ -927,7 +993,7 @@ tr.is-hold .code { color: var(--hold); }
     const text = b64decode(data.content); blobCache.set(sha, text); return text;
   }
   function saveBlobCache() {
-    const live = new Set([...messages, ...statuses, ...memories, ...tasks].map((x) => x.sha).concat(planSha || []));
+    const live = new Set([...messages, ...statuses, ...memories, ...tasks].map((x) => x.sha).concat(planSha || [], sliceSha || []));
     const obj = {}; for (const [k, v] of blobCache) if (live.has(k)) obj[k] = v;
     store.set("aka.blobs", obj);
   }
@@ -978,12 +1044,24 @@ tr.is-hold .code { color: var(--hold); }
         const wd = wikiDir ? await gh(`/git/trees/${wikiDir.sha}`).then((r) => r.data).catch(() => null) : null;
         const w = wd && wd.tree.find((e) => e.path === WIKI_FILE && e.type === "blob");
         wikiSha = w ? w.sha : null;
+        // the vertical slice: docs/design/VERTICAL-SLICE.md, parsed for the Slice tab
+        try {
+          const designDir = d.tree.find((e) => e.path === SLICE_DIR.split("/").pop() && e.type === "tree");
+          const dd = designDir ? (await gh(`/git/trees/${designDir.sha}`)).data : null;
+          const sf = dd && dd.tree.find((e) => e.path === SLICE_FILE && e.type === "blob");
+          sliceFile = sf ? { sha: sf.sha, text: await blob(sf.sha) } : null;
+        } catch (err) { sliceFile = null; console.error("slice read", err); }
         return f ? { sha: f.sha, text: await blob(f.sha) } : null;
       };
+      let sliceFile = null;
       const [m, s, mem, tk, planFile] = await Promise.all([read(bus), read(status), read(memory), read(taskDir), readPlan().catch(() => null)]);
       tasks = tk.map((x) => taskOf(x.file, x.sha, x.meta, x.body)).sort((a, b) => a.file.localeCompare(b.file));
       plan = planFile ? parsePlan(planFile.text) : null;
       planSha = planFile ? planFile.sha : null;
+      if (!sliceFile) slice = null;
+      else if (sliceFile.sha !== sliceSha || !slice) { try { slice = parseSlice(sliceFile.text); } catch (err) { slice = null; console.error("slice parse", err); } }
+      sliceSha = sliceFile ? sliceFile.sha : null;
+      loadErr = "";
       commitsDirty = true;
       messages = m.map((x) => ({
         id: x.file, sha: x.sha,
@@ -1003,6 +1081,8 @@ tr.is-hold .code { color: var(--hold); }
       refreshCommits();
     } catch (e) {
       if (e.status === 401) { signOut("Your token was rejected (401). Sign in again."); return; }
+      loadErr = e.status === 404 ? "the repo isn't visible to this token (404)" : e.message || "network error";
+      if (view === "slice") renderSlice();
       if (e.status === 404) { setSync("err", "Repo not visible to this token (404). Check the token's access."); return; }
       setSync("err", e.message || "Network error");
     } finally { polling = false; }
@@ -2222,6 +2302,238 @@ tr.is-hold .code { color: var(--hold); }
     }
   }
 
+  // ---------- SLICE (docs/design/VERTICAL-SLICE.md on main, read through the token at view time; never copied here) ----------
+  // Contract: "# " title; "## Done when", "## The slice area", "## The route ...", "## Scope ..." with a table whose
+  // header names the #, item, starting point, status and milestone columns, "**Row n ...**" note paragraphs and the
+  // "**Milestones, in order:** M0 name → M1 name (rows a–b) → ..." line; and "## Playtest log".
+  const SLICE_DIR = "docs/design", SLICE_FILE = "VERTICAL-SLICE.md";
+  const SLICE_WAIT_RE = /\b(?:waiting on|waits on|awaiting|blocked on|needs) (karan|ash|akshat|hahn|ttt)\b|\b(karan|ash|akshat|hahn|ttt) (?:to|must|should) (?:decide|choose|approve|confirm|pick|answer|review|sign off)\b/i;
+  // One table row into cells: pipes inside `code` or escaped as \| stay in the cell.
+  function sliceCells(line) {
+    const s = line.trim().replace(/^\|/, "").replace(/(^|[^\\])\|$/, "$1");
+    const out = []; let cur = "", tick = false;
+    for (let i = 0; i < s.length; i++) {
+      const c = s[i];
+      if (c === "\\" && s[i + 1] === "|") { cur += "|"; i++; continue; }
+      if (c === "`") tick = !tick;
+      if (c === "|" && !tick) { out.push(cur.trim()); cur = ""; continue; }
+      cur += c;
+    }
+    out.push(cur.trim());
+    return out;
+  }
+  // A status cell's wording into one of the board's lamps: DONE, IN PROGRESS, TO DO or WAITING ON <NAME>.
+  function sliceStatus(text) {
+    const t = String(text || "").replace(/\*\*|`/g, "").replace(/\s+/g, " ").trim().toLowerCase();
+    const w = t.match(SLICE_WAIT_RE);
+    if (w) { const who = (w[1] || w[2]).toLowerCase(); return { key: "waiting", who, txt: `WAITING ON ${who.toUpperCase()}` }; }
+    const todo = { key: "todo", txt: "TO DO" };
+    if (!t || /^(?:[-–—?]|n\/a|tbd)$/.test(t)) return todo;
+    if (/^(?:done|built|complete|completed|shipped|finished|approved|merged)\b/.test(t)) return { key: "done", txt: "DONE" };
+    const pos = t.replace(/\b(?:not|never|nothing|no)\s+(?:yet\s+)?(?:\w+\s+)?(?:started|done|built|begun|working)\b/g, " ");
+    if (/^(?:to do|todo|none|not started|not checked|nothing)\b/.test(t)) return todo;
+    if (/\b(?:in progress|wip|started|underway|under way|building|partly|partial|partially|half|drafted|block-?out|built|done|working|works|playable|first pass|prototype)\b/.test(pos)) return { key: "progress", txt: "IN PROGRESS" };
+    return todo;
+  }
+  function parseSlice(text) {
+    const out = { title: "", intro: [], sections: [], done: [], area: [], route: [], routeTitle: "", log: [], rows: [], named: [], msNote: "", notes: [], asOf: "" };
+    let cur = null;
+    for (const raw of String(text).split(/\r?\n/)) {
+      const line = raw.replace(/\s+$/, ""); let m;
+      if (!out.title && (m = line.match(/^# (.+)/))) { out.title = m[1].trim(); continue; }
+      if ((m = line.match(/^## (.+)/))) { cur = { title: m[1].trim(), lines: [] }; out.sections.push(cur); continue; }
+      (cur ? cur.lines : out.intro).push(line);
+    }
+    const sec = (re) => out.sections.find((s) => re.test(s.title)) || null;
+    const done = sec(/^done when\b/i), area = sec(/^(?:the )?slice area\b/i), route = sec(/^(?:the )?route\b/i), scope = sec(/^scope\b/i), log = sec(/^playtest log\b/i);
+    out.done = done ? done.lines : []; out.area = area ? area.lines : []; out.log = log ? log.lines : [];
+    out.route = route ? route.lines : []; out.routeTitle = route ? route.title : "";
+    // paragraphs of the scope section (and, for the milestones line, of every section)
+    const paras = (lines) => { const ps = []; let p = []; for (const l of lines) { if (l.trim()) p.push(l); else if (p.length) { ps.push(p); p = []; } } if (p.length) ps.push(p); return ps; };
+    for (const p of paras(scope ? scope.lines : [])) {
+      if (p.every((l) => /^\s*\|/.test(l))) {
+        if (out.rows.length) continue; // the first table is the scope table
+        const head = sliceCells(p[0]).map((c) => c.replace(/\*\*/g, "").trim());
+        const col = (re) => head.findIndex((c) => re.test(c));
+        const iN = col(/^(?:#|no\.?|row)$/i), iW = col(/item|what|work/i), iS = col(/start|where|from/i), iSt = col(/status|state/i), iM = col(/milestone/i);
+        const d = iSt >= 0 && head[iSt].match(/\d{4}-\d{2}-\d{2}/); out.asOf = d ? d[0] : "";
+        for (const line of p.slice(1)) {
+          if (/^\s*\|?\s*:?-{3,}/.test(line)) continue;
+          const c = sliceCells(line), at = (i) => (i >= 0 && i < c.length ? c[i] : "");
+          const id = at(iN).replace(/\*\*/g, "").trim(), ms = (at(iM).match(/\bM\d+\b/i) || [""])[0].toUpperCase();
+          if (!id && !at(iW)) continue;
+          out.rows.push({ id, n: /^\d+$/.test(id) ? Number(id) : null, what: at(iW), where: at(iS), status: at(iSt), ms, notes: [], state: sliceStatus(at(iSt)) });
+        }
+        continue;
+      }
+      const joined = p.map((l) => l.trim()).join(" "); let m;
+      if (/^\*\*Milestones\b/i.test(joined)) continue;
+      if ((m = joined.match(/^\*\*Row (\d+)\b/i))) { const r = out.rows.find((x) => x.n === Number(m[1])); if (r) { r.notes.push(joined); continue; } }
+      out.notes.push(joined);
+    }
+    for (const s of [{ lines: out.intro }, ...out.sections]) for (const p of paras(s.lines)) {
+      const joined = p.map((l) => l.trim()).join(" ");
+      const m = joined.match(/^\*\*Milestones[^*]*\*\*\s*(.*)$/i);
+      if (!m || out.named.length) continue;
+      const parts = m[1].split(/\s*(?:→|->)\s*/);
+      parts.forEach((part, i) => {
+        let x = part.trim();
+        if (i === parts.length - 1) { const k = x.search(/\.\s+\S/); if (k > 0) { out.msNote = x.slice(k + 1).trim(); x = x.slice(0, k); } }
+        const mm = x.replace(/\.$/, "").match(/^(M\d+)\s*:?\s*(.*)$/i);
+        if (!mm) return;
+        const span = (mm[2].match(/\(([^)]*)\)\s*$/) || ["", ""])[1];
+        out.named.push({ id: mm[1].toUpperCase(), name: mm[2].replace(/\s*\([^)]*\)\s*$/, "").trim(), span });
+      });
+    }
+    out.milestones = sliceRollup(out.rows, out.named);
+    return out;
+  }
+  // Each milestone's rows and state: done when every row is done, in progress once any row moved, else not started.
+  // The first milestone that isn't done is the current one.
+  function sliceRollup(rows, named) {
+    const num = (id) => Number(String(id).slice(1));
+    const ids = [...new Set([...named.map((m) => m.id), ...rows.map((r) => r.ms).filter(Boolean)])].sort((a, b) => num(a) - num(b));
+    const ms = ids.map((id) => {
+      const rs = rows.filter((r) => r.ms === id), nm = named.find((m) => m.id === id);
+      const done = rs.filter((r) => r.state.key === "done").length;
+      const state = rs.length && done === rs.length ? "done" : rs.some((r) => r.state.key !== "todo") ? "progress" : "todo";
+      return { id, name: nm ? nm.name : "", span: nm ? nm.span : "", rows: rs, done, total: rs.length, state, now: false };
+    });
+    const loose = rows.filter((r) => !r.ms);
+    if (loose.length) ms.push({ id: "", name: "No milestone", span: "", rows: loose, done: loose.filter((r) => r.state.key === "done").length, total: loose.length, state: "todo", now: false });
+    const cur = ms.find((m) => m.id && m.state !== "done");
+    if (cur) cur.now = true;
+    return ms;
+  }
+  // Which slice rows a task names, read from its headline (the text before the first colon) so a passing
+  // "until row 10 ..." deeper in the body doesn't link it: "Slice row 7", "Slice encounter (row 5)", "rows 3 and 8", "rows 9-14".
+  function sliceRowRefs(text) {
+    const s = String(text || "").replace(/\s+/g, " ").trim(), k = s.indexOf(":");
+    const head = k > 0 && k <= 160 ? s.slice(0, k) : s;
+    const rows = new Set();
+    for (const m of head.matchAll(/\brows?\s*#?\s*(\d+(?:\s*(?:,|&|and|or|to|[–-])\s*#?\d+)*)/gi)) {
+      for (const tok of m[1].split(/\s*(?:,|&|\band\b|\bor\b)\s*/)) {
+        const r = tok.match(/(\d+)\s*(?:to|[–-])\s*#?(\d+)/);
+        if (r) { const a = Number(r[1]), b = Number(r[2]); for (let i = Math.min(a, b); i <= Math.max(a, b) && i - Math.min(a, b) < 40; i++) rows.add(i); }
+        else { const n = tok.match(/\d+/); if (n) rows.add(Number(n[0])); }
+      }
+    }
+    return { rows: [...rows].sort((a, b) => a - b), slice: /\bslice rows?\b/i.test(s) };
+  }
+  // Open tasks per slice row number, plus open tasks that say "slice row" without a number.
+  function sliceTaskLinks(list) {
+    const byRow = {}, general = [];
+    for (const t of list) {
+      if (t.done) continue;
+      const r = sliceRowRefs(t.body);
+      if (r.rows.length) r.rows.forEach((n) => (byRow[n] = byRow[n] || []).push(t));
+      else if (r.slice) general.push(t);
+    }
+    return { byRow, general };
+  }
+  // The "needs a decision" chip for a row: the first open human task among its links, yours first.
+  function sliceDecision(list, who) {
+    const hum = list.filter((t) => t.kind === "human" && !t.done);
+    if (!hum.length) return null;
+    const mine = hum.find((t) => t.owner === who || t.owner === "all");
+    return mine ? { mine: true, owner: who, task: mine } : { mine: false, owner: hum[0].owner, task: hum[0] };
+  }
+  const sliceHeadline = (t) => { const s = flat(t.body), k = s.indexOf(":"); return k > 0 && k <= 160 ? s.slice(0, k) : s; };
+  // Markdown for the slice's prose: the board's md() plus _italics_ and simple tables.
+  function sliceMd(lines) {
+    let html = "", buf = [], tbl = [];
+    const flushText = () => { if (buf.length) { html += md(buf.map((l) => l.replace(/(^|[\s(])_([^_\n]+)_(?=$|[\s).,;:])/g, "$1*$2*"))); buf = []; } };
+    const flushTbl = () => {
+      if (!tbl.length) return;
+      const rows = tbl.filter((l) => !/^\s*\|?\s*:?-{3,}/.test(l)).map(sliceCells);
+      html += `<div class="sl-tw"><table class="sl-table"><thead><tr>${rows[0].map((c) => `<th>${inlineMd(c)}</th>`).join("")}</tr></thead><tbody>${rows.slice(1).map((r) => `<tr>${r.map((c) => `<td>${inlineMd(c)}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
+      tbl = [];
+    };
+    for (const l of lines) { if (/^\s*\|/.test(l)) { flushText(); tbl.push(l); } else { flushTbl(); buf.push(l); } }
+    flushText(); flushTbl();
+    return html;
+  }
+  const sliceUrl = () => `https://github.com/${OWNER}/${REPO}/blob/${BRANCH}/${SLICE_DIR}/${SLICE_FILE}`;
+  function renderSlice() {
+    const v = $("v-slice"), path = `${SLICE_DIR}/${SLICE_FILE}`;
+    const keep = new Set([...v.querySelectorAll("details[open][id]")].map((d) => d.id));
+    const op = (id) => (keep.has(id) ? "open" : "");
+    const acts = `<div class="sl-acts"><a class="btn btn-sm" href="${esc(sliceUrl())}" target="_blank" rel="noopener noreferrer">Open the doc on GitHub</a></div>`;
+    const head = (title, sub) => `<header class="page-h"><div><h1>${title}</h1><div class="sub">${sub}</div></div>${acts}</header>`;
+    const state = (html) => head("Vertical slice", `The slice rows, read from <code>${esc(path)}</code> on the private repo's <code>main</code> through your token.`) + `<div class="wiki-state">${html}</div>`;
+    if (!token) { v.innerHTML = state("Sign in with your GitHub token to see the slice. It lives in the private repo and is never served without one."); return; }
+    if (!lastSha) { v.innerHTML = state(loadErr ? `Couldn't load the slice: ${esc(loadErr)}` : "Loading the slice from main…"); return; }
+    if (!slice) { v.innerHTML = state(`No <code>${esc(path)}</code> on main yet.`); return; }
+    if (!slice.rows.length) { v.innerHTML = state(`<code>${esc(path)}</code> has no scope table this tab can read. It looks for a <code>## Scope</code> table with <code>#</code>, item, starting point, status and milestone columns.`); return; }
+    const links = sliceTaskLinks(tasks);
+    const lamp = (s) => (s.key === "done" ? "done" : s.key === "progress" ? "go" : s.key === "waiting" ? (s.who === me ? "hold" : "wait") : "idle");
+    const msLamp = { done: ["done", "DONE"], progress: ["go", "IN PROGRESS"], todo: ["idle", "NOT STARTED"] };
+    const taskLink = (t) => {
+      const q = t.kind === "agent" && !t.done ? (agentQueue(t.owner, tasks).find((r) => r.t === t) || {}).code : "";
+      return `<a href="#tasks" data-task-jump="${esc(t.file)}" title="${esc(flat(t.body))}">${q ? `<span class="q">${esc(q)}</span>` : ""}${esc(clip(sliceHeadline(t), 64))}</a>`;
+    };
+    const statusHtml = (r) => {
+      const plain = flat(r.status.replace(/\*\*|`/g, ""));
+      if (!plain) return "";
+      if (plain.length <= 150) return `<div class="sl-st">${inlineMd(r.status)}</div>`;
+      const id = `sl-st-${r.id}`;
+      return `<details class="sl-st sl-more" id="${esc(id)}" ${op(id)}><summary><span class="sl-clip">${esc(clip(plain, 130))}</span> <span class="sl-tog"><span class="more">Show all</span><span class="less">Show less</span></span></summary><div class="sl-full">${inlineMd(r.status)}</div></details>`;
+    };
+    const rowHtml = (r) => {
+      const ts = r.n != null ? links.byRow[r.n] || [] : [], dec = sliceDecision(ts, me), cls = lamp(r.state);
+      const decHtml = dec ? `<span class="sl-dec ${dec.mine ? "hot" : ""}">${dec.mine ? "Needs your decision" : `Needs ${esc(name(dec.owner))}'s decision`}</span>` : "";
+      const tasksHtml = ts.length ? `<div class="sl-tasks"><span class="sl-k">Tasks</span>${ts.map(taskLink).join("")}${decHtml}</div>` : "";
+      const where = r.where && !/^[—–-]$/.test(r.where.trim()) ? `<div class="sl-where"><span class="sl-k">Where</span>${inlineMd(r.where)}</div>` : "";
+      const nid = `sl-n-${r.id}`;
+      const notes = r.notes.length ? `<details class="sl-notes" id="${esc(nid)}" ${op(nid)}><summary>Notes</summary><div class="prose">${sliceMd(r.notes)}</div></details>` : "";
+      return `<li class="sl-row is-${r.state.key} ${cls === "hold" ? "is-hold" : ""}" id="slice-row-${esc(r.id)}" data-row="${esc(r.id)}" data-state="${r.state.key}">
+        <span class="code">${esc(r.n != null ? String(r.n).padStart(2, "0") : r.id)}</span>
+        <div class="sl-text"><div class="sl-t">${inlineMd(r.what)}</div>${where}${statusHtml(r)}${tasksHtml}${notes}</div>
+        <span class="st ${cls}"><i aria-hidden="true"></i>${esc(r.state.txt)}</span>
+      </li>`;
+    };
+    const ms = slice.milestones;
+    const msTitle = (m) => (m.id ? `${m.id}${m.name ? ": " + m.name : ""}` : m.name);
+    const groups = ms.map((m) => {
+      const [c, t] = msLamp[m.state];
+      return `<section class="sl-ms" id="slice-${esc(m.id || "none")}" aria-labelledby="slh-${esc(m.id || "none")}">
+        <header class="board-sub"><h3 id="slh-${esc(m.id || "none")}">${m.id ? `<span class="code">${esc(m.id)}</span>` : ""}<span>${inlineMd(m.name || "Rows")}</span></h3>
+          <span class="led-chip">${m.done}/${m.total}</span><span class="st ${c}"><i aria-hidden="true"></i>${t}</span></header>
+        ${m.rows.length ? `<ol class="sl-rows">${m.rows.map(rowHtml).join("")}</ol>` : '<div class="board-empty">No rows in this milestone yet.</div>'}
+      </section>`;
+    }).join("");
+    const n = (k) => slice.rows.filter((r) => r.state.key === k).length;
+    const waitMine = slice.rows.some((r) => r.state.key === "waiting" && r.state.who === me);
+    const tot = `<div class="tot"><span class="dim"><b>${n("done")}</b>done</span><span class="go"><b>${n("progress")}</b>in progress</span>${n("waiting") ? `<span class="${waitMine ? "hot" : ""}"><b>${n("waiting")}</b>waiting</span>` : ""}<span class="dim"><b>${n("todo")}</b>to do</span></div>`;
+    const general = links.general.length ? ` Other open slice tasks: ${links.general.map(taskLink).join(", ")}.` : "";
+    const board = `<section class="board sl-board" aria-labelledby="slH">
+        <header class="board-h"><h2 id="slH">Slice rows <span lang="hi">पंक्तियाँ</span></h2>${tot}</header>
+        ${groups}
+        <div class="board-foot">Read from <code>${esc(path)}</code> on main${slice.asOf ? `, status as of ${esc(slice.asOf)}` : ""}. Each lamp comes from the row's status wording; tasks link when their headline names the row.${general}</div>
+      </section>`;
+    const route = `<ol class="route-strip" style="--n:${ms.filter((m) => m.id).length}">${ms.filter((m) => m.id).map((m) => {
+        const cls = m.state === "done" ? "done" : m.now ? "now" : "next";
+        const tag = m.state === "done" ? '<span class="tag done">Done</span>' : m.state === "progress" ? '<span class="tag wait">In progress</span>' : '<span class="tag">Not started</span>';
+        return `<li class="${cls}" data-ms="${esc(m.id)}" data-ms-state="${m.state}"><button type="button" data-slice-jump="slice-${esc(m.id)}">
+          <span class="stn" aria-hidden="true"></span>
+          <span class="ph-t">${esc(msTitle(m))}</span>
+          <span class="ph-c"><span class="led-chip">${m.done}/${m.total}</span>${tag}</span>
+        </button></li>`; }).join("")}</ol>`;
+    const first = (lines) => { const p = []; for (const l of lines) { if (!l.trim()) { if (p.length) break; continue; } if (/^\s*\|/.test(l)) { if (p.length) break; continue; } p.push(l); } return p; };
+    const goalLine = flat(first(slice.done).join(" ")).match(/^([\s\S]+?[.!?])(?=\s+[A-Z]|\s*$)/);
+    const panel = (id, h, body) => (body ? `<section class="panel sl-panel" aria-labelledby="${id}"><h2 id="${id}">${h}</h2><div class="prose">${body}</div></section>` : "");
+    const areaRest = slice.area.filter((l) => !first(slice.area).includes(l));
+    const side = [
+      panel("slDoneH", "Done when", sliceMd(slice.done)),
+      panel("slRouteH", esc(slice.routeTitle.replace(/^the /i, "The ")) || "The route", sliceMd(slice.route)),
+      panel("slAreaH", "The slice area", sliceMd(first(slice.area)) + (sliceMd(areaRest) ? `<details class="sl-more-p" id="sl-area" ${op("sl-area")}><summary>Places, edges and why</summary>${sliceMd(areaRest)}</details>` : "")),
+      panel("slLogH", "Playtest log", sliceMd(slice.log) || "<p>Nothing recorded yet.</p>"),
+    ].join("");
+    v.innerHTML = `${head(esc(slice.title || "Vertical slice"), goalLine ? inlineMd(goalLine[1]) : `${slice.rows.length} rows across ${ms.filter((m) => m.id).length} milestones.`)}
+      <section class="sec" aria-labelledby="slMsH"><div class="sec-h"><h2 id="slMsH">Milestones</h2><span class="meta">${ms.filter((m) => m.state === "done" && m.id).length} of ${ms.filter((m) => m.id).length} done${slice.msNote ? ` · ${inlineMd(slice.msNote)}` : ""}</span></div>${route}</section>
+      <div class="sl-grid"><div>${board}</div><aside class="side">${side}</aside></div>`;
+  }
+
   // ---------- AGENT MAP ----------
   let agentRunning = 0;
   async function loadAgents() {
@@ -2536,7 +2848,7 @@ tr.is-hold .code { color: var(--hold); }
     if (h === "humans") return { v: "inbox", chan: "humans" };
     if (h === "chat") return { v: "inbox", chan: "agents" };
     const [v, chan, id] = h.split("/");
-    const alias = { board: "today", talk: "inbox", plan: "progress", agents: "today", "human-tasks": "tasks", "agent-tasks": "tasks", lore: "wiki", docs: "wiki", catalogue: "library", systems: "library" };
+    const alias = { board: "today", talk: "inbox", plan: "progress", agents: "today", "human-tasks": "tasks", "agent-tasks": "tasks", lore: "wiki", docs: "wiki", catalogue: "library", systems: "library", "vertical-slice": "slice", rows: "slice" };
     const vv = alias[v] || v;
     return { v: VIEWS.includes(vv) ? vv : "today", chan, id };
   }
@@ -2551,6 +2863,7 @@ tr.is-hold .code { color: var(--hold); }
     if (view === "today") { renderToday(); refreshCommits(); loadAgents().then(scheduleAgents); }
     else if (view === "inbox") renderInbox();
     else if (view === "progress") { renderProgress(); refreshCommits(); }
+    else if (view === "slice") renderSlice();
     else if (view === "memory") renderMemory();
     else if (view === "tasks") renderTasks();
     else if (view === "wiki") renderWiki();
@@ -2563,6 +2876,7 @@ tr.is-hold .code { color: var(--hold); }
     if (view === "today") renderToday();
     else if (view === "inbox") { const s = $("readPane").scrollTop; const typing = document.activeElement && ["replyText", "composeText"].includes(document.activeElement.id); if (!typing) { renderInbox(); $("readPane").scrollTop = s; } }
     else if (view === "progress") renderProgress();
+    else if (view === "slice") renderSlice();
     else if (view === "memory") renderMemory(true);
     else if (view === "tasks") renderTasks();
     else if (view === "wiki") renderWiki();
@@ -2635,6 +2949,7 @@ tr.is-hold .code { color: var(--hold); }
     clearTimeout(pollTimer); store.del("aka.token"); token = null; lastSha = null; etag = null;
     // the private pages held in memory go with the token
     wikiHtml = wikiLoadedSha = wikiInfo = null; libHtml = libLoadedSha = libInfo = libHead = libSha = libEtag = libLink = null; libChecked = false; linksDirSha = undefined;
+    slice = sliceSha = null; loadErr = "";
     showGate(err);
   }
   async function start() {
@@ -2729,12 +3044,14 @@ tr.is-hold .code { color: var(--hold); }
     if ((b = t.closest("[data-task-jump]"))) {
       e.preventDefault();
       const f = b.dataset.taskJump, tk = tasks.find((x) => x.file === f);
+      if (view !== "tasks") setView("tasks");
       if (tk && tk.done) { if (tk.kind === "human") doneOpen = true; else agentDoneOpen = true; renderTasks(true); }
       const el = document.getElementById(taskDomId(f));
       if (el) { el.scrollIntoView({ block: "center", behavior: "smooth" }); el.classList.remove("flash"); void el.offsetWidth; el.classList.add("flash"); }
       return;
     }
     if ((b = t.closest("[data-phase]"))) { pgPhase = b.dataset.phase; renderProgress(); return; }
+    if ((b = t.closest("[data-slice-jump]"))) { const el = document.getElementById(b.dataset.sliceJump); if (el) el.scrollIntoView({ block: "start", behavior: "smooth" }); return; }
     if (t.closest("#wikiReload")) { fetchWiki(true); renderWiki(); return; }
     if (t.closest("#wikiOpen")) { openWikiTab(); return; }
     if (t.closest("#libReload")) { fetchLibrary(true); renderLibrary(); return; }
