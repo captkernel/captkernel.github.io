@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Questions for Shrey — Structural Software</title>
+<meta name="description" content="Engineering questions on a free browser-based RC building analysis and design tool for the Indian codes.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0d1117; --panel:#161b22; --panel-2:#1c232c; --border:#30363d;
+    --text:#e6edf3; --muted:#8b949e; --accent:#3fb950; --accent-dim:#2ea043;
+    --link:#58a6ff; --warn:#d29922; --radius:10px; --maxw:820px;
+    --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    --sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--bg); color:var(--text);
+    font-family:var(--sans); font-size:16px; line-height:1.65;
+    -webkit-text-size-adjust:100%;
+  }
+  .wrap{max-width:var(--maxw); margin:0 auto; padding:32px 20px 80px}
+  @media(min-width:700px){ .wrap{padding:56px 24px 96px} }
+
+  .eyebrow{
+    font-family:var(--mono); font-size:12px; letter-spacing:.08em;
+    text-transform:uppercase; color:var(--accent); margin:0 0 14px;
+  }
+  h1{
+    font-size:clamp(26px,6vw,40px); line-height:1.15; font-weight:800;
+    margin:0 0 14px; letter-spacing:-.02em;
+  }
+  .meta{
+    font-family:var(--mono); font-size:13px; color:var(--muted);
+    margin:0 0 28px; line-height:1.8;
+  }
+  .lede{font-size:17px; margin:0 0 14px}
+  p{margin:0 0 14px}
+  a{color:var(--link)}
+
+  .cta{
+    display:block; background:var(--accent); color:#06120a; font-weight:700;
+    text-decoration:none; text-align:center; padding:16px 20px;
+    border-radius:var(--radius); margin:28px 0 10px; font-size:17px;
+  }
+  .cta:hover{background:var(--accent-dim)}
+  .cta small{display:block; font-weight:500; font-size:13px; opacity:.75; margin-top:4px}
+  .cta-note{
+    text-align:center; color:var(--muted); font-size:13.5px;
+    font-family:var(--mono); margin:0 0 8px;
+  }
+
+  hr{border:0; border-top:1px solid var(--border); margin:40px 0}
+
+  .blocks{
+    background:var(--panel); border:1px solid var(--border);
+    border-radius:var(--radius); padding:22px 20px; margin:0 0 8px;
+  }
+  @media(min-width:700px){ .blocks{padding:28px} }
+  .blocks h2{
+    font-size:13px; font-family:var(--mono); font-weight:700; letter-spacing:.1em;
+    text-transform:uppercase; color:var(--accent); margin:0 0 18px;
+  }
+  .row{
+    display:flex; gap:14px; padding:14px 0;
+    border-top:1px solid var(--border);
+  }
+  .row:first-of-type{border-top:0; padding-top:0}
+  .row__id{
+    font-family:var(--mono); font-size:12px; font-weight:700; color:var(--accent);
+    flex:0 0 58px; padding-top:2px;
+  }
+  .row__body{flex:1 1 auto; min-width:0}
+  .row__title{font-weight:600; margin:0 0 3px}
+  .row__sub{color:var(--muted); font-size:14.5px; margin:0}
+  .tag{
+    font-family:var(--mono); font-size:10.5px; font-weight:700; letter-spacing:.06em;
+    text-transform:uppercase; background:rgba(210,153,34,.14); color:var(--warn);
+    border:1px solid rgba(210,153,34,.35); border-radius:4px;
+    padding:2px 7px; margin-left:7px; vertical-align:2px; white-space:nowrap;
+  }
+
+  .callout{
+    background:var(--panel-2); border-left:3px solid var(--link);
+    border-radius:0 6px 6px 0; padding:16px 18px; margin:24px 0;
+    font-size:15px;
+  }
+  .callout strong{color:var(--link)}
+  .callout.warn{border-left-color:var(--warn)}
+  .callout.warn strong{color:var(--warn)}
+
+  /* ---- embedded form: desktop only ----
+     Nested scrolling inside an iframe is miserable on a phone, so narrow
+     screens get the button above instead and never load this at all. */
+  .embed{display:none}
+  @media(min-width:860px){
+    .embed{display:block; margin:8px 0 0}
+    .embed h2{
+      font-size:13px; font-family:var(--mono); font-weight:700; letter-spacing:.1em;
+      text-transform:uppercase; color:var(--accent); margin:0 0 14px;
+    }
+    .embed__frame{
+      background:#fff; border:1px solid var(--border);
+      border-radius:var(--radius); overflow:hidden;
+    }
+    .embed iframe{display:block; width:100%; height:1500px; border:0}
+  }
+  footer{color:var(--muted); font-size:15px; margin-top:44px; text-align:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <p class="eyebrow">Open questions · v1 design</p>
+  <h1>Questions for Shrey</h1>
+  <p class="meta">
+    From Karan · 7 October 2026<br>
+    Free browser-based RC building analysis &amp; design · Indian codes
+  </p>
+
+  <p class="lede">
+    I'm building a <strong>free, browser-based structural analysis and design tool for RC building
+    frames</strong>, designed to the Indian codes. No install, no licence, no account — it opens in
+    a browser tab. The aim is the part of commercial building-analysis software that engineers
+    actually use day to day, with the learning curve designed out.
+  </p>
+  <p>
+    The research is done — workflow, solver mathematics, IS code clauses, validation benchmarks.
+    But there are gaps only someone in practice can close, and some of them are safety-critical.
+    I'm not willing to guess a code coefficient, so I'd rather ask you than ship something I can't
+    stand behind.
+  </p>
+
+  <a class="cta" href="https://docs.google.com/forms/d/e/1FAIpQLScJLy9199cT-ANYlsOCAC7_X8gtBp1uDSxMtFeQaczKVokQNA/viewform">
+    Open the form
+    <small>Nothing required · skip anything · you can come back and edit</small>
+  </a>
+  <p class="cta-note">~35 questions · answer as few as you like</p>
+
+  <div class="callout">
+    <strong>If you only do one block, do Block A.</strong> Those three answers decide whether the
+    design-check half of the tool can ship at all. Without the real BIS text the tool can still do
+    full <em>analysis</em> — forces, moments, drift, periods, seismic base shear — because that's
+    mathematics I can verify against textbook closed-form solutions. What it can't do is claim to
+    be a <em>code compliance check</em>.
+  </div>
+
+  <section class="blocks">
+    <h2>What's in it</h2>
+
+    <div class="row">
+      <div class="row__id">Block A</div>
+      <div class="row__body">
+        <p class="row__title">The three that gate everything</p>
+        <p class="row__sub">
+          Which IS standards you have access to · whether you'd check my implementation against
+          them · whether you sign off drawings.
+        </p>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="row__id">Block B</div>
+      <div class="row__body">
+        <p class="row__title">How you actually work <span class="tag">B1 matters most</span></p>
+        <p class="row__sub">
+          Do you mesh slabs or use a rigid diaphragm with tributary load distribution? The entire
+          architecture rests on the answer. Plus OMRF vs SMRF, cracked sections, load combinations,
+          P-Delta, typical job size.
+        </p>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="row__id">Block C</div>
+      <div class="row__body">
+        <p class="row__title">Code values I could not verify <span class="tag">C5 · C6</span></p>
+        <p class="row__sub">
+          Thirteen items that came back either contradicted between sources or completely
+          unconfirmed — IS 1893 Table 7 minimum base shear, the Cl. 7.7.1 dynamic-analysis
+          thresholds, the 2016 irregularity limits, and the whole of IS 13920 which I couldn't
+          reach at all. Only worth attempting with the books to hand.
+        </p>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="row__id">Block D</div>
+      <div class="row__body">
+        <p class="row__title">Outputs, and what wastes your time</p>
+        <p class="row__sub">
+          What you hand over at the end of a job, what the design basis report needs, and whether
+          you'd genuinely use a free browser tool for paid work. Please don't be polite about that
+          last one.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div class="callout warn">
+    <strong>A decision I've already made — argue with it.</strong> Until the IS 13920 capacity-design
+    clauses are confirmed against the real text, the tool will offer <strong>OMRF R = 3 only</strong>
+    and block SMRF entirely. Letting someone divide their base shear by 5 when the software can't
+    verify the ductile detailing is enforced seemed like the wrong call — that's a 40% force
+    reduction against a promise the tool never checks, and soft-storey failure is the dominant RC
+    collapse mode here. There's a question in Block C for telling me I'm being over-cautious.
+  </div>
+
+  <section class="embed">
+    <h2>Or fill it in here</h2>
+    <div class="embed__frame">
+      <iframe
+        src="https://docs.google.com/forms/d/e/1FAIpQLScJLy9199cT-ANYlsOCAC7_X8gtBp1uDSxMtFeQaczKVokQNA/viewform?embedded=true"
+        title="Questions for Shrey — form"
+        loading="lazy">Loading form…</iframe>
+    </div>
+  </section>
+
+  <footer>
+    Thanks Shrey. Whatever you manage to answer, you'll get the tool to try before anyone else sees it.
+  </footer>
+
+</div>
+</body>
+</html>

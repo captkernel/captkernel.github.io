@@ -1,0 +1,20 @@
+{
+  "name": "Slate House",
+  "short_name": "Slate House",
+  "start_url": "./",
+  "display": "browser",
+  "background_color": "#10151a",
+  "theme_color": "#10151a",
+  "icons": [
+    {
+      "src": "assets/img/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "assets/img/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ]
+}
