@@ -19,7 +19,9 @@ function sliceVar(name, endMark) {
   return html.slice(start + `var ${name}=`.length, end + endMark.length - 1);
 }
 function evalData(src) {
-  const icons = "var ICO_KNOB='',ICO_CLAUN='',ICO_SKILLS='',ICO_FOOD='',ICO_C2B='',ICO_SWA='',ICO_ANC='',ICO_KP='';";
+  /* stub every project icon the site defines (ICO_*), so a new project card never breaks the build */
+  const names = [...new Set(html.match(/\bvar (ICO_[A-Z0-9_]+)=/g) || [])].map(m => m.slice(4, -1));
+  const icons = names.length ? "var " + names.map(n => n + "=''").join(",") + ";" : "";
   return new Function(icons + "return " + src + ";")();
 }
 
