@@ -134,6 +134,9 @@
   .cr-refine{display:flex;gap:.4rem;padding:.45rem .6rem;border-top:1px solid var(--border);}
   .cr-refine input{flex:1;min-width:0;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:6px;color:var(--text);font:inherit;font-size:.82rem;padding:.35rem .55rem;outline:none;}
   .cr-busy .cr-refine{opacity:.5;}
+  .cr-std{font-size:.8rem;color:var(--muted);} .cr-std summary{cursor:pointer;font-family:var(--mono);font-size:.72rem;color:var(--faint);list-style:none;}
+  .cr-std summary::before{content:'▸ ';} .cr-std[open] summary::before{content:'▾ ';} .cr-std ul{margin:.4rem 0 .2rem;padding-left:1.1rem;} .cr-std li{margin:.12rem 0;} .cr-std p{margin:.2rem 0 0;font-size:.74rem;color:var(--faint);}
+  #ios .app-create .cr-std{background:var(--i-cell);border-radius:18px;padding:12px 16px;font-size:14px;} #ios .app-create .cr-std summary{font:600 14px -apple-system,system-ui;color:var(--i-green);}
   .cr-mine{display:flex;flex-direction:column;gap:.35rem;margin-top:.4rem;}
   .cr-mine-h{font-family:var(--mono);font-size:.7rem;color:var(--faint);margin-bottom:.1rem;}
   .cr-mine button{display:flex;justify-content:space-between;gap:.8rem;text-align:left;font:inherit;font-size:.82rem;color:var(--text);background:rgba(255,255,255,.02);border:1px solid var(--border);border-radius:8px;padding:.4rem .65rem;cursor:pointer;}
@@ -1888,6 +1891,10 @@ var CR_HTML='<div class="cr"><div class="cr-start"><div class="cr-h">Describe it
   '<div class="cr-kinds">'+['app','website','dashboard','game','tool'].map(function(k,i){return '<button type="button" data-kind="'+k+'"'+(i?'':' class="on"')+'>'+k+'</button>';}).join('')+'</div>'+
   '<textarea class="cr-in" rows="3" maxlength="2000" placeholder="e.g. a habit tracker with streaks and a weekly heatmap"></textarea>'+
   '<div class="cr-ex"></div><div class="cr-row"><button type="button" class="cr-go">Create ▸</button><span class="cr-note">built by Claude Sonnet 5.5 · runs sandboxed, offline</span></div>'+
+  '<details class="cr-std"><summary>How every build is made</summary><ul>'+
+  ['A design direction picked for your subject, not a template','Mobile-first, readable and accessible; every control works',
+   'Honest sample data: no invented reviews, ratings or facts','One data layer and a CONFIG block, so going live is a swap, not a rewrite'].map(function(t){return '<li>'+t+'</li>';}).join('')+
+  '</ul><p>The same standards I build to. Built by Claude, following my studio guidelines.</p></details>'+
   '<div class="cr-mine"></div></div>'+
   '<div class="cr-work" style="display:none"><div class="cr-bar"><span class="cr-status"></span><span class="cr-sp"></span>'+
   '<span class="cr-tabs"><button type="button" data-v="preview" class="on">preview</button><button type="button" data-v="code">code</button><button type="button" data-v="live">go live</button></span>'+

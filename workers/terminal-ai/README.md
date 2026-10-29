@@ -15,6 +15,10 @@ terminal still works offline (built-in commands + keyword answers).
 | `POST /host` · `GET /host/:slug` | request `captkernel.com/<slug>` for a build · check its status (`free`/`pending`/`live`/`rejected`/`removed`) |
 | `GET /admin` | Karan's console: approve / reject / take down hosting requests, browse the build library |
 
+**Studio guidelines.** `studio-guidelines.js` holds Karan's design, tech and go-live guidelines (distilled from how he
+works across his projects). The builder and the go-live planner prompts both include them, so builds come out the
+way he'd make them. Edit that file to change the house style; the Create screen shows a short visitor-facing summary.
+
 **Create.** Every finished build (and every edit, linked to its parent) is kept in KV with no expiry; that's
 the library. A new build is given the closest earlier build (same kind + overlapping words, latest version
 of each lineage, under 45 KB) as a reference to reuse from. Visitors keep their build ids in localStorage
