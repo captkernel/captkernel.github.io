@@ -719,6 +719,9 @@
   #ios .feat ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:7px;}
   #ios .feat li{font-size:14px;line-height:1.38;color:rgba(255,255,255,.82);padding-left:14px;position:relative;}
   #ios .feat li::before{content:'';position:absolute;left:0;top:.55em;width:5px;height:5px;border-radius:50%;background:var(--i-blue);}
+  #ios .ios-reel{display:flex;gap:14px;align-items:flex-end;margin:0 20px;}
+  #ios .ios-reel video{width:46%;max-width:220px;aspect-ratio:9/16;object-fit:cover;border-radius:22px;background:#111;flex:none;box-shadow:0 0 0 .5px rgba(255,255,255,.12);}
+  #ios .ios-reel p{margin:0;font-size:13.5px;color:var(--i-l2);line-height:1.4;}
   /* contact card */
   #ios .cc{display:flex;flex-direction:column;align-items:center;text-align:center;padding:4px 20px 0;}
   #ios .cc-av{width:104px;height:104px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:40px;font-weight:700;letter-spacing:-1px;
@@ -2218,6 +2221,7 @@ function iosProdHtml(f){
   if(f.press)st.push(['Press',String(f.press.length),f.press.length>1?'articles':'article']);
   st.push(['Built with',f.chips[0],f.chips.slice(1).join(' · ')]);
   h+='<div class="stats">'+st.map(function(s){return '<div class="stat"><div class="k">'+s[0]+'</div><div class="v">'+s[1]+'</div><div class="s">'+s[2]+'</div></div>';}).join('')+'</div>';
+  if(f.reel)h+='<div class="sec-h">Preview</div><div class="ios-reel"><video src="'+f.reel+'" poster="'+(f.reelPoster||'')+'" controls playsinline muted preload="none"></video>'+(f.reelCap?'<p>'+f.reelCap+'</p>':'')+'</div>';
   h+='<div class="sec-h">About</div><div class="prose clamp">'+f.pitch+'</div><button class="more" type="button">more</button>';
   if(f.why)h+='<div class="sec-h">Why I built it</div><div class="prose">'+f.why+'</div>';
   if(f.who)h+='<div class="sec-h">Who it\'s for</div><div class="prose">'+f.who+'</div>';

@@ -573,6 +573,8 @@ async function hostPost(req, env, hdrs) {
   if (!(await env.TERM.get(`art:${id}`))) return json({ error: "that build has expired" }, 404, hdrs);
   const prev = JSON.parse((await env.TERM.get(`host:${slug}`)) || "null");
   if (prev && prev.status !== "rejected" && prev.status !== "removed") return json({ error: `/${slug} is already taken or requested` }, 409, hdrs);
+  if (env.GITHUB_TOKEN && env.GH_REPO && (await gh(env, "GET", `${slug}?ref=${env.GH_BRANCH || "master"}`)).status === 200)
+    return json({ error: `/${slug} is already part of the site — pick another path` }, 409, hdrs);
   const hash = await ipHash(req, env);
   if (await overLimit(env, `h:${hash}`, +env.HOST_PER_DAY || 3)) return json({ error: "daily hosting-request limit reached" }, 429, hdrs);
   const rec = { slug, id, contact, title: str(body.title, 80).trim(), note: str(body.note, 1000), status: "pending", at: new Date().toISOString(), ip: hash };
@@ -625,8 +627,10 @@ async function hostAction(env, slug, action, hdrs) {
     if (!env.GITHUB_TOKEN || !env.GH_REPO) return json({ error: "set GITHUB_TOKEN and GH_REPO to publish" }, 503, hdrs);
     const art = JSON.parse((await env.TERM.get(`art:${rec.id}`)) || "null");
     if (!art) return json({ error: "the build has expired" }, 404, hdrs);
+    /* the path must be new to the repo: any existing file OR folder there (video/, KPParentsDay/…) is someone else's */
+    const dir = await gh(env, "GET", `${slug}?ref=${branch}`);
+    if (dir.status === 200 && rec.status !== "live") return json({ error: `/${slug} already exists in the site repo — pick another path` }, 409, hdrs);
     const existing = await gh(env, "GET", `${file}?ref=${branch}`);
-    if (existing.status === 200 && rec.status !== "live") return json({ error: `${file} already exists in the repo — pick another path` }, 409, hdrs);
     const put = await gh(env, "PUT", file, {
       message: `host: captkernel.com/${slug} (Create build ${rec.id})`, branch, content: b64(hostShell(rec, art)),
       ...(existing.status === 200 ? { sha: existing.data.sha } : {}),
