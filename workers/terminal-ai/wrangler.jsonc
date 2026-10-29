@@ -1,0 +1,22 @@
+{
+  "name": "captkernel-terminal",
+  "main": "worker.js",
+  "compatibility_date": "2026-08-01",
+  "compatibility_flags": ["nodejs_compat"],
+  // Rate counters + saved briefs. Create with: npx wrangler kv namespace create TERM
+  "kv_namespaces": [{ "binding": "TERM", "id": "FILL_IN_KV_ID" }],
+  "vars": {
+    "ASK_PER_DAY": "40",        // per visitor (hashed IP)
+    "ASK_GLOBAL_PER_DAY": "1500", // hard ceiling on total spend per day
+    "BRIEF_PER_DAY": "6",
+    "CREATE_PER_DAY": "4",          // new builds per visitor
+    "REFINE_PER_DAY": "12",         // edits per visitor
+    "CREATE_GLOBAL_PER_DAY": "150", // builds + edits + plans, all visitors (~$0.10–0.40 each)
+    "PLAN_PER_DAY": "8",            // go-live plans per visitor (cached per build)
+    "HOST_PER_DAY": "3",            // captkernel.com/<path> hosting requests per visitor
+    "GH_REPO": "captkernel/captkernel.github.io", // approved hosting commits <path>/index.html here
+    "GH_BRANCH": "master"
+  }
+  // Secrets (npx wrangler secret put …): ANTHROPIC_API_KEY, IP_SALT, ADMIN_SECRET,
+  // GITHUB_TOKEN (fine-grained PAT: this repo only, Contents read/write — used only when you approve hosting)
+}

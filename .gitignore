@@ -7,3 +7,8 @@
 .superpowers/
 .lab/
 .pcc.json
+
+# worker deps / local state
+node_modules/
+.wrangler/
+.dev.vars

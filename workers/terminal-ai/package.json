@@ -1,0 +1,16 @@
+{
+  "name": "captkernel-terminal-ai",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "kb": "node build-kb.mjs",
+    "dev": "node build-kb.mjs && wrangler dev",
+    "deploy": "node build-kb.mjs && wrangler deploy"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^1.3.0"
+  },
+  "devDependencies": {
+    "wrangler": "^4.0.0"
+  }
+}
