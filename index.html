@@ -1772,7 +1772,7 @@ emptyEl.addEventListener('pointerleave',function(){patMouse.x=-9999;patMouse.y=-
 /* ---------------- terminal ---------------- */
 /* TERM_AI = the captkernel-terminal worker (workers/terminal-ai). Empty = offline: built-in commands + keyword answers.
    Dev override: localStorage.ckTermAI = 'http://127.0.0.1:8787' */
-var TERM_AI='';
+var TERM_AI='https://captkernel-terminal.kidsplanetkullu.workers.dev';
 try{TERM_AI=localStorage.getItem('ckTermAI')||TERM_AI;}catch(e){}
 var PROJ={};FEATURED.concat(WIP).forEach(function(f){PROJ[f.k]=f;});
 var TERM_APPS=['about','work','kernel','connect','c2b','create'];

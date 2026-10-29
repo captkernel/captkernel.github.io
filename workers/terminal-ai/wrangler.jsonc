@@ -3,6 +3,8 @@
   "main": "worker.js",
   "compatibility_date": "2026-08-01",
   "compatibility_flags": ["nodejs_compat"],
+  // run next to the Anthropic API, not next to the visitor: Anthropic refused (403) calls from some Cloudflare edge locations
+  "placement": { "mode": "targeted", "hostname": "api.anthropic.com" },
   // Rate counters + saved briefs. Create with: npx wrangler kv namespace create TERM
   "kv_namespaces": [{ "binding": "TERM", "id": "ba18791df2944b899b0f2f1f0b25b711" }],
   "vars": {
