@@ -4,7 +4,7 @@
   "compatibility_date": "2026-08-01",
   "compatibility_flags": ["nodejs_compat"],
   // Rate counters + saved briefs. Create with: npx wrangler kv namespace create TERM
-  "kv_namespaces": [{ "binding": "TERM", "id": "FILL_IN_KV_ID" }],
+  "kv_namespaces": [{ "binding": "TERM", "id": "ba18791df2944b899b0f2f1f0b25b711" }],
   "vars": {
     "ASK_PER_DAY": "40",        // per visitor (hashed IP)
     "ASK_GLOBAL_PER_DAY": "1500", // hard ceiling on total spend per day
