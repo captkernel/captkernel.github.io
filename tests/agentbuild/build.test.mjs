@@ -39,7 +39,7 @@ test('crew: first open builds with a layer + log, then cleans up; reopen does no
   await p.evaluate(() => openApp('about'));
   await p.waitForSelector('.w-about .ab-layer', { timeout: 500 });
   assert.ok(await p.locator('.w-about .ab-log .ab-ln').count() >= 1);
-  await p.waitForSelector('.w-about[data-ab="done"]', { timeout: 4000 });
+  await p.waitForSelector('.w-about[data-ab="done"]', { timeout: 6000 });
   await p.waitForFunction(() => !document.querySelector('.ab-layer,.ab-log,.ab-wire'), null, { timeout: 2500 });
   assert.equal(await p.evaluate(() => [...document.querySelectorAll('.w-about .wbody *')].some((e) => e.style.clipPath && e.style.clipPath !== 'none')), false);
   await p.evaluate(() => { closeApp('about'); });

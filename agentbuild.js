@@ -98,6 +98,7 @@
     function walk(p) {
       for (var c = p.firstElementChild; c; c = c.nextElementSibling) {
         var tag = c.tagName.toUpperCase(); if (SKIP.test(tag) || c.classList.contains('ab-layer') || c.classList.contains('ab-log')) continue;
+        if (p.tagName === 'DETAILS' && !p.open && tag !== 'SUMMARY') continue;   /* closed <details> still has layout in Chrome */
         var f = c.getAttribute('data-ab'); if (f === 'skip') continue;
         var r = c.getBoundingClientRect(); if (!r.width && !r.height) continue;
         if (f === 'type') { add(c, 'type', 'writer'); continue; }
@@ -255,12 +256,14 @@
   /* regions: [{el, name}] built by the swarm; opt.total agents (16 desktop / 8 iOS) */
   function swarm(opt) {
     if (!window.gsap) return Promise.resolve();
-    memory.markBoot();
+    if (swarmJob) swarmJob.finish(true);
+    if (opt.boot !== false) memory.markBoot();
     (opt.ids || []).forEach(function (id) { memory.mark(id); });
     var W = innerWidth, H = innerHeight, ctx = context(), t0 = performance.now();
-    var bp = mk(null, 'ab-bp', ''); (opt.bpParent || document.body).insertBefore(bp, opt.bpBefore || (opt.bpParent || document.body).firstChild);
+    var area = opt.area || { x: 0, y: 0, w: W, h: H };   /* the region being built (whole screen, or one window) */
+    var bp = mk(null, 'ab-bp', opt.bpCss || ''); (opt.bpParent || document.body).insertBefore(bp, opt.bpBefore || (opt.bpParent || document.body).firstChild);
     var ink = mk(document.body, 'ab-ink', '');
-    var con = mk(document.body, 'ab-console' + (W < 700 ? ' narrow' : ''), '');
+    var con = mk(document.body, 'ab-console' + (W < 700 ? ' narrow' : ''), opt.consoleCss || '');
     var roster = mk(con, 'ab-roster', ''), lg = makeLog(con, false), meter = mk(con, 'ab-meter', '');
     lg.el.classList.add('ab-swarmlog');
 
@@ -278,7 +281,8 @@
       });
       by.forEach(function (st, top) {
         var nm = (typeof top.className === 'string' && top.className.trim().split(/\s+/)[0]) || top.tagName.toLowerCase();
-        groups.push({ name: nm.replace(/^(m-|w-|ab-)/, '').slice(0, 12), steps: st });
+        nm = nm.replace(/^(m-|w-|ab-|cr-)/, '');
+        groups.push({ name: ((opt.nameMap || {})[nm] || nm).slice(0, 12), steps: st });
       });
     });
     var all = []; groups.forEach(function (g) { g.steps.forEach(function (s) { hide(s); all.push(s); }); });
@@ -326,7 +330,7 @@
     if (ctx.ref) lg.line('boot', '#7e8c84', 'referrer <i class="s">' + esc(ctx.ref) + '</i> · tailoring copy');
     lg.line('boot', '#7e8c84', '<i class="s">spawning ' + names.length + ' agents</i> · skin ' + ctx.skin + ' · ' + ctx.time + (ctx.night ? ' → night palette' : ''));
 
-    var lane = opt.lanes({ agents: agents, tl: tl, say: say, start: start, end: end, go: go, box: box, vr: vr, ink: ink, bp: bp, W: W, H: H, mk: mk, label: label });
+    var lane = opt.lanes({ agents: agents, tl: tl, say: say, start: start, end: end, go: go, box: box, vr: vr, ink: ink, bp: bp, W: W, H: H, area: area, mk: mk, label: label });
 
     /* content agents: box each step on the blueprint, then reveal it */
     groups.forEach(function (g, gi) {
@@ -374,13 +378,13 @@
 
   /* shared fixed lanes ------------------------------------------------------------------ */
   function starfield(k, a, at, until) {
-    var n = k.W < 700 ? 40 : 80, stars = [];
+    var n = k.area.w < 700 ? 40 : 80, stars = [];
     k.start(a, at); k.say(a, '<i class="k">sky</i> HIP catalogue · <i class="y">' + n + '</i> anchors', at + 0.05);
-    for (var i = 0; i < n; i++) stars.push(k.mk(k.bp, 'ab-star', 'left:' + (Math.random() * k.W) + 'px;top:' + (Math.random() * k.H) + 'px'));
+    for (var i = 0; i < n; i++) stars.push(k.mk(k.bp, 'ab-star', 'left:' + (Math.random() * k.area.w) + 'px;top:' + (Math.random() * k.area.h) + 'px'));
     var step = (until - at) / Math.ceil(n / 6);
     for (var j = 0; j < n; j += 6) {
       var t = at + (j / 6) * step;
-      k.go(a, parseFloat(stars[j].style.left), parseFloat(stars[j].style.top), t, step * 0.9);
+      k.go(a, k.area.x + parseFloat(stars[j].style.left), k.area.y + parseFloat(stars[j].style.top), t, step * 0.9);
       k.tl.to(stars.slice(j, j + 6), { opacity: function () { return 0.3 + Math.random() * 0.7; }, duration: 0.2 }, t + step * 0.8);
     }
     k.end(a, until + 0.1);
@@ -417,7 +421,7 @@
     var o = { p: 0 };
     k.tl.to(o, { p: 100, duration: 0.6, ease: 'power1.inOut', onUpdate: function () {
       k.bp.style.clipPath = 'inset(0 0 0 ' + o.p + '%)';
-      gsap.set(a.cur, { x: k.W * o.p / 100, y: k.H / 2, opacity: 1 });
+      gsap.set(a.cur, { x: k.area.x + k.area.w * o.p / 100, y: k.area.y + k.area.h / 2, opacity: 1 });
     } }, at);
     k.tl.to(k.ink.querySelectorAll('.ab-box,.ab-guide,.ab-dim'), { opacity: 0, duration: 0.3 }, at);
     k.end(a, at + 0.62);
@@ -521,9 +525,75 @@
     });
   }
 
+  /* Create studio: every open of Create is built from scratch by a 16-agent swarm inside the
+     (maximized) window — blueprint behind the content, the prompt typed in, real build facts in the log */
+  function shouldStudio() { return enabled(); }
+  function studio(win) {
+    var body = win && win.querySelector('.wbody'); if (!body || !window.gsap) return Promise.resolve();
+    var work = body.querySelector('.cr-work'), start = body.querySelector('.cr-start');
+    var view = work && work.style.display !== 'none' ? work : start; if (!view) return Promise.resolve();
+    var r = body.getBoundingClientRect(), wr = win.getBoundingClientRect();
+    var area = { x: r.left, y: r.top, w: r.width, h: r.height };
+    var ta = view.querySelector('.cr-in'), ph = ta ? ta.getAttribute('placeholder') : null;
+    var kinds = view.querySelectorAll('.cr-kinds button'), mine = view.querySelectorAll('.cr-mine > *').length;
+    var frame = view.querySelector('.cr-frame');
+    memory.mark('create');
+    return swarm({
+      total: 16, boot: false, area: area, ids: [],
+      fixed: ['architect', 'director', 'model', 'sandbox', 'a11y', 'critic', 'painter'],
+      content: [view],
+      nameMap: { h: 'headline', sub: 'copy', kinds: 'kinds', in: 'prompt', ex: 'examples', row: 'cta', std: 'standards', mine: 'library', bar: 'toolbar', stage: 'preview', refine: 'refine' },
+      bpParent: win, bpBefore: win.firstChild,
+      bpCss: 'position:absolute;inset:auto;left:' + (r.left - wr.left) + 'px;top:' + (r.top - wr.top) + 'px;width:' + r.width + 'px;height:' + r.height + 'px;z-index:-1',
+      consoleCss: 'left:auto;right:' + Math.max(14, innerWidth - r.right + 18) + 'px;bottom:' + Math.max(14, innerHeight - r.bottom + 18) + 'px',
+      lanes: function (k) {
+        var A = k.agents, ax = area.x, ay = area.y;
+        /* architect: column + baseline guides over the window body */
+        k.start(A.architect, 0); k.say(A.architect, '<i class="k">grid</i> 8pt · column <i class="y">' + Math.round(Math.min(area.w, 720)) + 'px</i>', 0.05);
+        var col = view.firstElementChild ? view.firstElementChild.getBoundingClientRect().left - ax : 24;
+        var gv = k.mk(k.ink, 'ab-guide', 'left:' + (ax + col) + 'px;top:' + ay + 'px;width:1px;height:0');
+        k.go(A.architect, ax + col, ay + 6, 0, 0.25); k.tl.to(gv, { height: area.h, duration: 0.45 }, 0.2);
+        [].slice.call(view.children, 0, 6).forEach(function (c, i) {
+          var cy = c.getBoundingClientRect().top; if (cy > ay + area.h) return;
+          var gh = k.mk(k.ink, 'ab-guide', 'left:' + ax + 'px;top:' + cy + 'px;height:1px;width:0;opacity:.25');
+          k.tl.to(gh, { width: area.w, duration: 0.35 }, 0.25 + i * 0.06);
+        });
+        k.end(A.architect, 0.75);
+        /* director: reads the brief, types the example prompt into the box */
+        k.start(A.director, 0.1);
+        k.say(A.director, 'brief › <i class="s">studio intake</i> · ' + (kinds.length ? kinds.length + ' kinds · ' : '') + (ta ? 'prompt ≤ <i class="y">' + (ta.getAttribute('maxlength') || '∞') + '</i> chars' : 'live build in view'), 0.15);
+        if (ta && ph) {
+          var tr = k.vr(ta); k.go(A.director, tr.x + 16, tr.y + 18, 1.0, 0.3);
+          k.tl.call(function () { ta.setAttribute('placeholder', ''); }, null, 0.1);
+          var steps = Math.min(ph.length, 40);
+          for (var i = 1; i <= steps; i++) (function (n) { k.tl.call(function () { ta.setAttribute('placeholder', ph.slice(0, Math.round(ph.length * n / steps)) + (n < steps ? '▍' : '')); }, null, 1.3 + n * 0.022); })(i);
+          k.say(A.director, 'example › <i class="s">"' + esc(ph.replace(/^e\.g\.\s*/, '').slice(0, 42)) + '"</i>', 1.3);
+        }
+        k.end(A.director, 2.25);
+        /* model + sandbox: the real build pipeline behind Create */
+        k.start(A.model, 0.35); k.go(A.model, ax + area.w * 0.62, ay + area.h * 0.22, 0.35, 0.5);
+        k.say(A.model, 'model <i class="s">claude-sonnet-5-5</i> · studio guidelines loaded', 0.6);
+        if (mine) k.say(A.model, 'library › <i class="y">' + mine + '</i> of your builds restored', 0.95);
+        k.end(A.model, 1.2);
+        k.start(A.sandbox, 0.55); k.go(A.sandbox, ax + area.w * 0.78, ay + area.h * 0.5, 0.55, 0.5);
+        k.say(A.sandbox, '<i class="k">&lt;iframe</i> <i class="p">sandbox</i>=<i class="s">"allow-scripts"</i><i class="k">&gt;</i> · CSP locked ✓', 0.9);
+        k.end(A.sandbox, 1.3);
+        a11yLane(k, A.a11y, 1.55, [view]);
+        var pair = kinds.length > 1 ? [kinds[0], kinds[1]] : null;
+        criticLane(k, A.critic, 1.3, pair);
+        return {
+          contentStart: 0.55, contentBudget: 1.0, paintAt: 2.3,
+          paint: function (at) { painterLane(k, A.painter, at); },
+          cleanup: function () { if (ta && ph != null) ta.setAttribute('placeholder', ph); }
+        };
+      }
+    });
+  }
+
   window.AB = {
     memory: memory, shouldBuild: shouldBuild, shouldSwarm: shouldSwarm, suppress: suppress,
     plan: plan, crew: crew, finishAll: finishAll, swarmDesktop: swarmDesktop, swarmIOS: swarmIOS,
+    shouldStudio: shouldStudio, studio: studio,
     busy: function () { return live.length > 0 || !!swarmJob; }
   };
 })();
