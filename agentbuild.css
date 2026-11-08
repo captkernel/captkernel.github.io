@@ -1,0 +1,53 @@
+/* captKernel — Agentic Build (see agentbuild.js) */
+.ab-layer{position:absolute;inset:0;pointer-events:none;z-index:50;overflow:hidden;}
+.ab-cur{position:absolute;left:0;top:0;pointer-events:none;opacity:0;will-change:transform;filter:drop-shadow(0 1px 2px #0008);}
+.ab-cur svg{display:block;}
+.ab-cur span{position:absolute;left:11px;top:14px;font:600 9px/1.5 'JetBrains Mono',monospace;color:#0a0d0b;padding:0 5px;border-radius:3px;white-space:nowrap;}
+
+/* a paint step waits as a wireframe */
+.ab-wire{background:transparent!important;background-image:none!important;box-shadow:none!important;
+  border-color:rgba(97,175,239,.55)!important;border-style:dashed!important;outline:1px dashed rgba(97,175,239,.35);outline-offset:-1px;}
+.ab-paint-in{transition:background-color .35s ease,border-color .35s ease,box-shadow .35s ease,outline-color .35s ease!important;}
+
+/* the code log */
+.ab-log{position:absolute;left:0;right:0;bottom:0;height:86px;z-index:51;pointer-events:none;overflow:hidden;
+  display:flex;flex-direction:column;justify-content:flex-end;padding:6px 12px;
+  background:linear-gradient(to bottom,rgba(7,10,8,.0),rgba(7,10,8,.94) 22%);border-top:1px solid rgba(29,41,34,.9);
+  font:10px/1.55 'JetBrains Mono',monospace;color:#7e8c84;}
+.ab-log.compact{height:22px;padding:3px 10px;background:rgba(7,10,8,.92);}
+.ab-ln{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;animation:ab-in .2s ease;}
+.ab-ln b{font-weight:500;}
+.ab-log i,.ab-console i{font-style:normal;}
+.ab-log .k,.ab-console .k{color:#e06c75;} .ab-log .s,.ab-console .s{color:#46d17a;}
+.ab-log .p,.ab-console .p{color:#61afef;} .ab-log .y,.ab-console .y{color:#e5c07b;}
+@keyframes ab-in{from{opacity:0;transform:translateY(3px);}}
+
+/* swarm: blueprint under the windows, ink above everything */
+.ab-bp{position:fixed;inset:0;z-index:0;pointer-events:none;background-color:#0b1622;
+  background-image:linear-gradient(rgba(97,175,239,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(97,175,239,.08) 1px,transparent 1px);
+  background-size:14px 14px;}
+#ios>.ab-bp{position:absolute;}
+.ab-star{position:absolute;width:2px;height:2px;border-radius:50%;background:#cfe8ff;opacity:0;}
+.ab-ink{position:fixed;inset:0;z-index:9200;pointer-events:none;overflow:hidden;}
+.ab-ink .ab-cur span{font-size:8.5px;}
+.ab-box{position:absolute;border:1px solid rgba(97,175,239,.7);color:#61afef;font:9px/1.4 'JetBrains Mono',monospace;
+  padding:1px 4px;overflow:hidden;white-space:nowrap;background:rgba(97,175,239,.05);border-radius:2px;}
+.ab-guide{position:absolute;background:#61afef;opacity:.45;}
+.ab-dim{position:absolute;font:8px 'JetBrains Mono',monospace;color:#61afef;opacity:.85;}
+.ab-badge{position:absolute;width:14px;height:14px;border-radius:50%;background:#c678dd;color:#0a0d0b;
+  font:700 8px/14px 'JetBrains Mono',monospace;text-align:center;}
+.ab-flag{position:absolute;font:600 9px/1.5 'JetBrains Mono',monospace;padding:0 5px;border-radius:3px;background:#e06c75;color:#0a0d0b;white-space:nowrap;}
+.ab-flag.ok{background:#46d17a;}
+
+/* swarm console: roster + interleaved log + meter */
+.ab-console{position:fixed;left:14px;bottom:98px;width:min(560px,calc(100vw - 28px));height:132px;z-index:9300;pointer-events:none;
+  display:flex;background:rgba(7,10,8,.94);border:1px solid #1d2922;border-radius:9px;overflow:hidden;
+  box-shadow:0 14px 40px rgba(0,0,0,.45);font:10px/1.5 'JetBrains Mono',monospace;color:#7e8c84;}
+.ab-console.narrow{bottom:12px;height:112px;}
+.ab-roster{width:44%;padding:7px 8px;display:flex;flex-wrap:wrap;gap:3px;align-content:flex-start;border-right:1px solid #1d2922;}
+.ab-chip{font-size:8.5px;padding:0 5px;border-radius:3px;border:1px solid #1d2922;color:#535e57;line-height:1.6;}
+.ab-chip i{display:inline-block;width:5px;height:5px;border-radius:50%;margin-right:4px;vertical-align:1px;}
+.ab-chip.run{color:#dde5df;} .ab-chip.ok{color:#46d17a;border-color:#2f7d4f;}
+.ab-console .ab-swarmlog{position:static;flex:1;height:auto;background:none;border:0;padding:20px 10px 6px;}
+.ab-meter{position:absolute;right:8px;top:4px;font-size:9px;color:#7e8c84;}
+.ab-meter b{color:#dde5df;font-weight:500;} .ab-meter b.ok{color:#46d17a;}
