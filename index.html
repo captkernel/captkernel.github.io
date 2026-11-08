@@ -2145,7 +2145,7 @@ function initMobile(){
     if(id==='create')mountCreate(sec);
     sec.querySelectorAll('[data-open]').forEach(function(b){b.addEventListener('click',function(e){e.preventDefault();var t=document.getElementById('m-'+b.getAttribute('data-open'));if(t)t.scrollIntoView({behavior:'smooth',block:'start'});});});
   });
-  if(window.AB)[].forEach.call(host.querySelectorAll('.m-card'),function(sec){var id=sec.id.slice(2);if(AB.shouldBuild(id))AB.crew(sec,{quick:true,id:id,root:sec.querySelector('.wbody'),waitVisible:true,skipOn:'click'});});   /* agentic build: each section assembles as it scrolls in */
+  if(window.AB)[].forEach.call(host.querySelectorAll('.m-card'),function(sec){var id=sec.id.slice(2),_ab=AB.shouldBuild(id);if(_ab)AB.crew(sec,{quick:true,warm:_ab==='quick',id:id,root:sec.querySelector('.wbody'),waitVisible:true,skipOn:'click'});});   /* agentic build: each section assembles as it scrolls in */
   var nav=document.getElementById('m-nav');
   [['hero','⌂','home'],['term','▸_','term'],['work','▦','work'],['kernel','✎','kernel'],['connect','✉','connect']].forEach(function(it){
     var x=document.createElement('a');x.href='#m-'+it[0];x.innerHTML=it[1]+'<span class="lab">'+it[2]+'</span>';

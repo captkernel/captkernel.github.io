@@ -15,7 +15,7 @@
   background:linear-gradient(to bottom,rgba(7,10,8,.0),rgba(7,10,8,.94) 22%);border-top:1px solid rgba(29,41,34,.9);
   font:10px/1.55 'JetBrains Mono',monospace;color:#7e8c84;}
 .ab-log.compact{height:22px;padding:3px 10px;background:rgba(7,10,8,.92);}
-.ab-ln{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;animation:ab-in .2s ease;}
+.ab-ln{flex:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;animation:ab-in .2s ease;}
 .ab-ln b{font-weight:500;}
 .ab-log i,.ab-console i{font-style:normal;}
 .ab-log .k,.ab-console .k{color:#e06c75;} .ab-log .s,.ab-console .s{color:#46d17a;}
@@ -48,6 +48,6 @@
 .ab-chip{font-size:8.5px;padding:0 5px;border-radius:3px;border:1px solid #1d2922;color:#535e57;line-height:1.6;}
 .ab-chip i{display:inline-block;width:5px;height:5px;border-radius:50%;margin-right:4px;vertical-align:1px;}
 .ab-chip.run{color:#dde5df;} .ab-chip.ok{color:#46d17a;border-color:#2f7d4f;}
-.ab-console .ab-swarmlog{position:static;flex:1;height:auto;background:none;border:0;padding:20px 10px 6px;}
-.ab-meter{position:absolute;right:8px;top:4px;font-size:9px;color:#7e8c84;}
+.ab-console .ab-swarmlog{position:static;z-index:auto;flex:1;height:auto;background:none;border:0;padding:20px 10px 6px;}
+.ab-meter{position:absolute;left:44%;right:0;top:0;z-index:1;padding:3px 8px;text-align:right;font-size:9px;color:#7e8c84;background:#070a08;border-bottom:1px solid #121912;}
 .ab-meter b{color:#dde5df;font-weight:500;} .ab-meter b.ok{color:#46d17a;}

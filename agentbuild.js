@@ -117,6 +117,7 @@
 
   /* hide / reveal / restore one planned step (inline styles are saved and put back exactly) */
   function hide(s) {
+    s.code = snippet(s);   /* capture the real CSS before the wireframe state hides it */
     var st = s.el.style; s.prev = { clip: st.clipPath, op: st.opacity, tf: st.transform, tr: st.transition };
     if (s.kind === 'type') st.clipPath = 'inset(0 100% 0 0)';
     else if (s.kind === 'drop') { st.opacity = '0'; }
@@ -185,13 +186,13 @@
 
     var tl = gsap.timeline({ paused: true });
     var lanes = { layout: 0, writer: 0.12, stylist: 0.24 }, MV = 0.2;
-    if (opt.quick) log.line('crew', '#7e8c84', 'cache warm · rebuilding…');
+    if (opt.quick && opt.warm !== false) log.line('crew', '#7e8c84', 'cache warm · rebuilding…');
     else log.line('planner', COL.writer, steps.length + ' steps · 3 agents · skin <i class="s">' + ctx.skin + '</i> · ' + ctx.time + (ctx.night ? ' → night palette' : ''));
     steps.forEach(function (s) {
       var a = s.agent, at = lanes[a];
       var d = s.kind === 'type' ? Math.min(0.75, 0.16 + Math.min(s.chars, 60) * 0.01) : s.kind === 'drop' ? 0.3 : 0.26;
       tl.call(moveTo, [curs[a], s, MV], at);
-      tl.call(function () { log.line(a, COL[a], snippet(s)); }, null, at + MV);
+      tl.call(function () { log.line(a, COL[a], s.code); }, null, at + MV);
       revealAt(tl, s, at + MV, d);
       if (s.kind === 'type') tl.call(sweep, [curs[a], s, d], at + MV);
       lanes[a] = at + MV + d + 0.04;
@@ -312,8 +313,9 @@
     function end(a, at) { tl.call(function () { a.chip.classList.remove('run'); a.chip.classList.add('ok'); done++; gsap.to(a.cur, { opacity: 0, duration: 0.2 }); }, null, at); }
     function go(a, x, y, at, d) { tl.to(a.cur, { x: x, y: y, opacity: 1, duration: d || 0.3, ease: 'power2.inOut' }, at); }
     function box(a, r, label, at, d) {
-      var b = mk(ink, 'ab-box', 'left:' + r.x + 'px;top:' + r.y + 'px;width:0;height:' + r.h + 'px', label ? esc(label) : '');
+      var b = mk(ink, 'ab-box', 'left:' + r.x + 'px;top:' + r.y + 'px;width:0;height:' + r.h + 'px;visibility:hidden', label ? esc(label) : '');
       go(a, r.x, r.y, at, 0.2);
+      tl.set(b, { visibility: 'visible' }, at + 0.2);
       tl.to(b, { width: r.w, duration: d || 0.35, ease: 'power2.out' }, at + 0.2);
       tl.to(a.cur, { x: r.x + r.w - 4, y: r.y + r.h - 4, duration: d || 0.35, ease: 'power2.out' }, at + 0.2);
       return b;
@@ -333,7 +335,7 @@
       start(a, at);
       g.steps.forEach(function (s, si) {
         var r = vr(s.el), b = box(a, r, si === 0 ? label(s.el) : '', at, bd);
-        if (si === 0 || s.kind === 'paint') say(a, snippet(s), at + 0.2);
+        if (si === 0 || s.kind === 'paint') say(a, s.code, at + 0.2);
         revealAt(tl, s, at + 0.2 + bd, s.kind === 'type' ? 0.32 : 0.26);
         tl.to(b, { opacity: 0, duration: 0.2 }, at + 0.5 + bd);
         at += gap;
@@ -441,7 +443,7 @@
           var r = k.vr(w), v = k.mk(k.ink, 'ab-guide', 'left:' + r.x + 'px;top:0;width:1px;height:0'), h = k.mk(k.ink, 'ab-guide', 'left:0;top:' + r.y + 'px;height:1px;width:0');
           k.go(A.architect, r.x, r.y, g, 0.25);
           k.tl.to(v, { height: k.H, duration: 0.4 }, g + 0.2); k.tl.to(h, { width: k.W, duration: 0.4 }, g + 0.2);
-          k.mk(k.ink, 'ab-dim', 'left:' + (r.x + 4) + 'px;top:' + (r.y - 13) + 'px', '← ' + Math.round(r.x));
+          var dm = k.mk(k.ink, 'ab-dim', 'left:' + (r.x + 4) + 'px;top:' + (r.y - 13) + 'px;opacity:0', '← ' + Math.round(r.x)); k.tl.to(dm, { opacity: 0.85, duration: 0.2 }, g + 0.5);
           g += 0.25;
         });
         if (wins.length > 1) { var r0 = k.vr(wins[0]), r1 = k.vr(wins[1]); k.say(A.architect, 'split <i class="y">' + Math.round(r0.w / (r0.w + r1.w) * 100) + '%</i> / ' + Math.round(r1.w / (r0.w + r1.w) * 100) + '%', g + 0.2); }
