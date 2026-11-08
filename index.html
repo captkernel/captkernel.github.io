@@ -19,6 +19,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700;800&family=Space+Grotesk:wght@500;700&family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Archivo:wght@700;900&family=Instrument+Serif&family=Syne:wght@700;800&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<link rel="stylesheet" href="agentbuild.css">
+<script src="agentbuild.js"></script>
 <style>
   :root{
     --bg:#0a0d0b; --win:#0f1411; --winhdr:#121912; --border:#1d2922; --border-active:#2f7d4f;
@@ -1361,15 +1363,24 @@ function openApp(id){
   if(id==='home'){HOME_SET.forEach(function(k){if(!WIN[k])openApp(k);else{WIN[k].min=false;WIN[k].float=false;WIN[k].el.style.display='';}});relayout();markRun();return;}
   var a=APPS[id];if(!a)return;
   var w=WIN[id];
-  if(w){ if(w.min){w.min=false;w.el.style.display='';requestAnimationFrame(function(){w.el.classList.remove('minimizing');});} focus(id); relayout(); markRun(); return; }
+  if(w){ if(w.min){w.min=false;w.el.style.display='';requestAnimationFrame(function(){w.el.classList.remove('minimizing');});} focus(id); relayout(); markRun(); if(id==='create')crFull(w.el); return; }
   var el=document.createElement('div');el.className='win '+a.cls+' opening';el.style.zIndex=++z;
   var mt=(MAC()&&a.mtitle)?a.mtitle:a.title;
   el.innerHTML='<div class="wbar"><span class="ic">'+a.icon+'</span><span class="name">'+mt+'</span><span class="ctrls"><span class="c-min" title="minimize">—</span><span class="c-max" title="maximize">▢</span><span class="c-x" title="close">✕</span></span></div><div class="wbody">'+a.html+'</div><div class="g g-n"></div><div class="g g-s"></div><div class="g g-e"></div><div class="g g-w"></div><div class="g g-ne"></div><div class="g g-nw"></div><div class="g g-sw"></div><div class="g g-se"></div>';
   desktop.appendChild(el);
   WIN[id]={el:el,min:false,float:false,x:0,y:0,w:a.w,h:a.h};order.push(id);
   wire(id);relayout();focus(id);markRun();
+  if(id==='create')crFull(el);
+  else if(window.AB){var _ab=AB.shouldBuild(id);if(_ab){el.classList.remove('opening');AB.crew(el,{quick:_ab==='quick',id:id});}}   /* agentic build: agents assemble the window on first open */
   el.addEventListener('animationend',function(){el.classList.remove('opening');},{once:true});
 }
+/* Create always opens full screen, and the agent studio builds it from scratch on every open */
+function crFull(el){var w=WIN.create;if(!w)return;
+  el.classList.remove('opening','minimizing');el.classList.add('size');   /* snap, don't animate, so the agents plan the final layout */
+  if(w._zoom&&!w.float)w._zoom=null;   /* minimize un-floats it: zoom record is stale */
+  if(!w._zoom){maximize('create');relayout();}
+  el.getBoundingClientRect();requestAnimationFrame(function(){el.classList.remove('size');});
+  if(window.AB&&AB.shouldStudio())AB.studio(el);}
 function closeApp(id){var w=WIN[id];if(!w)return;w.el.classList.add('closing');
   setTimeout(function(){w.el.remove();delete WIN[id];order=order.filter(function(o){return o!==id;});relayout();markRun();},200);}
 function minApp(id){var w=WIN[id];if(!w)return;w.el.classList.add('minimizing');w.min=true;w.float=false;
@@ -2142,6 +2153,7 @@ function initMobile(){
     if(id==='create')mountCreate(sec);
     sec.querySelectorAll('[data-open]').forEach(function(b){b.addEventListener('click',function(e){e.preventDefault();var t=document.getElementById('m-'+b.getAttribute('data-open'));if(t)t.scrollIntoView({behavior:'smooth',block:'start'});});});
   });
+  if(window.AB)[].forEach.call(host.querySelectorAll('.m-card'),function(sec){var id=sec.id.slice(2),_ab=AB.shouldBuild(id);if(_ab)AB.crew(sec,{quick:true,warm:_ab==='quick',id:id,root:sec.querySelector('.wbody'),waitVisible:true,skipOn:'click'});});   /* agentic build: each section assembles as it scrolls in */
   var nav=document.getElementById('m-nav');
   [['hero','⌂','home'],['term','▸_','term'],['work','▦','work'],['kernel','✎','kernel'],['connect','✉','connect']].forEach(function(it){
     var x=document.createElement('a');x.href='#m-'+it[0];x.innerHTML=it[1]+'<span class="lab">'+it[2]+'</span>';
@@ -2345,6 +2357,7 @@ function iosOpen(key,arg){
     if(!iosBuild(key,sheet)){host.removeChild(sheet);return;}_iosSheets[key]=sheet;}
   while(sheet._stack.length>1&&arg){var t=sheet._stack.pop();if(t.parentNode)t.parentNode.removeChild(t);sheet._stack[0].classList.remove('under');}
   requestAnimationFrame(function(){Object.keys(_iosSheets).forEach(function(k){_iosSheets[k].classList.toggle('open',k===key);});document.body.classList.add('sheet-open');});
+  if(window.AB&&key!=='search'){var _ab=key==='create'?(AB.shouldStudio()&&'full'):AB.shouldBuild(key);if(_ab)AB.crew(sheet,{quick:_ab==='quick',id:key,root:sheet._stack&&sheet._stack[0]||sheet,delay:340,skipOn:'click'});}   /* agentic build */
   if(key==='work'&&arg)setTimeout(function(){iosProduct(sheet,arg);},120);
   if(key==='term'){var inp=sheet.querySelector('.terminline input');if(inp)setTimeout(function(){inp.focus();},300);}
   if(key==='search'){var si=sheet.querySelector('input');si.value='';iosSearchRender(sheet._stack[0],'');setTimeout(function(){si.focus();},300);}
@@ -2488,7 +2501,7 @@ function macLanding(){var W=desktop.clientWidth,H=desktop.clientHeight,g=14,fw=M
 function applyOsChrome(){Object.keys(WIN).forEach(function(id){var w=WIN[id],a=APPS[id];if(!w||!a)return;
   var nm=w.el.querySelector('.wbar .name');if(nm)nm.textContent=(MAC()&&a.mtitle)?a.mtitle:a.title;});
   var mb=document.querySelector('.mb-app');if(mb&&!MAC())mb.textContent='captKernel';}
-function applyOs(m){var nm=(m==='macos'||m==='ios')?m:'linux';try{localStorage.setItem('ckOS',nm);}catch(e){}
+function applyOs(m){if(window.AB)AB.finishAll();var nm=(m==='macos'||m==='ios')?m:'linux';try{localStorage.setItem('ckOS',nm);}catch(e){}
   if(nm==='ios'||osMode==='ios'){location.href=location.pathname;return;}   /* springboard needs a clean boot; drop any ?os= override */
   osMode=nm;
   document.body.classList.toggle('macos',osMode==='macos');
@@ -2570,8 +2583,11 @@ document.body.classList.toggle('ios',osMode==='ios');
 if(osMode==='ios'){var _tc=document.querySelector('meta[name="theme-color"]');if(_tc)_tc.setAttribute('content','#000000');}
 [].forEach.call(document.querySelectorAll('#osswitch button'),function(b){b.classList.toggle('on',b.getAttribute('data-os')===osMode);b.addEventListener('click',function(){applyOs(b.getAttribute('data-os'));});});
 updateClock();
-if(osMode==='ios'){P.count=Math.min(P.count,700);P.cursorGlowA=0;if(typeof initIOS==='function')initIOS();startEmpty();}
+if(osMode==='ios'){P.count=Math.min(P.count,700);P.cursorGlowA=0;if(typeof initIOS==='function')initIOS();startEmpty();if(window.AB&&AB.shouldSwarm())AB.swarmIOS(document.getElementById('ios'));}
 else if(IS_MOBILE){document.body.classList.add('mobile');P.count=Math.min(P.count,1000);P.cursorGlowA=0;initMobile();startEmpty();}
+else if(window.AB&&AB.shouldSwarm()){   /* first-ever visit: a 16-agent swarm builds the whole desktop */
+  AB.suppress(HOME_SET,true);openApp('home');AB.suppress(HOME_SET,false);
+  requestAnimationFrame(function(){AB.swarmDesktop({wins:HOME_SET.map(function(k){return WIN[k]&&WIN[k].el;}),ids:HOME_SET,dock:document.querySelector('.dock'),topbar:document.querySelector('.menubar')});});}
 else{openApp('home');}
 /* ?brief=<id> — a shared fit/scope brief */
 (function(){var id=null;try{id=new URLSearchParams(location.search).get('brief');}catch(e){}
