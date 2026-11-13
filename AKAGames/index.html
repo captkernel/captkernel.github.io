@@ -387,6 +387,7 @@ tr.is-hold .code { color: var(--hold); }
 .ci-green { border-left-color: var(--go-ink); } .ci-green .ci-lamp { background: var(--go-ink); border-color: var(--go-ink); } .ci-green .ci-main { color: var(--go-ink); }
 .ci-red { border-color: color-mix(in srgb, var(--hold) 55%, var(--line)); border-left-color: var(--hold); background: color-mix(in srgb, var(--hold) 7%, var(--surface)); }
 .ci-red .ci-lamp { background: var(--hold); border-color: var(--hold); } .ci-red .ci-main { color: var(--hold-ink); }
+.ci-stale { border-left-color: var(--amber-ink); } .ci-stale .ci-lamp { border-color: var(--amber-ink); } .ci-stale .ci-main { color: var(--amber-ink); }
 .ci-running { border-left-color: var(--amber-ink); } .ci-running .ci-lamp { border-color: var(--amber-ink); border-style: dashed; }
 .ci-wasred { border-left-color: var(--hold); } .ci-wasred .ci-main { color: var(--hold-ink); }
 .status-edit { grid-column: 1 / -1; display: grid; gap: 14px; margin-top: 10px; }
@@ -2550,6 +2551,8 @@ tr.is-hold .code { color: var(--hold); }
     renderAgents();
   }
   // ---------- CI badge: ci.json on branch live/ci, published by the AKAGames test workflow ----------
+  // hours without a published result before the badge stops vouching for main
+  const CI_STALE_H = 30;
   let ci, ciEtag = null; // undefined = not loaded yet, null = no file/branch yet
   async function loadCI() {
     try {
@@ -2583,6 +2586,14 @@ tr.is-hold .code { color: var(--hold); }
     const owner = ci.repair_owner ? `repair owner <b>${who(ci.repair_owner)}</b>` : "no repair owner yet";
     const redLine = (r) => `main is RED since ${link(r ? r.commit : ci.commit)} by <b>${who(r ? r.author : ci.author)}</b>${r && r.at && parseAt(r.at) ? ` (${timeEl(r.at)})` : ""}`;
     const meta = [suite, ci.commit_msg ? esc(clip(String(ci.commit_msg), 90)) : "", upd].filter(Boolean).join(" \u00b7 ");
+    // A result nobody has refreshed says nothing about today's main: the watcher runs a full suite every ~20 h and
+    // the nightly backup covers a PC that is off, so anything older than CI_STALE_H means CI itself has stopped.
+    const staleH = ci.updated && parseAt(ci.updated) ? (Date.now() - new Date(ci.updated)) / 3600000 : 0;
+    if (staleH > CI_STALE_H && ci.state !== "running") {
+      const was = ci.state === "red" ? "red" : ci.state === "green" ? "green" : esc(String(ci.state || "unknown"));
+      return box("ci-stale", `CI has not run for ${staleH >= 48 ? `${Math.floor(staleH / 24)} days` : `${Math.round(staleH)} hours`}: main is untested`,
+        [`last result: ${was}${tally || ci.commit ? ` (${[tally, link(ci.commit)].filter(Boolean).join(", ")})` : ""}`, upd, "start it on Karan's PC: <code>scripts/ci/start-ci-watcher.bat</code>"].filter(Boolean).join(" · "), run);
+    }
     if (ci.state === "green") return box("ci-green", `main is green${tally || ci.commit ? ` (${[tally, link(ci.commit)].filter(Boolean).join(", ")})` : ""}`, meta, run);
     if (ci.state === "red") return box("ci-red", `${redLine(rs)} \u2014 ${owner}`, [fails ? `Failing: ${fails}` : "", tally ? `${tally} passed` : "", meta].filter(Boolean).join(" \u00b7 "), run);
     if (ci.state === "running") return box(rs ? "ci-running ci-wasred" : "ci-running", `CI running${suite ? ` (${suite})` : ""} on ${link(ci.commit) || "main"} by <b>${who(ci.author)}</b>${rs ? ` \u2014 ${redLine(rs)}, ${owner}` : ""}`, meta, run);
